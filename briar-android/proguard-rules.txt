@@ -1,0 +1,35 @@
+# Android defaults and rules from ../bramble-android/proguard-rules.txt are also applied
+
+-dontobfuscate
+-keepattributes SourceFile, LineNumberTable, *Annotation*, Signature, InnerClasses, EnclosingMethod
+
+# QR codes
+-keep class com.google.zxing.Result
+
+# RSS libraries
+-keep,includedescriptorclasses class com.rometools.rome.feed.synd.impl.** { *; }
+-keep,includedescriptorclasses class com.rometools.rome.io.impl.** { *; }
+-dontwarn javax.xml.stream.**
+-dontwarn org.jaxen.**
+-dontwarn java.nio.**
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn org.slf4j.impl.**
+
+# OkHttp does some shenanigans with Android's SSL classes
+-dontnote com.android.org.conscrypt.SSLParametersImpl
+-dontnote org.apache.harmony.xnet.provider.jsse.SSLParametersImpl
+-dontnote sun.security.ssl.SSLContextImpl
+
+# HTML sanitiser
+-keep class org.jsoup.safety.Whitelist
+
+# KeyboardAwareLinearLayout uses reflection on android.View
+-dontnote org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout
+
+# Emoji
+-keep class org.thoughtcrime.securesms.**
+-keep class com.astuetz.PagerSlidingTabStrip$OnTabReselectedListener
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="briar_blue">#2D3E50</color>
+	<color name="briar_blue_dark">#0F1720</color>
+	<color name="briar_gold">#FCCF1C</color>
+	<color name="briar_green_light">#95D220</color>
+
+	<color name="window_background">#eceff1</color>
+	<color name="action_bar_text">#FFFFFF</color>
+	<color name="button_bar_background">#FFFFFF</color>
+	<color name="private_message_date">#AAAAAA</color>
+	<color name="private_message_date_inverse">#e0e0e0</color>
+	<color name="forum_avatar_shadow">#99000000</color>
+
+	<color name="briar_primary">@color/briar_blue</color>
+	<color name="briar_primary_dark">@color/briar_blue_dark</color>
+
+	<color name="briar_accent">@color/briar_blue</color>
+	<color name="control_normal_light">#757575</color>
+
+	<!-- text colors -->
+	<color name="briar_text_link">#06b9ff</color>
+	<color name="briar_text_primary">#df000000</color>
+	<color name="briar_text_primary_inverse">#ffffff</color>
+	<color name="briar_text_secondary">#8a000000</color>
+	<color name="briar_text_secondary_inverse">#b4ffffff</color>
+	<color name="briar_text_tertiary">#61000000</color>
+	<color name="briar_text_tertiary_inverse">#80ffffff</color>
+	<color name="briar_button_positive">#06b9ff</color>
+	<color name="briar_button_negative">#ff0000</color>
+	<color name="briar_warning_background">#ff0000</color>
+	<color name="emoji_text_color">#ff000000</color>
+
+	<color name="emoji_pager_background">@color/window_background</color>
+
+	<!-- this is needed as preference_category_material layout uses this color as the text color -->
+	<color name="preference_fallback_accent_color">@color/briar_accent</color>
+
+	<color name="thread_indicator">#9e9e9e</color>
+	<color name="divider">#c1c1c1</color>
+	<color name="menu_background">#FFFFFF</color>
+
+	<color name="spinner_border">#61000000</color> <!-- 38% Black -->
+	<color name="forum_cell_highlight">#ffffff</color>
+</resources>
