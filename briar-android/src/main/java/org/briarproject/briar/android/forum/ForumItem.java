@@ -12,6 +12,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 class ForumItem extends ThreadItem {
 
+
 	ForumItem(ForumPostHeader h, String body) {
 		super(h.getId(), h.getParentId(), body, h.getTimestamp(), h.getAuthor(),
 				h.getAuthorStatus(), h.isRead());
