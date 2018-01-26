@@ -4,8 +4,6 @@ android:
     - tools
     - platform-tools
     - tools
-before_script:
-  - chmod=+x ./gradlew
 
 script:
   - ./gradlew build
