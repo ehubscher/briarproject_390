@@ -24,3 +24,6 @@ local.properties
 build/
 *.iml
 projectFilesBackup/
+
+# Visual Studio Code
+.vscode/

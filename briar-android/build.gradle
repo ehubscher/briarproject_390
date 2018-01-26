@@ -229,5 +229,6 @@ android {
 		warning 'MissingTranslation'
 		warning 'ImpliedQuantity'
 		warning 'ExtraTranslation'
+		abortOnError false
 	}
 }
