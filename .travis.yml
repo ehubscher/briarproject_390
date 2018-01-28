@@ -1,17 +1,28 @@
 language: android
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-26.0.2
-    - build-tools-27.0.2
-    - android-26
-    - android-27
+  - tools
+  - platform-tools
+  - build-tools-26.0.2
+  - android-26
   licenses:
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
+  - android-sdk-license-.+
+addons:
+  sonarcloud:
+    organization: sonarqubesoen390briar-github
+    token:
+      secure: nD/1Iom+L87ru/yGkiBrGhjj0LEd7BGv4jPcdpuQTvWby8HAmZaoj4HwygqpBO6GXyn2MXw+brDyIIQDAMnbNKYu3hTMzW3b3Ts1EY2DJStpY9J8RJOOv3C3TTP+1kP6b3DsyfC/47WiHk209VR4HWXb8q6KK7t3ima1AgqhZV8yy6aOgCiVlRD4fLajifaCCWjdTrPjsQXeGxgr4sqlo4iqWSEYTpRpz7UVf1qBn/kZ4PRPvGOkKFZL/1oX7p96r2NCcmp0q5hXzAo7HG2Y6xhfMG3iGBhMBfcHl6On+KIrKM3AFcsVLozvVg0FsYQZQe2Yo152TXb0wZIzCbaJ371qPlaPoKkil3hVnfzWkrig4l7oDRWpL6d01LAnt8RcKcg+qXSDfj1eFamRPvz585EAGllm4eDj2rqgc4yeO781wG2f4N5d1tDJEh/NMH2Hfk9xpIbKKnTEhh1f72hvj0eiDyM+/uBCGnrRoZS8sy/sa44B16CBp/1O5i9OcGswALwO0PqYMEQqMj+3dqb+OD1fKNKgleBU5gPX46pdGhaWdJ8NPxXxehEshm7CLnVGMNXV9O3woOIFDTgiRcyyOiOe4pkynxwduENWNvw9rk1Nqo8AVRPxcdmMXqS7NHVitgkzB46Vu7CV+9edTi74baXczI0VidufgNWHu0lUUTk=
 
 before_install:
-  - yes | sdkmanager "platforms;android-27"
+- yes | sdkmanager "platforms;android-27"
 script:
-  - ./gradlew build
+- ./gradlew sonarqube \
+    -Dsonar.host.url=https://sonarcloud.io \
+    -Dsonar.organization=sonarqubesoen390briar-github \
+    -Dsonar.login=870c8013189dffb751a97fb4e178c678e1112a42
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle'
+    - '.gradle'
