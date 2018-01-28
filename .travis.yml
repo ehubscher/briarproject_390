@@ -19,7 +19,11 @@ before_install:
 - yes | sdkmanager "platforms;android-27"
 - ./gradlew clean test
 script:
-- cd /home/travis/build/jhubscher/briarproject_390/build/intermediates/classes
+- cd build
+- ls
+- cd intermediates
+- ls
+- cd classes
 - ls
 cache:
   directories:
