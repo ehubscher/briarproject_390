@@ -17,7 +17,7 @@ addons:
       - dev
 before_install:
 - yes | sdkmanager "platforms;android-27"
-- ./gradlew clean test
+- gradle build
 script:
 - cd build
 - ls
