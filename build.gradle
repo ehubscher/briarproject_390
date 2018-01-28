@@ -62,5 +62,6 @@ sonarqube {
         property "sonar.organization", "sonarqubesoen390briar-github"
         property "sonar.login", "870c8013189dffb751a97fb4e178c678e1112a42"
         property "sonar.password", "Sonar390"
+        property "sonar.branch.name", "dev"
     }
 }
