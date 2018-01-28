@@ -52,12 +52,6 @@ task createJavaLangInvokeJar(type: Zip) {
     include '**/*'
 }
 
-android {
-    lintOptions {
-        abortOnError false
-    }
-}
-
 sonarqube {
     androidVariant 'fullDebug'
     properties {
