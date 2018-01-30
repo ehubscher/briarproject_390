@@ -28,6 +28,13 @@
 	<PreferenceCategory android:layout="@layout/divider_preference"/>
 
 	<PreferenceCategory
+		android:title="Theme">
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:layout="@layout/divider_preference"/>
+
+	<PreferenceCategory
 		android:title="@string/security_settings_title">
 
 		<Preference
