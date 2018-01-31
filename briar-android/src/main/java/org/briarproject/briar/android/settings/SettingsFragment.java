@@ -90,6 +90,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyLockscreen;
 
 	private Preference notifySound;
+	private ListPreference activeTheme;
 
 	// Fields that are accessed from background threads must be volatile
 	volatile Settings settings;
@@ -131,6 +132,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyLockscreen = (CheckBoxPreference) findPreference(
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
+
+		//activeTheme = findPreference("pref_key_active_theme");
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
