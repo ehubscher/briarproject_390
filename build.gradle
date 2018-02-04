@@ -25,6 +25,8 @@ buildscript {
         classpath 'de.undercouch:gradle-download-task:3.2.0'
         classpath files('libs/gradle-witness.jar')
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.1"
+        classpath 'com.android.support:appcompat-v7:27.0.2'
+
     }
 }
 
