@@ -15,6 +15,7 @@
 		<item name="android:listSeparatorTextViewStyle">@style/BriarTheme.ListSeparatorTextView</item>
 	</style>
 
+
 	<style name="BriarTheme.NoActionBar" parent="BriarTheme">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>

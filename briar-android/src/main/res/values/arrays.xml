@@ -24,8 +24,8 @@
 		<item>Pastel</item>
 	</string-array>
 	<string-array name="theme_setting_values">
-		<item>Default</item>
-		<item>Dark</item>
-		<item>Pastel</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 </resources>

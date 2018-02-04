@@ -8,10 +8,12 @@ import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
 
+
 public class SettingsActivity extends BriarActivity {
 
 	@Override
 	public void onCreate(Bundle bundle) {
+
 		super.onCreate(bundle);
 
 		ActionBar actionBar = getSupportActionBar();
@@ -22,6 +24,7 @@ public class SettingsActivity extends BriarActivity {
 
 		setContentView(R.layout.activity_settings);
 	}
+
 
 	@Override
 	public void injectActivity(ActivityComponent component) {
