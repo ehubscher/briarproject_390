@@ -65,6 +65,7 @@ import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF
 import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF_NOTIFY_SOUND;
 import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF_NOTIFY_VIBRATION;
 
+
 /*File to modify for user story #27*/
 
 @MethodsNotNullByDefault
@@ -90,7 +91,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyLockscreen;
 
 	private Preference notifySound;
-	private ListPreference activeTheme;
+	protected Preference activeTheme;
+
 
 	// Fields that are accessed from background threads must be volatile
 	volatile Settings settings;
@@ -133,7 +135,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
 
-		//activeTheme = findPreference("pref_key_active_theme");
+		activeTheme = findPreference("pref_style");
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);

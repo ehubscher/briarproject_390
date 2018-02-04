@@ -24,22 +24,6 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		SharedPreferences getData = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		String themeValues = getData.getString("pref_style", "1");
-
-		if (themeValues.equals("1")) {
-			setTheme(R.style.BriarTheme);
-		}
-
-		if (themeValues.equals("2")) {
-			setTheme(android.R.style.Theme_Holo);
-		}
-
-		/**if (themeValues.equals("3")) {
-		 setTheme(R.style.PastelTheme);
-		 }**/
-
-
 		setContentView(R.layout.activity_settings);
 	}
 
