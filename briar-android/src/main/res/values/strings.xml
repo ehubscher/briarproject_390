@@ -2,11 +2,9 @@
 <resources>
 
 	<!-- Theme array -->
-	<string-array name="themes">
-		<item>Default</item>
-		<item>Dark</item>
-		<item>Pastel</item>
-	</string-array>
+	<string name="Default">Default</string>
+	<string name="Dark">Darkt</string>
+	<string name="Pastel">Pastel</string>
 
 
 	<!-- Setup -->
