@@ -9,5 +9,5 @@
 		android:id="@+id/fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:name="org.briarproject.briar.android.settings.SettingsFragment"/>
+		class = "org.briarproject.briar.android.settings.SettingsFragment"/>
 </FrameLayout>

@@ -35,7 +35,7 @@
 			android:defaultValue="1"
 			android:entries="@array/theme_setting_names"
 			android:entryValues="@array/theme_setting_values"
-			android:key="@string/pref_theme"
+			android:key="pref_theme"
 			android:persistent="false"
 			android:summary="%s"
 			android:title="@string/theme_settings_title"/>

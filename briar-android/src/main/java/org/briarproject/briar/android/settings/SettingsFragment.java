@@ -120,9 +120,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 	@Override
 	public void onCreatePreferences(Bundle bundle, String s) {
-		setPreferencesFromResource(R.xml.settings, s);
 		addPreferencesFromResource(R.xml.settings);
-
 		enableBluetooth = (ListPreference) findPreference("pref_key_bluetooth");
 		torNetwork = (ListPreference) findPreference("pref_key_tor_network");
 		notifyPrivateMessages = (CheckBoxPreference) findPreference(
@@ -138,7 +136,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyLockscreen = (CheckBoxPreference) findPreference(
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
-		/* ----------------- THEME ----------------------*/
+
+		/* ----------------- THEME ---------------------- */
 		selectedTheme = (ListPreference) findPreference("pref_theme");
 
 
