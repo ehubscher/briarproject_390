@@ -33,7 +33,9 @@ import org.briarproject.briar.R;
 import org.briarproject.briar.android.util.UserFeedback;
 import org.briarproject.briar.api.test.TestDataCreator;
 
+
 import java.util.logging.Logger;
+
 
 import javax.inject.Inject;
 
@@ -89,9 +91,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyBlogPosts;
 	private CheckBoxPreference notifyVibration;
 	private CheckBoxPreference notifyLockscreen;
-
 	private Preference notifySound;
-	protected Preference activeTheme;
+	//private ListPreference theme;
 
 
 	// Fields that are accessed from background threads must be volatile
@@ -117,6 +118,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 	@Override
 	public void onCreatePreferences(Bundle bundle, String s) {
+		setPreferencesFromResource(R.xml.settings, s);
 		addPreferencesFromResource(R.xml.settings);
 
 		enableBluetooth = (ListPreference) findPreference("pref_key_bluetooth");
@@ -134,8 +136,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyLockscreen = (CheckBoxPreference) findPreference(
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
+		//theme = (ListPreference) findPreference("pref_theme");
 
-		activeTheme = findPreference("pref_style");
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
@@ -187,6 +189,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 		loadSettings();
 	}
+
 
 	@Override
 	public void onStart() {

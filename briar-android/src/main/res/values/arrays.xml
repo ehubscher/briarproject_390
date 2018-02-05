@@ -19,9 +19,9 @@
 		<item>2</item>
 	</string-array>
 	<string-array name="theme_setting_names">
-		<item>@string/Default</item>
-		<item>@string/Dark</item>
-		<item>@string/Pastel</item>
+		<item>@string/theme_default</item>
+		<item>@string/theme_dark</item>
+		<item>@string/theme_pastel</item>
 	</string-array>
 	<string-array name="theme_setting_values">
 		<item>1</item>

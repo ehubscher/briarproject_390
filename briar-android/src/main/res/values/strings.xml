@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- Theme array -->
-	<string name="Default">Default</string>
-	<string name="Dark">Dark</string>
-	<string name="Pastel">Pastel</string>
+	<!-- Themes -->
+	<string name="theme_default">Default</string>
+	<string name="theme_dark">Dark</string>
+	<string name="theme_pastel">Pastel</string>
 
 
 	<!-- Setup -->
@@ -331,6 +331,7 @@
 	<!-- Settings Style -->
 	<string name="style_settings_title">Style</string>
 	<string name="theme_settings_title">Choose a theme</string>
+	<string name="pref_theme">prefTheme</string>
 
 	<!-- Settings Security and Panic -->
 	<string name="security_settings_title">Security</string>

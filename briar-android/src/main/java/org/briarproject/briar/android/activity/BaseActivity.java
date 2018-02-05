@@ -32,12 +32,13 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.WindowManager.LayoutParams.FLAG_SECURE;
 import static android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT;
 import static org.briarproject.briar.android.TestingConstants.PREVENT_SCREENSHOTS;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
 
 public abstract class BaseActivity extends AppCompatActivity
 		implements DestroyableContext, OnTapFilteredListener {
@@ -51,7 +52,6 @@ public abstract class BaseActivity extends AppCompatActivity
 			new ArrayList<>();
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
-
 	public abstract void injectActivity(ActivityComponent component);
 
 	public void addLifecycleController(ActivityLifecycleController alc) {
@@ -60,22 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-
-		SharedPreferences getData = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		String themeValues = getData.getString("pref_style", "1");
-
-		if (themeValues.equals("1")) {
-			setTheme(R.style.BriarTheme);
-		}
-
-		if (themeValues.equals("2")) {
-			setTheme(android.R.style.Theme_Holo);
-		}
-
-		/**if (themeValues.equals("3")) {
-			setTheme(R.style.PastelTheme);
-		}**/
-
 		super.onCreate(savedInstanceState);
 
 		if (PREVENT_SCREENSHOTS) getWindow().addFlags(FLAG_SECURE);

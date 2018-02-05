@@ -1,5 +1,7 @@
 package org.briarproject.briar.android.settings;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,11 +13,14 @@ import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
 
 
+
+
 public class SettingsActivity extends BriarActivity {
+
+	private int mCurrentTheme;
 
 	@Override
 	public void onCreate(Bundle bundle) {
-
 		super.onCreate(bundle);
 
 		ActionBar actionBar = getSupportActionBar();
@@ -24,7 +29,35 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
+		this.mCurrentTheme = this.getThemeId(this);
+		this.setTheme(this.mCurrentTheme);
+
 		setContentView(R.layout.activity_settings);
+	}
+
+	@Override
+	public void onStart(){
+		super.onStart();
+		int newTheme = this.getThemeId(this);
+		if(this.mCurrentTheme != newTheme) {
+			this.finish();
+			this.startActivity(new Intent(this, this.getClass()));
+		}
+
+	}
+
+	public int getThemeId(Context context) {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		String theme = settings.getString(context.getResources().getString(R.string.pref_theme), null);
+
+		if (theme == null || theme.equals("THEME_LIGHT")) {
+			return android.R.style.Theme_Holo_Light;
+		} else if (theme.equals("THEME_DARK")) {
+			return android.R.style.Theme_Holo;
+		}
+
+		// default
+		return android.R.style.Theme_Holo_Light;
 	}
 
 
