@@ -1,9 +1,7 @@
 package org.briarproject.briar.android.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentManager;
@@ -62,15 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		String theme = settings.getString(this.getResources().getString(R.string.pref_theme),"");
-
-		if (theme.equals("2")) {
-			setTheme(android.R.style.Theme_Holo);
-		} else if (theme.equals("3")) {
-			setTheme(android.R.style.Theme_Holo_Light);
-		}
 
 		super.onCreate(savedInstanceState);
 
