@@ -53,7 +53,7 @@ public class SettingsActivity extends BriarActivity {
 		if (theme == null || theme.equals("1")) {
 			return android.R.style.Theme_Holo;
 		} else if (theme.equals("2")) {
-			return android.R.style.Theme_Holo;
+			return android.R.style.Theme_Holo_Light;
 		}
 
 		// default
