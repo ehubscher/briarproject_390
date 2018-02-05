@@ -313,10 +313,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 	/* ----------------- THEME ----------------------*/
 	private void storeThemeSettings(int selectedTheme){
-		SharedPreferences preferences = this.getActivity().getSharedPreferences("pref_theme", Context.MODE_PRIVATE);
+		/** I'm not sure the first argument of
+		 * getSharedPreferences should be the key
+		 * According to docs, it should be the settings file name **/
+		SharedPreferences preferences = this.getActivity().getSharedPreferences("settings.xml", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
+		editor.clear();
 		editor.putString("pref_theme",Integer.toString(selectedTheme));
-		editor.apply();
+		editor.commit();
 		//Popup to see that method was executed
 		Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
 	}
