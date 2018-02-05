@@ -2,11 +2,13 @@ package org.briarproject.briar.android.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -92,7 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyVibration;
 	private CheckBoxPreference notifyLockscreen;
 	private Preference notifySound;
-	//private ListPreference theme;
+	private ListPreference selectedTheme;
 
 
 	// Fields that are accessed from background threads must be volatile
@@ -136,9 +138,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyLockscreen = (CheckBoxPreference) findPreference(
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
-		//theme = (ListPreference) findPreference("pref_theme");
+		/* ----------------- THEME ----------------------*/
+		selectedTheme = (ListPreference) findPreference("pref_theme");
 
 
+		selectedTheme.setOnPreferenceChangeListener(this);
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
 		notifyPrivateMessages.setOnPreferenceChangeListener(this);
@@ -301,8 +305,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			Settings s = new Settings();
 			s.putBoolean(PREF_NOTIFY_LOCK_SCREEN, (Boolean) o);
 			storeSettings(s);
+		} else if(preference == selectedTheme){
+			int themeSetting = Integer.valueOf((String) o);
+			storeThemeSettings(themeSetting);
 		}
 		return true;
+	}
+
+	/* ----------------- THEME ----------------------*/
+	private void storeThemeSettings(int selectedTheme){
+		SharedPreferences preferences = this.getActivity().getSharedPreferences("pref_theme", Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString("pref_theme",Integer.toString(selectedTheme));
+		editor.apply();
+		//Popup to see that method was executed
+		Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {

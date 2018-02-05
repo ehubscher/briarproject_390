@@ -48,7 +48,7 @@ public class SettingsActivity extends BriarActivity {
 
 	public int getThemeId(Context context) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String theme = settings.getString(context.getResources().getString(R.string.pref_theme), "1");
+		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
 
 		if (theme.equals("2")) {
 			return android.R.style.Theme_Holo;
