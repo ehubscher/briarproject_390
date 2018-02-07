@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -70,7 +71,7 @@ import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF
 import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF_NOTIFY_VIBRATION;
 
 
-/*File to modify for user story #27*/
+
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
@@ -80,6 +81,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	public static final String SETTINGS_NAMESPACE = "android-ui";
 	public static final String BT_NAMESPACE = BluetoothConstants.ID.getString();
 	public static final String TOR_NAMESPACE = TorConstants.ID.getString();
+	// This is wrong but I haven't figured out what to set it to
+	public static final String THEME_NAMESPACE = "theme";
 
 	private static final Logger LOG =
 			Logger.getLogger(SettingsFragment.class.getName());
@@ -138,10 +141,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifySound = findPreference("pref_key_notify_sound");
 
 		/* ----------------- THEME ---------------------- */
+		//Add listener to listPreference component
 		selectedTheme = (ListPreference) findPreference("pref_theme");
-
-
 		selectedTheme.setOnPreferenceChangeListener(this);
+
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
 		notifyPrivateMessages.setOnPreferenceChangeListener(this);
@@ -221,17 +224,33 @@ public class SettingsFragment extends PreferenceFragmentCompat
 						btSettings.getBoolean(PREF_BT_ENABLE, false);
 				int torSetting = torSettings.getInt(PREF_TOR_NETWORK,
 						PREF_TOR_NETWORK_ALWAYS);
-				displaySettings(btSetting, torSetting);
+
+				/*---- THEME ---*/
+				//Get theme settings from settingsManager
+				Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
+				//Store theme number
+				int themeSetting = themeSettings.getInt("pref_theme",1);
+
+				displaySettings(btSetting, torSetting, themeSetting);
+
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			}
 		});
 	}
 
-	private void displaySettings(boolean btSetting, int torSetting) {
+	private void displaySettings(boolean btSetting, int torSetting, int themeSetting) {
 		listener.runOnUiThreadUnlessDestroyed(() -> {
 			enableBluetooth.setValue(Boolean.toString(btSetting));
 			torNetwork.setValue(Integer.toString(torSetting));
+			// Should be changed
+			if(themeSetting ==1){
+				selectedTheme.setValue("Default");
+			}else if(themeSetting==2){
+				selectedTheme.setValue("Dark");
+			}else if(themeSetting==3){
+				selectedTheme.setValue("Pastel");
+			}
 
 			notifyPrivateMessages.setChecked(settings.getBoolean(
 					PREF_NOTIFY_PRIVATE, true));
@@ -262,6 +281,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			} else {
 				text = getString(R.string.notify_sound_setting_disabled);
 			}
+
 			notifySound.setSummary(text);
 		});
 	}
@@ -313,16 +333,38 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 	/* ----------------- THEME ----------------------*/
 	private void storeThemeSettings(int selectedTheme){
-		/** I'm not sure the first argument of
-		 * getSharedPreferences should be the key
-		 * According to docs, it should be the settings file name **/
-		SharedPreferences preferences = this.getActivity().getSharedPreferences("settings.xml", Context.MODE_PRIVATE);
+		/** Keeping this as a backup */
+		/*SharedPreferences preferences = this.getActivity().getSharedPreferences("settings.xml", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.clear();
 		editor.putString("pref_theme",Integer.toString(selectedTheme));
 		editor.commit();
+		editor.apply()*/
+
+		/* Adding theme number to settingsManager*/
+		listener.runOnDbThread(() -> {
+			try {
+				Settings s = new Settings();
+				s.putInt("pref_theme", selectedTheme);
+				long now = System.currentTimeMillis();
+				//Again, THEME_NAMESPACE is probably wrong
+				settingsManager.mergeSettings(s, THEME_NAMESPACE);
+				long duration = System.currentTimeMillis() - now;
+				if (LOG.isLoggable(INFO))
+					LOG.info("Merging settings took " + duration + " ms");
+			} catch (DbException e) {
+				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+			}
+		});
+
 		//Popup to see that method was executed
 		Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
+
+		//Close activity & restart it
+		getActivity().finish();
+		final Intent intent = getActivity().getIntent();
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		getActivity().startActivity(intent);
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {

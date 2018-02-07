@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.activity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -15,6 +16,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 
 import org.briarproject.bramble.api.db.DbException;
+import org.briarproject.bramble.api.settings.Settings;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.AndroidComponent;
 import org.briarproject.briar.android.BriarApplication;
@@ -62,6 +64,17 @@ public abstract class BaseActivity extends AppCompatActivity
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
+
+		/*
+		Settings s = new Settings();
+		Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
+		String themeSetting = themeSettings.getInt();*/
+
+		/*if (theme.equals("2")) {
+			setTheme(android.R.style.Theme_Holo);
+		} else if (theme.equals("3")) {
+			 setTheme(android.R.style.Theme_Holo_Light);
+		}*/
 
 		super.onCreate(savedInstanceState);
 

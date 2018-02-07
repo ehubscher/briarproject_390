@@ -29,8 +29,9 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		this.mCurrentTheme = this.getThemeId(this);
-		this.setTheme(this.mCurrentTheme);
+		/*this.mCurrentTheme = this.getThemeId(this);
+		this.setTheme(this.mCurrentTheme);*/
+
 		setContentView(R.layout.activity_settings);
 	}
 
