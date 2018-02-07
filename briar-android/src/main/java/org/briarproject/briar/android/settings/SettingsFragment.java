@@ -97,7 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyVibration;
 	private CheckBoxPreference notifyLockscreen;
 	private Preference notifySound;
-	private ListPreference selectedTheme;
+	private Preference selectedTheme;
 
 
 	// Fields that are accessed from background threads must be volatile
@@ -144,6 +144,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		//Add listener to listPreference component
 		selectedTheme = (ListPreference) findPreference("pref_theme");
 		selectedTheme.setOnPreferenceChangeListener(this);*/
+
+		selectedTheme = findPreference("pref_them");
+		bindPreferenceSummaryToValue(selectedTheme);
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
@@ -196,6 +199,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		loadSettings();
 	}
 
+	private void bindPreferenceSummaryToValue(Preference preference) {
+		preference.setOnPreferenceChangeListener(this);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
+		String preferenceString = preferences.getString(preference.getKey(), "");
+		onPreferenceChange(preference, preferenceString);
+	}
 
 
 	@Override
@@ -333,6 +342,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			int themeSetting = Integer.valueOf((String) o);
 			storeThemeSettings(themeSetting);
 		}*/
+
+		String stringValue = o.toString();
+
+		if (preference instanceof ListPreference) {
+			ListPreference listPreference = (ListPreference) preference;
+			int prefIndex = listPreference.findIndexOfValue(stringValue);
+			if (prefIndex >= 0) {
+				CharSequence[] labels = listPreference.getEntries();
+				preference.setSummary(labels[prefIndex]);
+			}
+		} else {
+			preference.setSummary(stringValue);
+		}
 		return true;
 	}
 
