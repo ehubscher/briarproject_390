@@ -82,7 +82,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	public static final String BT_NAMESPACE = BluetoothConstants.ID.getString();
 	public static final String TOR_NAMESPACE = TorConstants.ID.getString();
 	// This is wrong but I haven't figured out what to set it to
-	public static final String THEME_NAMESPACE = "theme";
+	//public static final String THEME_NAMESPACE = "theme";
 
 	private static final Logger LOG =
 			Logger.getLogger(SettingsFragment.class.getName());
@@ -140,10 +140,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
 
-		/* ----------------- THEME ---------------------- */
+		/* ----------------- THEME ----------------------
 		//Add listener to listPreference component
 		selectedTheme = (ListPreference) findPreference("pref_theme");
-		selectedTheme.setOnPreferenceChangeListener(this);
+		selectedTheme.setOnPreferenceChangeListener(this);*/
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
@@ -197,6 +197,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	}
 
 
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -227,11 +228,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 				/*---- THEME ---*/
 				//Get theme settings from settingsManager
-				Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
-				//Store theme number
-				int themeSetting = themeSettings.getInt("pref_theme",1);
 
-				displaySettings(btSetting, torSetting, themeSetting);
+				//BACKUP
+				//Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
+				//Store theme number
+				//int themeSetting = themeSettings.getInt("pref_theme",1);
+
+
+
+				displaySettings(btSetting, torSetting);
 
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
@@ -239,18 +244,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		});
 	}
 
-	private void displaySettings(boolean btSetting, int torSetting, int themeSetting) {
+	private void displaySettings(boolean btSetting, int torSetting) {
 		listener.runOnUiThreadUnlessDestroyed(() -> {
 			enableBluetooth.setValue(Boolean.toString(btSetting));
 			torNetwork.setValue(Integer.toString(torSetting));
 			// Should be changed
-			if(themeSetting ==1){
+			/*if(themeSetting ==1){
 				selectedTheme.setValue("Default");
 			}else if(themeSetting==2){
 				selectedTheme.setValue("Dark");
 			}else if(themeSetting==3){
 				selectedTheme.setValue("Pastel");
-			}
+			}*/
 
 			notifyPrivateMessages.setChecked(settings.getBoolean(
 					PREF_NOTIFY_PRIVATE, true));
@@ -324,25 +329,23 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			Settings s = new Settings();
 			s.putBoolean(PREF_NOTIFY_LOCK_SCREEN, (Boolean) o);
 			storeSettings(s);
-		} else if(preference == selectedTheme){
+		} /*else if(preference == selectedTheme){
 			int themeSetting = Integer.valueOf((String) o);
 			storeThemeSettings(themeSetting);
-		}
+		}*/
 		return true;
 	}
 
 	/* ----------------- THEME ----------------------*/
 	private void storeThemeSettings(int selectedTheme){
-		/** Keeping this as a backup */
-		/*SharedPreferences preferences = this.getActivity().getSharedPreferences("settings.xml", Context.MODE_PRIVATE);
+		//Keeping this as a backup
+		SharedPreferences preferences = this.getActivity().getSharedPreferences("settings.xml", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.clear();
 		editor.putString("pref_theme",Integer.toString(selectedTheme));
 		editor.commit();
-		editor.apply()*/
 
 		/* Adding theme number to settingsManager*/
-		listener.runOnDbThread(() -> {
+		/*listener.runOnDbThread(() -> {
 			try {
 				Settings s = new Settings();
 				s.putInt("pref_theme", selectedTheme);
@@ -364,7 +367,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		getActivity().finish();
 		final Intent intent = getActivity().getIntent();
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		getActivity().startActivity(intent);
+		getActivity().startActivity(intent);*/
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {
