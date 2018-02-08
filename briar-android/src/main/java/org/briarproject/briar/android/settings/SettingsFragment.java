@@ -245,15 +245,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			enableBluetooth.setValue(Boolean.toString(btSetting));
 			torNetwork.setValue(Integer.toString(torSetting));
 			selectedTheme.setValue(Integer.toString(themeSetting));
-			// Should be changed
-			/*if(themeSetting ==1){
-				selectedTheme.setValue("Default");
-			}else if(themeSetting==2){
-				selectedTheme.setValue("Dark");
-			}else if(themeSetting==3){
-				selectedTheme.setValue("Pastel");
-			}*/
-
+			
 			notifyPrivateMessages.setChecked(settings.getBoolean(
 					PREF_NOTIFY_PRIVATE, true));
 
