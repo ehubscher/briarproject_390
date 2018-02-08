@@ -96,6 +96,9 @@
 		</activity>
 
 		<activity
+			android:name="org.briarproject.briar.android.activity.AppCompatActivity"></activity>
+
+		<activity
 			android:name="org.briarproject.briar.android.privategroup.creation.CreateGroupActivity"
 			android:label="@string/groups_create_group_title"
 			android:parentActivityName="org.briarproject.briar.android.navdrawer.NavDrawerActivity"

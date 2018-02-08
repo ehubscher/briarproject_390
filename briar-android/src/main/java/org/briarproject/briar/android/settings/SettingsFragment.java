@@ -2,14 +2,11 @@ package org.briarproject.briar.android.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.content.IntentCompat;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -81,8 +78,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	public static final String SETTINGS_NAMESPACE = "android-ui";
 	public static final String BT_NAMESPACE = BluetoothConstants.ID.getString();
 	public static final String TOR_NAMESPACE = TorConstants.ID.getString();
-	// This is wrong but I haven't figured out what to set it to
-	//public static final String THEME_NAMESPACE = "theme";
 
 	private static final Logger LOG =
 			Logger.getLogger(SettingsFragment.class.getName());
@@ -97,7 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyVibration;
 	private CheckBoxPreference notifyLockscreen;
 	private Preference notifySound;
-	private Preference selectedTheme;
+	private ListPreference selectedTheme;
 
 
 	// Fields that are accessed from background threads must be volatile
@@ -140,13 +135,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
 
-		/* ----------------- THEME ----------------------
+		/* ----------------- THEME ----------------------*/
 		//Add listener to listPreference component
 		selectedTheme = (ListPreference) findPreference("pref_theme");
-		selectedTheme.setOnPreferenceChangeListener(this);*/
-
-		selectedTheme = findPreference("pref_them");
-		bindPreferenceSummaryToValue(selectedTheme);
+		selectedTheme.setOnPreferenceChangeListener(this);
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
@@ -199,12 +191,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		loadSettings();
 	}
 
-	private void bindPreferenceSummaryToValue(Preference preference) {
-		preference.setOnPreferenceChangeListener(this);
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-		String preferenceString = preferences.getString(preference.getKey(), "");
-		onPreferenceChange(preference, preferenceString);
-	}
 
 
 	@Override
@@ -243,9 +229,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				//Store theme number
 				//int themeSetting = themeSettings.getInt("pref_theme",1);
 
+				Settings themeSettings = settingsManager.getSettings("theme");
+				int themeSetting = themeSettings.getInt("pref_theme", 1);
 
-
-				displaySettings(btSetting, torSetting);
+				displaySettings(btSetting, torSetting, themeSetting);
 
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
@@ -253,10 +240,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		});
 	}
 
-	private void displaySettings(boolean btSetting, int torSetting) {
+	private void displaySettings(boolean btSetting, int torSetting, int themeSetting) {
 		listener.runOnUiThreadUnlessDestroyed(() -> {
 			enableBluetooth.setValue(Boolean.toString(btSetting));
 			torNetwork.setValue(Integer.toString(torSetting));
+			selectedTheme.setValue(Integer.toString(themeSetting));
 			// Should be changed
 			/*if(themeSetting ==1){
 				selectedTheme.setValue("Default");
@@ -338,42 +326,30 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			Settings s = new Settings();
 			s.putBoolean(PREF_NOTIFY_LOCK_SCREEN, (Boolean) o);
 			storeSettings(s);
-		} /*else if(preference == selectedTheme){
+		} else if(preference == selectedTheme){
 			int themeSetting = Integer.valueOf((String) o);
 			storeThemeSettings(themeSetting);
-		}*/
-
-		String stringValue = o.toString();
-
-		if (preference instanceof ListPreference) {
-			ListPreference listPreference = (ListPreference) preference;
-			int prefIndex = listPreference.findIndexOfValue(stringValue);
-			if (prefIndex >= 0) {
-				CharSequence[] labels = listPreference.getEntries();
-				preference.setSummary(labels[prefIndex]);
-			}
-		} else {
-			preference.setSummary(stringValue);
 		}
+
 		return true;
 	}
 
 	/* ----------------- THEME ----------------------*/
-	private void storeThemeSettings(int selectedTheme){
+	private void storeThemeSettings(int theme){
 		//Keeping this as a backup
-		SharedPreferences preferences = this.getActivity().getSharedPreferences("settings.xml", Context.MODE_PRIVATE);
+		/*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(selectedTheme.getContext());
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putString("pref_theme",Integer.toString(selectedTheme));
-		editor.commit();
+		editor.putString("pref_theme",Integer.toString(theme));
+		editor.commit();*/
 
 		/* Adding theme number to settingsManager*/
-		/*listener.runOnDbThread(() -> {
+		listener.runOnDbThread(() -> {
 			try {
 				Settings s = new Settings();
-				s.putInt("pref_theme", selectedTheme);
+				s.putInt("pref_theme", theme);
 				long now = System.currentTimeMillis();
 				//Again, THEME_NAMESPACE is probably wrong
-				settingsManager.mergeSettings(s, THEME_NAMESPACE);
+				settingsManager.mergeSettings(s, "theme");
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
 					LOG.info("Merging settings took " + duration + " ms");
@@ -383,13 +359,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		});
 
 		//Popup to see that method was executed
-		Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
+		//Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
 
 		//Close activity & restart it
-		getActivity().finish();
-		final Intent intent = getActivity().getIntent();
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		getActivity().startActivity(intent);*/
+		//getActivity().finish();
+		//final Intent intent = getActivity().getIntent();
+		//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		//getActivity().startActivity(intent);
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {

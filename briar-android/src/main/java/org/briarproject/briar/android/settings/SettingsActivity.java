@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.ListPreference;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -18,7 +20,7 @@ import org.briarproject.briar.android.activity.BriarActivity;
 
 public class SettingsActivity extends BriarActivity {
 
-	//private int mCurrentTheme;
+	private int mCurrentTheme;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -30,7 +32,7 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		SharedPreferences sharedPrefs =
+		/*SharedPreferences sharedPrefs =
 				PreferenceManager.getDefaultSharedPreferences(this);
 		String themes = sharedPrefs.getString("pref_theme", "");
 		switch (themes) {
@@ -42,11 +44,11 @@ public class SettingsActivity extends BriarActivity {
 				break;
 			case "Pastel":
 				setTheme(android.R.style.Theme_Holo_Light);
-		}
+		}*/
 
 
-		/*this.mCurrentTheme = this.getThemeId(this);
-		this.setTheme(this.mCurrentTheme);*/
+		this.mCurrentTheme = this.getThemeId(this);
+		this.setTheme(this.mCurrentTheme);
 
 		setContentView(R.layout.activity_settings);
 	}
@@ -54,10 +56,13 @@ public class SettingsActivity extends BriarActivity {
 	@Override
 	public void onBackPressed()
 	{
-		Intent intent = new Intent(this, BriarActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-		finish();
+		Toast.makeText(this,"Saved",Toast.LENGTH_LONG).show();
+
+		//Close activity & restart it
+		this.finish();
+		final Intent intent = this.getIntent();
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		this.startActivity(intent);
 	}
 
 
@@ -65,15 +70,15 @@ public class SettingsActivity extends BriarActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		/*int newTheme = this.getThemeId(this);
+		int newTheme = this.getThemeId(this);
 		if(this.mCurrentTheme != newTheme) {
 			this.finish();
 			this.startActivity(new Intent(this, this.getClass()));
-		}*/
+		}
 
 	}
 
-	/*public int getThemeId(Context context) {
+	public int getThemeId(Context context) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
 
@@ -85,7 +90,7 @@ public class SettingsActivity extends BriarActivity {
 
 		// default
 		return R.style.BriarTheme;
-	}*/
+	}
 
 
 	@Override
@@ -96,7 +101,7 @@ public class SettingsActivity extends BriarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			onBackPressed();
+			super.onBackPressed();
 			return true;
 		}
 		return false;
