@@ -245,7 +245,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			enableBluetooth.setValue(Boolean.toString(btSetting));
 			torNetwork.setValue(Integer.toString(torSetting));
 			selectedTheme.setValue(Integer.toString(themeSetting));
-			
+
 			notifyPrivateMessages.setChecked(settings.getBoolean(
 					PREF_NOTIFY_PRIVATE, true));
 
@@ -351,13 +351,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		});
 
 		//Popup to see that method was executed
-		//Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
+		Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
 
-		//Close activity & restart it
-		//getActivity().finish();
-		//final Intent intent = getActivity().getIntent();
-		//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		//getActivity().startActivity(intent);
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {

@@ -32,7 +32,7 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		/*SharedPreferences sharedPrefs =
+		SharedPreferences sharedPrefs =
 				PreferenceManager.getDefaultSharedPreferences(this);
 		String themes = sharedPrefs.getString("pref_theme", "");
 		switch (themes) {
@@ -44,7 +44,7 @@ public class SettingsActivity extends BriarActivity {
 				break;
 			case "Pastel":
 				setTheme(android.R.style.Theme_Holo_Light);
-		}*/
+		}
 
 
 		this.mCurrentTheme = this.getThemeId(this);
