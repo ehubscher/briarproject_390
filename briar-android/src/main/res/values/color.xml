@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- Main color for the app -->
-	<color name="briar_blue">#2D3E50</color>
+	<color name="briar_blue">#e2c565</color>
 	<color name="briar_blue_dark">#0F1720</color>
 	<color name="briar_gold">#FCCF1C</color>
 	<color name="briar_green_light">#95D220</color>
