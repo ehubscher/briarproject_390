@@ -12,7 +12,6 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.Toast;
-
 import org.acra.ACRA;
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.event.Event;
@@ -32,7 +31,6 @@ import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.util.UserFeedback;
 import org.briarproject.briar.api.test.TestDataCreator;
-
 
 import java.util.logging.Logger;
 
@@ -223,12 +221,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 				/*---- THEME ---*/
 				//Get theme settings from settingsManager
-
-				//BACKUP
-				//Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
-				//Store theme number
-				//int themeSetting = themeSettings.getInt("pref_theme",1);
-
 				Settings themeSettings = settingsManager.getSettings("theme");
 				int themeSetting = themeSettings.getInt("pref_theme", 1);
 
@@ -328,11 +320,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 	/* ----------------- THEME ----------------------*/
 	private void storeThemeSettings(int theme){
-		//Keeping this as a backup
-		/*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(selectedTheme.getContext());
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.putString("pref_theme",Integer.toString(theme));
-		editor.commit();*/
 
 		/* Adding theme number to settingsManager*/
 		listener.runOnDbThread(() -> {
@@ -340,7 +327,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				Settings s = new Settings();
 				s.putInt("pref_theme", theme);
 				long now = System.currentTimeMillis();
-				//Again, THEME_NAMESPACE is probably wrong
 				settingsManager.mergeSettings(s, "theme");
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))

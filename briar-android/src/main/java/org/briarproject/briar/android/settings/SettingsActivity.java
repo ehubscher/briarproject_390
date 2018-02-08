@@ -32,39 +32,11 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		SharedPreferences sharedPrefs =
-				PreferenceManager.getDefaultSharedPreferences(this);
-		String themes = sharedPrefs.getString("pref_theme", "");
-		switch (themes) {
-			case "Default":
-				setTheme(R.style.BriarTheme);
-				break;
-			case "Dark":
-				setTheme(android.R.style.Theme_Black);
-				break;
-			case "Pastel":
-				setTheme(android.R.style.Theme_Holo_Light);
-		}
-
-
 		this.mCurrentTheme = this.getThemeId(this);
 		this.setTheme(this.mCurrentTheme);
 
 		setContentView(R.layout.activity_settings);
 	}
-
-	@Override
-	public void onBackPressed()
-	{
-		Toast.makeText(this,"Saved",Toast.LENGTH_LONG).show();
-
-		//Close activity & restart it
-		this.finish();
-		final Intent intent = this.getIntent();
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		this.startActivity(intent);
-	}
-
 
 
 	@Override
@@ -82,9 +54,9 @@ public class SettingsActivity extends BriarActivity {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
 
-		if (theme.equals("2")) {
-			return android.R.style.Theme_Holo;
-		} else if (theme.equals("3")) {
+		if (theme.equals("theme_dark")) {
+			return android.R.style.Theme_Black;
+		} else if (theme.equals("theme_pastel")) {
 			return android.R.style.Theme_Holo_Light;
 		}
 
