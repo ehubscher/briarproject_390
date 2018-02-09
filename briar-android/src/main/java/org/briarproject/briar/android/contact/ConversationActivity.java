@@ -3,7 +3,9 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -147,6 +149,8 @@ public class ConversationActivity extends BriarActivity
 	private TextInputView textInputView;
 	private ImageButton imageButton;
 	final Context context = this;
+	private static int RESULT_LOAD_IMAGE = 1;
+	ImageView selectedImage;
 
 	private final ListenableFutureTask<String> contactNameTask =
 			new ListenableFutureTask<>(new Callable<String>() {
@@ -221,30 +225,26 @@ public class ConversationActivity extends BriarActivity
 		textInputView = findViewById(R.id.text_input_container);
 		textInputView.setListener(this);
 
+//		selectedImage = findViewById(R.id.select_image_from_browsing);
+//		selectedImage.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//
+//				//TODO What do we need to do on click here?
+//			}
+//		});
+
+
 		//the add_image button
-		imageButton = findViewById(R.id.add_image);
+		imageButton = findViewById(R.id.open_image_browser);
 
 		//the listener
 		imageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-			    //TODO Replace this with an open Image selector dialog box
-				android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
-				alertDialogBuilder.setTitle("TESTING IMAGE");
-				alertDialogBuilder.setMessage("Click yes to exit!")
-						.setCancelable(false)
-						.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								ConversationActivity.this.finish();
-							}
-						}).setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-				android.app.AlertDialog alertDialog = alertDialogBuilder.create();
-				alertDialog.show();
+					Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+							MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+					startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
 			}
 		});
 	}
@@ -264,6 +264,11 @@ public class ConversationActivity extends BriarActivity
 			snackbar.getView().setBackgroundResource(R.color.briar_primary);
 			snackbar.show();
 		}
+//
+//		if (request == RESULT_LOAD_IMAGE && request == RESULT_OK && null != data) {
+//			Uri selectedImageUri = data.getData();
+//			selectedImage.setImageURI(selectedImageUri);
+//		}
 	}
 
 	@Override

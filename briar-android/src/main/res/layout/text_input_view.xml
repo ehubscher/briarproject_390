@@ -16,7 +16,7 @@
 		android:layout_height="wrap_content">
 
 		<ImageButton
-			android:id="@+id/add_image"
+			android:id="@+id/open_image_browser"
 			android:layout_width="@dimen/text_input_height"
 			android:layout_height="@dimen/text_input_height"
 			app:srcCompat="@android:drawable/ic_menu_camera"
