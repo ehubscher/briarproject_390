@@ -149,6 +149,7 @@ public class ConversationActivity extends BriarActivity
 	private TextInputView textInputView;
 	private ImageButton imageButton;
 	final Context context = this;
+    public static final int PICK_IMAGE = 1;
 	private static int RESULT_LOAD_IMAGE = 1;
 	ImageView selectedImage;
 
@@ -234,19 +235,21 @@ public class ConversationActivity extends BriarActivity
 //			}
 //		});
 
+        //the add_image button
+        imageButton = findViewById(R.id.open_image_browser);
 
-		//the add_image button
-		imageButton = findViewById(R.id.open_image_browser);
+        //the listener
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-		//the listener
-		imageButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-					Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-					startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-			}
-		});
+                //TODO Add a on activityResult thing
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            }
+        });
 	}
 
 	@Override
