@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -143,6 +145,8 @@ public class ConversationActivity extends BriarActivity
 	private TextView toolbarTitle;
 	private BriarRecyclerView list;
 	private TextInputView textInputView;
+	private ImageButton imageButton;
+	final Context context = this;
 
 	private final ListenableFutureTask<String> contactNameTask =
 			new ListenableFutureTask<>(new Callable<String>() {
@@ -216,6 +220,33 @@ public class ConversationActivity extends BriarActivity
 
 		textInputView = findViewById(R.id.text_input_container);
 		textInputView.setListener(this);
+
+		//the add_image button
+		imageButton = findViewById(R.id.add_image);
+
+		//the listener
+		imageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			    //TODO Replace this with an open Image selector dialog box
+				android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+				alertDialogBuilder.setTitle("TESTING IMAGE");
+				alertDialogBuilder.setMessage("Click yes to exit!")
+						.setCancelable(false)
+						.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								ConversationActivity.this.finish();
+							}
+						}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+				android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+			}
+		});
 	}
 
 	@Override
