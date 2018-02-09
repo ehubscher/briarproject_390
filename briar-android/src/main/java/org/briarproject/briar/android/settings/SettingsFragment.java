@@ -65,6 +65,8 @@ import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF
 import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF_NOTIFY_SOUND;
 import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF_NOTIFY_VIBRATION;
 
+/*File to modify for user story #27*/
+
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
 public class SettingsFragment extends PreferenceFragmentCompat
