@@ -20,7 +20,7 @@ import org.briarproject.briar.android.activity.BriarActivity;
 
 public class SettingsActivity extends BriarActivity {
 
-	private int mCurrentTheme;
+	//private int mCurrentTheme;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -32,8 +32,8 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		this.mCurrentTheme = this.getThemeId(this);
-		this.setTheme(this.mCurrentTheme);
+		//this.mCurrentTheme = this.getThemeId(this);
+		//this.setTheme(this.mCurrentTheme);
 
 		setContentView(R.layout.activity_settings);
 	}
@@ -42,15 +42,15 @@ public class SettingsActivity extends BriarActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		int newTheme = this.getThemeId(this);
-		if(this.mCurrentTheme != newTheme) {
+		//int newTheme = this.getThemeId(this);
+		/*if(this.mCurrentTheme != newTheme) {
 			this.finish();
 			this.startActivity(new Intent(this, this.getClass()));
-		}
+		}*/
 
 	}
 
-	public int getThemeId(Context context) {
+	/*public int getThemeId(Context context) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
 
@@ -62,7 +62,7 @@ public class SettingsActivity extends BriarActivity {
 
 		// default
 		return R.style.BriarTheme;
-	}
+	}*/
 
 
 	@Override

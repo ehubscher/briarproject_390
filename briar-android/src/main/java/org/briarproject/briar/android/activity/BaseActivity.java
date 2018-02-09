@@ -56,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity
 	private static final Logger LOG2 =
 			Logger.getLogger(SettingsFragment.class.getName());
 	private SettingsActivity listener2;
+	@Inject
 	volatile SettingsManager settingsManager2;
 
 
@@ -69,6 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
 	public abstract void injectActivity(ActivityComponent component);
+	private int themePref;
+
 
 	public void addLifecycleController(ActivityLifecycleController alc) {
 		lifecycleControllers.add(alc);
@@ -287,31 +290,22 @@ public abstract class BaseActivity extends AppCompatActivity
 		showScreenFilterWarning();
 	}
 
+
 	public int setTheme() {
 
-		try {
-			Settings themeSettings = settingsManager2.getSettings("theme");
-			int themeSetting = themeSettings.getInt("pref_theme", 1);
-			return themeSetting;
-		}catch (DbException e){
-			if (LOG2.isLoggable(WARNING)) LOG2.log(WARNING, e.toString(), e);
-		}
+		//listener 2 needs to be instantiated. consider renaming preftheme and listener2
 
-		return 1;
-
-		/*
 		listener2.runOnDbThread(() -> {
 			try {
-				Settings themeSettings = settingsManager2.getSettings("theme");
-				themeSetting = themeSettings.getInt("pref_theme", 1);
+				final Settings themeSettings = settingsManager2.getSettings("theme");
 
+				themePref = themeSettings.getInt("pref_theme", 1);
 
 			} catch (DbException e) {
 				if (LOG2.isLoggable(WARNING)) LOG2.log(WARNING, e.toString(), e);
 			}
 		});
-
-		return themeSetting; */
+		return this.themePref;
 
 	}
 }
