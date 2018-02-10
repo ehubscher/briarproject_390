@@ -1,6 +1,7 @@
 package org.briarproject.briar.android.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -57,7 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity
 			Logger.getLogger(SettingsFragment.class.getName());
 	private SettingsActivity listener2;
 	@Inject
-	volatile SettingsManager settingsManager2;
+	volatile SettingsManager settingsManager;
 
 
 	@Inject
@@ -70,7 +71,8 @@ public abstract class BaseActivity extends AppCompatActivity
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
 	public abstract void injectActivity(ActivityComponent component);
-	private int themePref;
+	//private int themePref;
+	private int mCurrentTheme;
 
 
 	public void addLifecycleController(ActivityLifecycleController alc) {
@@ -95,17 +97,20 @@ public abstract class BaseActivity extends AppCompatActivity
 
 
 		/* THEME */
-		int theme= setTheme();
+		this.mCurrentTheme = getThemeId(this);
 
-		if (theme == 2) {
+		if (mCurrentTheme == 2) {
 			setTheme(android.R.style.Theme_Holo);
-		} else if (theme == 3) {
+		} else if (mCurrentTheme == 3) {
 			setTheme(android.R.style.Theme_Holo_Light);
-		}else{
+		} else {
 			setTheme(R.style.BriarTheme);
 		}
 
-		//setTheme(android.R.style.Theme_Holo);
+		setTheme(android.R.style.Theme_Holo);
+
+		/*this.mCurrentTheme = this.getThemeId(this);
+		this.setTheme(this.mCurrentTheme);*/
 
 		if (PREVENT_SCREENSHOTS) getWindow().addFlags(FLAG_SECURE);
 
@@ -123,6 +128,22 @@ public abstract class BaseActivity extends AppCompatActivity
 		for (ActivityLifecycleController alc : lifecycleControllers) {
 			alc.onActivityCreate(this);
 		}
+
+
+	}
+
+	public int getThemeId(Context context) {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
+
+		if (theme.equals("theme_dark")) {
+			return R.style.DarkTheme;
+		} else if (theme.equals("theme_pastel")) {
+			return R.style.PastelTheme;
+		}
+
+		// default
+		return R.style.BriarTheme;
 	}
 
 	public ActivityComponent getActivityComponent() {
@@ -141,6 +162,11 @@ public abstract class BaseActivity extends AppCompatActivity
 	@Override
 	protected void onStart() {
 		super.onStart();
+		int newTheme = this.getThemeId(this);
+		if(this.mCurrentTheme != newTheme) {
+			this.finish();
+			this.startActivity(new Intent(this, this.getClass()));
+		}
 		for (ActivityLifecycleController alc : lifecycleControllers) {
 			alc.onActivityStart();
 		}
@@ -291,13 +317,12 @@ public abstract class BaseActivity extends AppCompatActivity
 	}
 
 
-	public int setTheme() {
+	/*public int setTheme() {
 
 		//listener 2 needs to be instantiated. consider renaming preftheme and listener2
-
 		listener2.runOnDbThread(() -> {
 			try {
-				final Settings themeSettings = settingsManager2.getSettings("theme");
+				final Settings themeSettings = settingsManager.getSettings("theme");
 
 				themePref = themeSettings.getInt("pref_theme", 1);
 
@@ -307,5 +332,5 @@ public abstract class BaseActivity extends AppCompatActivity
 		});
 		return this.themePref;
 
-	}
+	}*/
 }
