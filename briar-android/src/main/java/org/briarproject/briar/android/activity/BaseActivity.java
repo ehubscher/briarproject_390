@@ -82,32 +82,24 @@ public abstract class BaseActivity extends AppCompatActivity
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 
-		/*
-		Settings s = new Settings();
-		Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
-		String themeSetting = themeSettings.getInt();*/
-
-		/*if (theme.equals("2")) {
-			setTheme(android.R.style.Theme_Holo);
-		} else if (theme.equals("3")) {
-			 setTheme(android.R.style.Theme_Holo_Light);
-		}*/
-
 		super.onCreate(savedInstanceState);
 
-
 		/* THEME */
+
+		//Getting the selected theme from the user
 		this.mCurrentTheme = getThemeId(this);
 
+		//Setting the theme accordingly and trying to resolve windowActionBar error, but not working
 		if (mCurrentTheme == 2) {
-			setTheme(android.R.style.Theme_Holo);
+			setTheme(R.style.DarkTheme_NoActionBar);
 		} else if (mCurrentTheme == 3) {
-			setTheme(android.R.style.Theme_Holo_Light);
+			setTheme(R.style.PastelTheme_NoActionBar);
 		} else {
 			setTheme(R.style.BriarTheme);
 		}
 
-		setTheme(android.R.style.Theme_Holo);
+
+		//This is not working either
 
 		/*this.mCurrentTheme = this.getThemeId(this);
 		this.setTheme(this.mCurrentTheme);*/
@@ -163,6 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity
 	protected void onStart() {
 		super.onStart();
 		int newTheme = this.getThemeId(this);
+
 		if(this.mCurrentTheme != newTheme) {
 			this.finish();
 			this.startActivity(new Intent(this, this.getClass()));
@@ -317,9 +310,9 @@ public abstract class BaseActivity extends AppCompatActivity
 	}
 
 
+	//I don't think we will be able to use this method. I can't find how to initialize listener2 in a way that makes sense.
 	/*public int setTheme() {
 
-		//listener 2 needs to be instantiated. consider renaming preftheme and listener2
 		listener2.runOnDbThread(() -> {
 			try {
 				final Settings themeSettings = settingsManager.getSettings("theme");
