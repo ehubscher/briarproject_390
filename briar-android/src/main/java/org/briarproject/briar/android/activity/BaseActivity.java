@@ -54,9 +54,6 @@ public abstract class BaseActivity extends AppCompatActivity
 		implements DestroyableContext, OnTapFilteredListener {
 
 	/* ----FOR THEME----*/
-	private static final Logger LOG2 =
-			Logger.getLogger(SettingsFragment.class.getName());
-	private SettingsActivity listener2;
 	@Inject
 	volatile SettingsManager settingsManager;
 
@@ -71,7 +68,6 @@ public abstract class BaseActivity extends AppCompatActivity
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
 	public abstract void injectActivity(ActivityComponent component);
-	//private int themePref;
 	private int mCurrentTheme;
 
 

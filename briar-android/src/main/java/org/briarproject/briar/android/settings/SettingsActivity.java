@@ -1,15 +1,12 @@
 package org.briarproject.briar.android.settings;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.ListPreference;
+
 import android.view.MenuItem;
-import android.widget.Toast;
+
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -20,7 +17,6 @@ import org.briarproject.briar.android.activity.BriarActivity;
 
 public class SettingsActivity extends BriarActivity {
 
-	//private int mCurrentTheme;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -32,9 +28,6 @@ public class SettingsActivity extends BriarActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		//this.mCurrentTheme = this.getThemeId(this);
-		//this.setTheme(this.mCurrentTheme);
-
 		setContentView(R.layout.activity_settings);
 	}
 
@@ -42,27 +35,8 @@ public class SettingsActivity extends BriarActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		//int newTheme = this.getThemeId(this);
-		/*if(this.mCurrentTheme != newTheme) {
-			this.finish();
-			this.startActivity(new Intent(this, this.getClass()));
-		}*/
 
 	}
-
-	/*public int getThemeId(Context context) {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
-
-		if (theme.equals("theme_dark")) {
-			return android.R.style.Theme_Black;
-		} else if (theme.equals("theme_pastel")) {
-			return android.R.style.Theme_Holo_Light;
-		}
-
-		// default
-		return R.style.BriarTheme;
-	}*/
 
 
 	@Override
