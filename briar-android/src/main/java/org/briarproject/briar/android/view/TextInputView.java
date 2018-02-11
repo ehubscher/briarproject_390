@@ -130,8 +130,14 @@ public class TextInputView extends KeyboardAwareLinearLayout
 		}
 	}
 
+	//check if the string is a Base64 encoded string
+	public boolean isBase64(String string){
+	    String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+	    return string.matches(pattern);
+    }
+
 	public void setText(String text) {
-		ui.editText.setText(text);
+	    ui.editText.setText(text);
 	}
 
 	public Editable getText() {
