@@ -2,6 +2,7 @@ package org.briarproject.briar.android.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,9 @@ import android.view.Gravity;
 import android.view.Window;
 import android.widget.CheckBox;
 
+import org.briarproject.bramble.api.db.DbException;
+import org.briarproject.bramble.api.settings.Settings;
+import org.briarproject.bramble.api.settings.SettingsManager;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.controller.BriarController;
 import org.briarproject.briar.android.controller.DbController;
@@ -29,6 +33,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 import static android.os.Build.MANUFACTURER;
 import static android.os.Build.VERSION.SDK_INT;
+import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_DOZE_WHITELISTING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PASSWORD;
 import static org.briarproject.briar.android.util.UiUtils.getDozeWhitelistingIntent;
@@ -48,6 +53,15 @@ public abstract class BriarActivity extends BaseActivity {
 	@Deprecated
 	@Inject
 	DbController dbController;
+
+	@Inject
+	volatile SettingsManager settingsManager;
+
+	@Override
+	public void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+		fetchThemeId();
+	}
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent data) {
@@ -178,5 +192,30 @@ public abstract class BriarActivity extends BaseActivity {
 	@Deprecated
 	protected void finishOnUiThread() {
 		runOnUiThreadUnlessDestroyed(this::supportFinishAfterTransition);
+	}
+
+	public void fetchThemeId() {
+
+		runOnDbThread(() -> {
+		try {
+			Settings themeSettings = settingsManager.getSettings("theme");
+			int themeSetting = themeSettings.getInt("pref_theme", 1);
+			switchTheme(themeSetting);
+
+		} catch (DbException e) {
+			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+		}
+		});
+
+	}
+
+	public void switchTheme(int theme){
+		if (theme == 2) {
+			setTheme(android.R.style.Theme_Holo);
+		} else if (theme == 3) {
+			setTheme(android.R.style.Theme_Holo_Light);
+		}else{
+			setTheme(R.style.BriarTheme);
+		}
 	}
 }

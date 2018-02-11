@@ -1,7 +1,6 @@
 package org.briarproject.briar.android.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -53,11 +52,6 @@ import static org.briarproject.briar.android.TestingConstants.PREVENT_SCREENSHOT
 public abstract class BaseActivity extends AppCompatActivity
 		implements DestroyableContext, OnTapFilteredListener {
 
-	/* ----FOR THEME----*/
-	@Inject
-	volatile SettingsManager settingsManager;
-
-
 	@Inject
 	protected ScreenFilterMonitor screenFilterMonitor;
 
@@ -68,8 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
 	public abstract void injectActivity(ActivityComponent component);
-	private int mCurrentTheme;
-
 
 	public void addLifecycleController(ActivityLifecycleController alc) {
 		lifecycleControllers.add(alc);
@@ -78,27 +70,31 @@ public abstract class BaseActivity extends AppCompatActivity
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 
+		/*
+		Settings s = new Settings();
+		Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
+		String themeSetting = themeSettings.getInt();*/
+
+		/*if (theme.equals("2")) {
+			setTheme(android.R.style.Theme_Holo);
+		} else if (theme.equals("3")) {
+			 setTheme(android.R.style.Theme_Holo_Light);
+		}*/
+
 		super.onCreate(savedInstanceState);
 
-		/* THEME */
 
-		//Getting the selected theme from the user
-		this.mCurrentTheme = getThemeId(this);
+		//setTheme(android.R.style.Theme_Holo);
 
-		//Setting the theme accordingly and trying to resolve windowActionBar error, but not working
-		if (mCurrentTheme == 2) {
-			setTheme(R.style.DarkTheme_NoActionBar);
-		} else if (mCurrentTheme == 3) {
-			setTheme(R.style.PastelTheme_NoActionBar);
-		} else {
+		/*if (theme == 2) {
+			setTheme(android.R.style.Theme_Holo);
+		} else if (theme == 3) {
+			setTheme(android.R.style.Theme_Holo_Light);
+		}else{
 			setTheme(R.style.BriarTheme);
-		}
+		}*/
 
-
-		//This is not working either
-
-		/*this.mCurrentTheme = this.getThemeId(this);
-		this.setTheme(this.mCurrentTheme);*/
+		//setTheme(android.R.style.Theme_Holo);
 
 		if (PREVENT_SCREENSHOTS) getWindow().addFlags(FLAG_SECURE);
 
@@ -116,22 +112,6 @@ public abstract class BaseActivity extends AppCompatActivity
 		for (ActivityLifecycleController alc : lifecycleControllers) {
 			alc.onActivityCreate(this);
 		}
-
-
-	}
-
-	public int getThemeId(Context context) {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String theme = settings.getString(context.getResources().getString(R.string.pref_theme),"");
-
-		if (theme.equals("theme_dark")) {
-			return R.style.DarkTheme;
-		} else if (theme.equals("theme_pastel")) {
-			return R.style.PastelTheme;
-		}
-
-		// default
-		return R.style.BriarTheme;
 	}
 
 	public ActivityComponent getActivityComponent() {
@@ -150,12 +130,6 @@ public abstract class BaseActivity extends AppCompatActivity
 	@Override
 	protected void onStart() {
 		super.onStart();
-		int newTheme = this.getThemeId(this);
-
-		if(this.mCurrentTheme != newTheme) {
-			this.finish();
-			this.startActivity(new Intent(this, this.getClass()));
-		}
 		for (ActivityLifecycleController alc : lifecycleControllers) {
 			alc.onActivityStart();
 		}
@@ -306,20 +280,4 @@ public abstract class BaseActivity extends AppCompatActivity
 	}
 
 
-	//I don't think we will be able to use this method. I can't find how to initialize listener2 in a way that makes sense.
-	/*public int setTheme() {
-
-		listener2.runOnDbThread(() -> {
-			try {
-				final Settings themeSettings = settingsManager.getSettings("theme");
-
-				themePref = themeSettings.getInt("pref_theme", 1);
-
-			} catch (DbException e) {
-				if (LOG2.isLoggable(WARNING)) LOG2.log(WARNING, e.toString(), e);
-			}
-		});
-		return this.themePref;
-
-	}*/
 }
