@@ -339,6 +339,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		//Popup to see that method was executed
 		Toast.makeText(this.getActivity(),"Saved",Toast.LENGTH_LONG).show();
 
+		this.getActivity().recreate();
+
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {

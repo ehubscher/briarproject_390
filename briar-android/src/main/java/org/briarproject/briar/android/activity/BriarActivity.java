@@ -197,23 +197,23 @@ public abstract class BriarActivity extends BaseActivity {
 	public void fetchThemeId() {
 
 		runOnDbThread(() -> {
-		try {
-			Settings themeSettings = settingsManager.getSettings("theme");
-			int themeSetting = themeSettings.getInt("pref_theme", 1);
-			switchTheme(themeSetting);
+			try {
+				Settings themeSettings = settingsManager.getSettings("theme");
+				int themeSetting = themeSettings.getInt("pref_theme", 1);
+				switchTheme(themeSetting);
 
-		} catch (DbException e) {
-			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
-		}
+			} catch (DbException e) {
+				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+			}
 		});
 
 	}
 
 	public void switchTheme(int theme){
 		if (theme == 2) {
-			setTheme(android.R.style.Theme_Holo);
+			setTheme(R.style.DarkTheme);
 		} else if (theme == 3) {
-			setTheme(android.R.style.Theme_Holo_Light);
+			setTheme(R.style.PastelTheme);
 		}else{
 			setTheme(R.style.BriarTheme);
 		}

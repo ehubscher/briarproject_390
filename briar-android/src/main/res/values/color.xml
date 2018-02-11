@@ -4,6 +4,10 @@
 	<color name="briar_blue_dark">#0F1720</color>
 	<color name="briar_gold">#FCCF1C</color>
 	<color name="briar_green_light">#95D220</color>
+	<color name="briar_pink">#ffc6f9</color>
+	<color name="briar_yellow">#ffffba</color>
+	<color name="briar_blue_light">#bae1ff</color>
+	<color name ="briare_peach">#ffdfba</color>
 
 	<color name="window_background">#eceff1</color>
 	<color name="action_bar_text">#FFFFFF</color>

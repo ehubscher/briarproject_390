@@ -27,10 +27,10 @@
 	<style name="DarkTheme" parent="BriarTheme">
 		<item name="colorPrimary">@color/briar_blue_dark</item>
 		<item name="colorPrimaryDark">@color/briar_primary_dark</item>
-		<item name="colorAccent">@color/briar_accent</item>
-		<item name="colorControlNormal">@color/control_normal_light</item>
+		<item name="colorAccent">@color/window_background</item>
+		<item name="colorControlNormal">@color/private_message_date</item>
 		<item name="android:textColorLink">@color/briar_text_link</item>
-		<item name="android:windowBackground">@color/window_background</item>
+		<item name="android:windowBackground">@color/control_normal_light</item>
 		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
 
 		<!-- These fix a long-standing UI bug in the support preference library -->
@@ -44,12 +44,12 @@
 		<item name="toolbarStyle">@style/BriarToolbar</item>
 	</style>
 
-	<style name="PastelTheme" parent="BriarTheme">
-		<item name="colorPrimary">@color/briar_gold</item>
-		<item name="colorPrimaryDark">@color/briar_green_light</item>
-		<item name="colorAccent">@color/briar_accent</item>
+	<style name="PastelTheme" parent="Theme.AppCompat.Light">
+		<item name="colorPrimary">@color/briar_yellow</item>
+		<item name="colorPrimaryDark">@color/briar_pink</item>
+		<item name="colorAccent">@color/control_normal_light</item>
 		<item name="colorControlNormal">@color/control_normal_light</item>
-		<item name="android:textColorLink">@color/briar_text_link</item>
+		<item name="android:textColorLink">@color/briar_blue_light</item>
 		<item name="android:windowBackground">@color/window_background</item>
 		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
 
