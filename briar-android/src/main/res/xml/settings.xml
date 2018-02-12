@@ -2,6 +2,10 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--this should be moved back down, only for speeding up testing-->
+	<Preference
+		android:key="pref_key_test_data"
+		android:title="Create Test Data"/>
 	<PreferenceCategory
 		android:title="@string/network_settings_title">
 
@@ -138,9 +142,5 @@
 			android:title="@string/send_feedback"/>
 
 	</PreferenceCategory>
-
-	<Preference
-		android:key="pref_key_test_data"
-		android:title="Create Test Data"/>
 
 </PreferenceScreen>
