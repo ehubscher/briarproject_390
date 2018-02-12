@@ -8,3 +8,6 @@ https://github.com/jhubscher/briarproject_390/wiki
 
 See the project progress sprint by sprint here:
 https://github.com/jhubscher/briarproject_390/projects
+
+Official Project location:
+https://code.briarproject.org/akwizgran/briar
