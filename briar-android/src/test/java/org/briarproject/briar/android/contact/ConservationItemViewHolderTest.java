@@ -1,19 +1,25 @@
 package org.briarproject.briar.android.contact;
 
-import org.briarproject.briar.android.TestBriarApplication;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import junit.framework.Assert;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21, application = TestBriarApplication.class,
-        packageName = "org.briarproject.briar")
+import org.junit.Test;
+import org.mockito.Mockito;
+
+//@RunWith(RobolectricTestRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
+//@Config(sdk = 21, application = TestBriarApplication.class,
+//        packageName = "org.briarproject.briar")
 public class ConservationItemViewHolderTest {
 
     @Test
     public void testBindMethodWithImageTagInBody(){
-        //Create test ConservationItem with test body that starts with "ImageTag:"
-        //Check if returned value of decodedImage is same as real image
+
+        ConversationItem ci = Mockito.mock(ConversationItem.class);
+        ci.body = "Image:";
+
+        ConversationItemViewHolder civh = Mockito.mock(ConversationItemViewHolder.class);
+        civh.bind(ci);
+
+        Assert.assertEquals(ci.getBody(), civh.getText());
     }
 }
