@@ -15,6 +15,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.briarproject.briar.R;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
@@ -130,11 +132,14 @@ public class TextInputView extends KeyboardAwareLinearLayout
 		}
 	}
 
-	//check if the string is a Base64 encoded string
-	public boolean isBase64(String string){
-	    String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
-	    return string.matches(pattern);
-    }
+    //send the base64 image String
+    public void sendImage(String imageString){
+	    ui.editText.setText("ImageTag:" + imageString);
+
+	    //Fake button press to send the image automatically after
+        ImageButton btn_send = findViewById(R.id.btn_send);
+        btn_send.performClick();
+	}
 
 	public void setText(String text) {
 	    ui.editText.setText(text);
