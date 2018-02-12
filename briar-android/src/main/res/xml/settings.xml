@@ -27,6 +27,23 @@
 
 	<PreferenceCategory android:layout="@layout/divider_preference"/>
 
+	<!-- Customize theme -->
+	<PreferenceCategory
+		android:title="@string/style_settings_title">
+
+		<ListPreference
+			android:defaultValue="1"
+			android:entries="@array/theme_setting_names"
+			android:entryValues="@array/theme_setting_values"
+			android:key="pref_theme"
+			android:persistent="false"
+			android:summary="%s"
+			android:title="@string/theme_settings_title"/>
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:layout="@layout/divider_preference"/>
+
 	<PreferenceCategory
 		android:title="@string/security_settings_title">
 
