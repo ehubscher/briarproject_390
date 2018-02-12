@@ -22,6 +22,7 @@ import org.briarproject.briar.android.util.UiUtils;
 class ConversationItemViewHolder extends ViewHolder {
 
 	protected final ViewGroup layout;
+
 	private final TextView text;
 	private final TextView time;
 	private final ImageView imageView;
@@ -59,5 +60,9 @@ class ConversationItemViewHolder extends ViewHolder {
 
 		long timestamp = item.getTime();
 		time.setText(UiUtils.formatDate(time.getContext(), timestamp));
+	}
+
+	public TextView getText() {
+		return text;
 	}
 }
