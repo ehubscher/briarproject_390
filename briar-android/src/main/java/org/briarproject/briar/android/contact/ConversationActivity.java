@@ -267,8 +267,8 @@ public class ConversationActivity extends BriarActivity
 			snackbar.show();
 		}
 
-		//to recognize when the user comes back from the image selector
-		if(request == PICK_IMAGE){
+		//to recognize when the user comes back from the image selector with an image
+		if(request == PICK_IMAGE && result == RESULT_OK && data.getData() != null){
 
             Uri uri;
             Bitmap bitmap;
@@ -277,17 +277,14 @@ public class ConversationActivity extends BriarActivity
 		        uri = data.getData();
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
+                //Enocodes the bitmap image into base64 string
                 ByteArrayOutputStream boas = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
                 byte[] imageBytes = boas.toByteArray();
                 String imageString = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
 
-                textInputView.setText(imageString);
-
-                //TODO: What we need to decode the string for later
-                //imageBytes = android.util.Base64.decode(imageString, android.util.Base64.DEFAULT);
-                //Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                //imageButton.setImageBitmap(decodeImage);
+                //Send the picture to the input text box to be sent
+                textInputView.sendImage(imageString);
 
             }catch(IOException e){
 		        e.printStackTrace();
