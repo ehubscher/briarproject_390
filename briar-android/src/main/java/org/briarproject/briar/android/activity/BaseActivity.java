@@ -1,6 +1,5 @@
 package org.briarproject.briar.android.activity;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,8 +15,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 
 import org.briarproject.bramble.api.db.DbException;
-import org.briarproject.bramble.api.settings.Settings;
-import org.briarproject.bramble.api.settings.SettingsManager;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.AndroidComponent;
 import org.briarproject.briar.android.BriarApplication;
@@ -26,8 +23,6 @@ import org.briarproject.briar.android.controller.ActivityLifecycleController;
 import org.briarproject.briar.android.forum.ForumModule;
 import org.briarproject.briar.android.fragment.BaseFragment;
 import org.briarproject.briar.android.fragment.ScreenFilterDialogFragment;
-import org.briarproject.briar.android.settings.SettingsActivity;
-import org.briarproject.briar.android.settings.SettingsFragment;
 import org.briarproject.briar.android.widget.TapSafeFrameLayout;
 import org.briarproject.briar.android.widget.TapSafeFrameLayout.OnTapFilteredListener;
 import org.briarproject.briar.api.android.ScreenFilterMonitor;
@@ -35,98 +30,63 @@ import org.briarproject.briar.api.android.ScreenFilterMonitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-
-
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.WindowManager.LayoutParams.FLAG_SECURE;
 import static android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT;
-import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.TestingConstants.PREVENT_SCREENSHOTS;
-
-
 public abstract class BaseActivity extends AppCompatActivity
 		implements DestroyableContext, OnTapFilteredListener {
-
 	@Inject
 	protected ScreenFilterMonitor screenFilterMonitor;
-
 	protected ActivityComponent activityComponent;
-
 	private final List<ActivityLifecycleController> lifecycleControllers =
 			new ArrayList<>();
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
 	public abstract void injectActivity(ActivityComponent component);
-
 	public void addLifecycleController(ActivityLifecycleController alc) {
 		lifecycleControllers.add(alc);
 	}
-
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-
-		/*
-		Settings s = new Settings();
-		Settings themeSettings = settingsManager.getSettings(THEME_NAMESPACE);
-		String themeSetting = themeSettings.getInt();*/
-
-		/*if (theme.equals("2")) {
-			setTheme(android.R.style.Theme_Holo);
-		} else if (theme.equals("3")) {
-			 setTheme(android.R.style.Theme_Holo_Light);
-		}*/
-
 		super.onCreate(savedInstanceState);
-
-
-		//setTheme(android.R.style.Theme_Holo);
-
-		/*if (theme == 2) {
-			setTheme(android.R.style.Theme_Holo);
-		} else if (theme == 3) {
-			setTheme(android.R.style.Theme_Holo_Light);
-		}else{
-			setTheme(R.style.BriarTheme);
-		}*/
-
-		//setTheme(android.R.style.Theme_Holo);
-
+		int selectedTheme = returnThemeID();
+		if (selectedTheme==2) {
+			setTheme(android.R.style.Theme_Black);
+		} else if (selectedTheme==3) {
+			setTheme(android.R.style.Theme_Light);
+		}
 		if (PREVENT_SCREENSHOTS) getWindow().addFlags(FLAG_SECURE);
-
 		AndroidComponent applicationComponent =
 				((BriarApplication) getApplication()).getApplicationComponent();
-
 		activityComponent = DaggerActivityComponent.builder()
 				.androidComponent(applicationComponent)
 				.activityModule(getActivityModule())
 				.forumModule(getForumModule())
 				.build();
-
 		injectActivity(activityComponent);
-
 		for (ActivityLifecycleController alc : lifecycleControllers) {
 			alc.onActivityCreate(this);
 		}
 	}
-
+	public int returnThemeID(){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+		return settings.getInt("pref_theme",1);
+	}
 	public ActivityComponent getActivityComponent() {
 		return activityComponent;
 	}
-
 	// This exists to make test overrides easier
 	protected ActivityModule getActivityModule() {
 		return new ActivityModule(this);
 	}
-
 	protected ForumModule getForumModule() {
 		return new ForumModule();
 	}
-
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -134,7 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity
 			alc.onActivityStart();
 		}
 	}
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -142,7 +101,6 @@ public abstract class BaseActivity extends AppCompatActivity
 			alc.onActivityStop();
 		}
 	}
-
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -151,13 +109,11 @@ public abstract class BaseActivity extends AppCompatActivity
 			dialogFrag = null;
 		}
 	}
-
 	protected void showInitialFragment(BaseFragment f) {
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.fragmentContainer, f, f.getUniqueTag())
 				.commit();
 	}
-
 	public void showNextFragment(BaseFragment f) {
 		getSupportFragmentManager().beginTransaction()
 				.setCustomAnimations(R.anim.step_next_in,
@@ -167,7 +123,6 @@ public abstract class BaseActivity extends AppCompatActivity
 				.addToBackStack(f.getUniqueTag())
 				.commit();
 	}
-
 	private void showScreenFilterWarning() {
 		if (dialogFrag != null && dialogFrag.isVisible()) return;
 		Set<String> apps = screenFilterMonitor.getApps();
@@ -179,7 +134,6 @@ public abstract class BaseActivity extends AppCompatActivity
 		FragmentManager fm = getSupportFragmentManager();
 		if (!fm.isStateSaved()) dialogFrag.show(fm, dialogFrag.getTag());
 	}
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -188,30 +142,25 @@ public abstract class BaseActivity extends AppCompatActivity
 			alc.onActivityDestroy();
 		}
 	}
-
 	@Override
 	public void runOnUiThreadUnlessDestroyed(Runnable r) {
 		runOnUiThread(() -> {
 			if (!destroyed && !isFinishing()) r.run();
 		});
 	}
-
 	public void showSoftKeyboard(View view) {
 		Object o = getSystemService(INPUT_METHOD_SERVICE);
 		((InputMethodManager) o).showSoftInput(view, SHOW_IMPLICIT);
 	}
-
 	public void hideSoftKeyboard(View view) {
 		IBinder token = view.getWindowToken();
 		Object o = getSystemService(INPUT_METHOD_SERVICE);
 		((InputMethodManager) o).hideSoftInputFromWindow(token, 0);
 	}
-
 	@UiThread
 	public void handleDbException(DbException e) {
 		supportFinishAfterTransition();
 	}
-
 	/*
 	 * Wraps the given view in a wrapper that notifies this activity when an
 	 * obscured touch has been filtered, and returns the wrapper.
@@ -223,7 +172,6 @@ public abstract class BaseActivity extends AppCompatActivity
 		wrapper.addView(v);
 		return wrapper;
 	}
-
 	/*
 	 * Finds the AppCompat toolbar, if any, and configures it to filter
 	 * obscured touches. If a custom toolbar is used, it will be part of the
@@ -237,7 +185,6 @@ public abstract class BaseActivity extends AppCompatActivity
 			if (toolbar != null) toolbar.setFilterTouchesWhenObscured(true);
 		}
 	}
-
 	@Nullable
 	private Toolbar findToolbar(ViewGroup vg) {
 		for (int i = 0, len = vg.getChildCount(); i < len; i++) {
@@ -250,34 +197,27 @@ public abstract class BaseActivity extends AppCompatActivity
 		}
 		return null;
 	}
-
 	@Override
 	public void setContentView(@LayoutRes int layoutRes) {
 		setContentView(getLayoutInflater().inflate(layoutRes, null));
 	}
-
 	@Override
 	public void setContentView(View v) {
 		super.setContentView(makeTapSafeWrapper(v));
 		protectToolbar();
 	}
-
 	@Override
 	public void setContentView(View v, LayoutParams layoutParams) {
 		super.setContentView(makeTapSafeWrapper(v), layoutParams);
 		protectToolbar();
 	}
-
 	@Override
 	public void addContentView(View v, LayoutParams layoutParams) {
 		super.addContentView(makeTapSafeWrapper(v), layoutParams);
 		protectToolbar();
 	}
-
 	@Override
 	public void onTapFiltered() {
 		showScreenFilterWarning();
 	}
-
-
 }

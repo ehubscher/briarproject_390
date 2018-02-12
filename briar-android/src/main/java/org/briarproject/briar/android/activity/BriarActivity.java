@@ -12,8 +12,6 @@ import android.view.Gravity;
 import android.view.Window;
 import android.widget.CheckBox;
 
-import org.briarproject.bramble.api.db.DbException;
-import org.briarproject.bramble.api.settings.Settings;
 import org.briarproject.bramble.api.settings.SettingsManager;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.controller.BriarController;
@@ -33,35 +31,23 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 import static android.os.Build.MANUFACTURER;
 import static android.os.Build.VERSION.SDK_INT;
-import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_DOZE_WHITELISTING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PASSWORD;
 import static org.briarproject.briar.android.util.UiUtils.getDozeWhitelistingIntent;
 
 @SuppressLint("Registered")
 public abstract class BriarActivity extends BaseActivity {
-
 	public static final String GROUP_ID = "briar.GROUP_ID";
 	public static final String GROUP_NAME = "briar.GROUP_NAME";
-
 	private static final Logger LOG =
 			Logger.getLogger(BriarActivity.class.getName());
-
 	@Inject
 	BriarController briarController;
-
 	@Deprecated
 	@Inject
 	DbController dbController;
-
 	@Inject
 	volatile SettingsManager settingsManager;
-
-	@Override
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
-		fetchThemeId();
-	}
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent data) {
@@ -192,30 +178,5 @@ public abstract class BriarActivity extends BaseActivity {
 	@Deprecated
 	protected void finishOnUiThread() {
 		runOnUiThreadUnlessDestroyed(this::supportFinishAfterTransition);
-	}
-
-	public void fetchThemeId() {
-
-		runOnDbThread(() -> {
-			try {
-				Settings themeSettings = settingsManager.getSettings("theme");
-				int themeSetting = themeSettings.getInt("pref_theme", 1);
-				switchTheme(themeSetting);
-
-			} catch (DbException e) {
-				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
-			}
-		});
-
-	}
-
-	public void switchTheme(int theme){
-		if (theme == 2) {
-			setTheme(R.style.DarkTheme);
-		} else if (theme == 3) {
-			setTheme(R.style.PastelTheme);
-		}else{
-			setTheme(R.style.BriarTheme);
-		}
 	}
 }
