@@ -2,6 +2,7 @@ package org.briarproject.briar.android.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.widget.CheckBox;
 
+import org.briarproject.bramble.api.settings.SettingsManager;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.controller.BriarController;
 import org.briarproject.briar.android.controller.DbController;
@@ -35,19 +37,17 @@ import static org.briarproject.briar.android.util.UiUtils.getDozeWhitelistingInt
 
 @SuppressLint("Registered")
 public abstract class BriarActivity extends BaseActivity {
-
 	public static final String GROUP_ID = "briar.GROUP_ID";
 	public static final String GROUP_NAME = "briar.GROUP_NAME";
-
 	private static final Logger LOG =
 			Logger.getLogger(BriarActivity.class.getName());
-
 	@Inject
 	BriarController briarController;
-
 	@Deprecated
 	@Inject
 	DbController dbController;
+	@Inject
+	volatile SettingsManager settingsManager;
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent data) {
