@@ -56,9 +56,9 @@ public abstract class BaseActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		int selectedTheme = returnThemeID();
 		if (selectedTheme==2) {
-			setTheme(android.R.style.Theme_Black);
+			setTheme(R.style.DarkTheme);
 		} else if (selectedTheme==3) {
-			setTheme(android.R.style.Theme_Light);
+			setTheme(R.style.PastelTheme);
 		}
 		if (PREVENT_SCREENSHOTS) getWindow().addFlags(FLAG_SECURE);
 		AndroidComponent applicationComponent =
