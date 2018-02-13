@@ -24,7 +24,7 @@
 
 	<!-- Added some themes to try and resolve the error in NavDrawerActivity -->
 
-	<style name="DarkTheme" parent="BriarTheme">
+	<style name="DarkTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 		<item name="colorPrimary">@color/briar_blue_dark</item>
 		<item name="colorPrimaryDark">@color/briar_primary_dark</item>
 		<item name="colorAccent">@color/window_background</item>
@@ -44,7 +44,7 @@
 		<item name="toolbarStyle">@style/BriarToolbar</item>
 	</style>
 
-	<style name="PastelTheme" parent="Theme.AppCompat.Light">
+	<style name="PastelTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 		<item name="colorPrimary">@color/briar_yellow</item>
 		<item name="colorPrimaryDark">@color/briar_pink</item>
 		<item name="colorAccent">@color/control_normal_light</item>
