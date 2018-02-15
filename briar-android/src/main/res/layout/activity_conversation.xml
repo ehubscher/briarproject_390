@@ -35,10 +35,11 @@
 					tools:text="Contact Name"/>
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/favourite_star"
+                    android:state_selected="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/btn_star_big_off"
+                    android:src="@drawable/star"
                     android:background="?attr/selectableItemBackground"/>
 
 			</LinearLayout>
