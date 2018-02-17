@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<!-- Themes -->
+	<string name="theme_default">Default</string>
+	<string name="theme_dark">Dark</string>
+	<string name="theme_pastel">Pastel</string>
+
+
 	<!-- Setup -->
 	<string name="setup_title">Welcome to Briar</string>
 	<string name="setup_name_explanation">Your nickname will be shown next to any content you post. You can\'t change it after creating your account.</string>
@@ -322,6 +328,11 @@
 	<string name="tor_network_setting_wifi">Only when using Wi-Fi</string>
 	<string name="tor_network_setting_always">When using Wi-Fi or mobile data</string>
 
+	<!-- Settings Style -->
+	<string name="style_settings_title">Style</string>
+	<string name="theme_settings_title">Choose a theme</string>
+	<string name="pref_theme">prefTheme</string>
+
 	<!-- Settings Security and Panic -->
 	<string name="security_settings_title">Security</string>
 	<string name="change_password">Change password</string>
@@ -403,5 +414,6 @@
 	<string name="permission_camera_request_body">To scan the QR code, Briar needs access to the camera.</string>
 	<string name="permission_camera_denied_body">You have denied access to the camera, but adding contacts requires using the camera.\n\nPlease consider granting access.</string>
 	<string name="permission_camera_denied_toast">Camera permission was not granted</string>
+
 
 </resources>

@@ -15,11 +15,56 @@
 		<item name="android:listSeparatorTextViewStyle">@style/BriarTheme.ListSeparatorTextView</item>
 	</style>
 
+
 	<style name="BriarTheme.NoActionBar" parent="BriarTheme">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 		<item name="toolbarStyle">@style/BriarToolbar</item>
 	</style>
+
+	<!-- Added some themes to try and resolve the error in NavDrawerActivity -->
+
+	<style name="DarkTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+		<item name="colorPrimary">@color/briar_blue_dark</item>
+		<item name="colorPrimaryDark">@color/briar_primary_dark</item>
+		<item name="colorAccent">@color/window_background</item>
+		<item name="colorControlNormal">@color/private_message_date</item>
+		<item name="android:textColorLink">@color/briar_text_link</item>
+		<item name="android:windowBackground">@color/control_normal_light</item>
+		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+
+		<!-- These fix a long-standing UI bug in the support preference library -->
+		<item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+		<item name="android:listSeparatorTextViewStyle">@style/BriarTheme.ListSeparatorTextView</item>
+	</style>
+
+	<style name="DarkTheme.NoActionBar" parent="DarkTheme">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+		<item name="toolbarStyle">@style/BriarToolbar</item>
+	</style>
+
+	<style name="PastelTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+		<item name="colorPrimary">@color/briar_yellow</item>
+		<item name="colorPrimaryDark">@color/briar_pink</item>
+		<item name="colorAccent">@color/control_normal_light</item>
+		<item name="colorControlNormal">@color/control_normal_light</item>
+		<item name="android:textColorLink">@color/briar_blue_light</item>
+		<item name="android:windowBackground">@color/window_background</item>
+		<item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+
+		<!-- These fix a long-standing UI bug in the support preference library -->
+		<item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+		<item name="android:listSeparatorTextViewStyle">@style/BriarTheme.ListSeparatorTextView</item>
+	</style>
+
+	<style name="PastelTheme.NoActionBar" parent="PastelTheme">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+		<item name="toolbarStyle">@style/BriarToolbar</item>
+	</style>
+
+	<!-- End of customed themes -->
 
 	<style name="ActivityAnimation" parent="@android:style/Animation.Activity">
 		<item name="android:activityOpenEnterAnimation">@anim/screen_new_in</item>
