@@ -54,6 +54,8 @@ import org.briarproject.briar.android.privategroup.memberlist.GroupMemberModule;
 import org.briarproject.briar.android.privategroup.reveal.GroupRevealModule;
 import org.briarproject.briar.android.privategroup.reveal.RevealContactsActivity;
 import org.briarproject.briar.android.privategroup.reveal.RevealContactsFragment;
+import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
 import org.briarproject.briar.android.settings.SettingsActivity;
 import org.briarproject.briar.android.settings.SettingsFragment;
 import org.briarproject.briar.android.sharing.BlogInvitationActivity;
@@ -151,6 +153,8 @@ public interface ActivityComponent {
 
 	void inject(RssFeedManageActivity activity);
 
+	void inject(ProfileActivity activity);
+
 	// Fragments
 	void inject(AuthorNameFragment fragment);
 	void inject(PasswordFragment fragment);
@@ -189,5 +193,7 @@ public interface ActivityComponent {
 	void inject(IntroductionMessageFragment fragment);
 
 	void inject(SettingsFragment fragment);
+
+	void inject(ProfileFragment fragment);
 
 }

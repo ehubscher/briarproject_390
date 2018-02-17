@@ -27,6 +27,10 @@
 			android:icon="@drawable/ic_settings_black_24dp"
 			android:title="@string/settings_button"/>
 		<item
+			android:id="@+id/nav_btn_profile"
+			android:icon="@drawable/ic_person_black_24dp"
+			android:title="@string/profile_button"/>
+		<item
 			android:id="@+id/nav_btn_signout"
 			android:icon="@drawable/ic_signout_black_24dp"
 			android:title="@string/sign_out_button"/>
