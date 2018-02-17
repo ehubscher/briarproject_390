@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -154,9 +155,7 @@ public class ConversationActivity extends BriarActivity
 	private BriarRecyclerView list;
 
     //Declared variables for the Image selector
-	private ImageButton imageButton;
 	final Context context = this;
-    public static final int PICK_IMAGE = 1;
     private TextInputView textInputView;
 
 	private final ListenableFutureTask<String> contactNameTask =
@@ -231,24 +230,6 @@ public class ConversationActivity extends BriarActivity
 
 		textInputView = findViewById(R.id.text_input_container);
 		textInputView.setListener(this);
-
-
-        //the add_image button
-        imageButton = findViewById(R.id.open_image_browser);
-
-        //the listener
-        imageButton.setOnClickListener(new View.OnClickListener() {
-
-        	//On click the image selector will pop open
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-            }
-        });
-
 	}
 
 	@Override
@@ -268,28 +249,31 @@ public class ConversationActivity extends BriarActivity
 		}
 
 		//to recognize when the user comes back from the image selector
-		if(request == PICK_IMAGE){
-
+		if(request == textInputView.ATTACH_IMAGES) {
             Uri uri;
             Bitmap bitmap;
+            Bitmap thumbnail;
 
 		    try{
 		        uri = data.getData();
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+				thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 96, 96);
 
+				/*
                 ByteArrayOutputStream boas = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
                 byte[] imageBytes = boas.toByteArray();
                 String imageString = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+				*/
 
-                textInputView.setText(imageString);
+                textInputView.setText("thumbnail");
 
                 //TODO: What we need to decode the string for later
                 //imageBytes = android.util.Base64.decode(imageString, android.util.Base64.DEFAULT);
                 //Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
                 //imageButton.setImageBitmap(decodeImage);
 
-            }catch(IOException e){
+            } catch(IOException e) {
 		        e.printStackTrace();
             }
 		}

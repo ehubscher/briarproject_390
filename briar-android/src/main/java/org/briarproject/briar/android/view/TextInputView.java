@@ -1,7 +1,9 @@
 package org.briarproject.briar.android.view;
 
 import android.animation.LayoutTransition;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.IBinder;
@@ -15,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 
 import org.briarproject.briar.R;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
@@ -32,11 +35,12 @@ import static android.view.KeyEvent.KEYCODE_ENTER;
 import static android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT;
 
 @UiThread
-public class TextInputView extends KeyboardAwareLinearLayout
-		implements EmojiEventListener {
+public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEventListener {
 
 	protected final ViewHolder ui;
 	protected TextInputListener listener;
+
+	public static final int ATTACH_IMAGES = 1;
 
 	public TextInputView(Context context) {
 		this(context, null);
@@ -46,8 +50,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
 		this(context, attrs, 0);
 	}
 
-	public TextInputView(Context context, @Nullable AttributeSet attrs,
-			int defStyleAttr) {
+	public TextInputView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		setOrientation(VERTICAL);
 		setLayoutTransition(new LayoutTransition());
@@ -58,16 +61,14 @@ public class TextInputView extends KeyboardAwareLinearLayout
 	}
 
 	protected void inflateLayout(Context context) {
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.text_input_view, this, true);
 	}
 
 	@CallSuper
 	protected void setUpViews(Context context, @Nullable AttributeSet attrs) {
 		// get attributes
-		TypedArray attributes = context.obtainStyledAttributes(attrs,
-				R.styleable.TextInputView);
+		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.TextInputView);
 		String hint = attributes.getString(R.styleable.TextInputView_hint);
 		attributes.recycle();
 
@@ -89,6 +90,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
 			}
 			return false;
 		});
+
 		ui.sendButton.setOnClickListener(v -> trySendMessage());
 		ui.emojiDrawer.setEmojiEventListener(this);
 	}
@@ -104,6 +106,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
 		if (visibility == GONE && isKeyboardOpen()) {
 			onKeyboardClose();
 		}
+
 		super.setVisibility(visibility);
 	}
 
@@ -193,6 +196,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
 	}
 
 	protected class ViewHolder {
+		private ImageButton imageButton;
 
 		private final EmojiToggle emojiToggle;
 		final EmojiEditText editText;
@@ -200,15 +204,25 @@ public class TextInputView extends KeyboardAwareLinearLayout
 		final EmojiDrawer emojiDrawer;
 
 		private ViewHolder() {
+			imageButton = findViewById(R.id.open_image_browser);
 			emojiToggle = findViewById(R.id.emoji_toggle);
 			editText = findViewById(R.id.input_text);
 			emojiDrawer = findViewById(R.id.emoji_drawer);
 			sendButton = findViewById(R.id.btn_send);
+
+			imageButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent();
+					intent.setType("image/*");
+					intent.setAction(Intent.ACTION_GET_CONTENT);
+					((Activity)getContext()).startActivityForResult(Intent.createChooser(intent, "Select Picture"), ATTACH_IMAGES);
+				}
+			});
 		}
 	}
 
 	public interface TextInputListener {
 		void onSendClick(String text);
 	}
-
 }

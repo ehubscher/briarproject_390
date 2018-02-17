@@ -41,7 +41,9 @@
 			android:maxLines="3"
 			android:minHeight="@dimen/text_input_height"
 			android:textColor="@color/briar_text_primary"
-			android:textColorHint="@color/briar_text_tertiary"/>
+			android:textColorHint="@color/briar_text_tertiary">
+
+		</org.thoughtcrime.securesms.components.emoji.EmojiEditText>
 
 		<ImageButton
 			android:id="@+id/btn_send"
