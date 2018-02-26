@@ -17,6 +17,9 @@ import static org.briarproject.bramble.api.plugin.WanTcpConstants.ID;
 
 /**
  * Created by Winterhart on 2/25/2018.
+ * This class is copied from WanTcpPluginFactory.java it is used to create our own
+ * TCP Driver using the already implemented Factory pattern
+ *
  */
 @Immutable
 @NotNullByDefault
