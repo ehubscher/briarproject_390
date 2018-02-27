@@ -415,8 +415,11 @@
     <string name="permission_camera_request_body">To scan the QR code, Briar needs access to the camera.</string>
     <string name="permission_camera_denied_body">You have denied access to the camera, but adding contacts requires using the camera.\n\nPlease consider granting access.</string>
     <string name="permission_camera_denied_toast">Camera permission was not granted</string>
-    <string name="title_activity_profile">ProfileActivity</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Profile -->
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="profile_empty_state">This page does not contain any avatars yet.</string>
 
 
 </resources>
