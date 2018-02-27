@@ -313,11 +313,14 @@
         </activity>
         <activity
             android:name=".android.panic.ExitActivity"
-            android:theme="@android:style/Theme.NoDisplay"></activity>
+            android:theme="@android:style/Theme.NoDisplay">
+        </activity>
         <activity
             android:name=".android.profile.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:theme="@style/BriarTheme.NoActionBar"></activity>
+            android:theme="@style/BriarTheme.NoActionBar"
+            android:parentActivityName=".android.navdrawer.NavDrawerActivity">
+        </activity>
     </application>
 
 </manifest>
