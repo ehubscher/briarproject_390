@@ -39,6 +39,7 @@ import org.briarproject.briar.android.fragment.SignOutFragment;
 import org.briarproject.briar.android.navdrawer.NavDrawerController.ExpiryWarning;
 import org.briarproject.briar.android.privategroup.list.GroupListFragment;
 import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
 import org.briarproject.briar.android.settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -195,7 +196,7 @@ public class NavDrawerActivity extends BriarActivity implements
 				startFragment(FeedFragment.newInstance());
 				break;
 			case R.id.nav_btn_profile:
-				startActivity(new Intent(this, ProfileActivity.class));
+				startFragment(ProfileFragment.newInstance());
 				break;
 			case R.id.nav_btn_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
