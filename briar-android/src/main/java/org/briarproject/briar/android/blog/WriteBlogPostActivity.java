@@ -1,7 +1,10 @@
 package org.briarproject.briar.android.blog;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -26,6 +29,8 @@ import org.briarproject.briar.api.blog.BlogManager;
 import org.briarproject.briar.api.blog.BlogPost;
 import org.briarproject.briar.api.blog.BlogPostFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.logging.Logger;
 
@@ -172,4 +177,31 @@ public class WriteBlogPostActivity extends BriarActivity
 			// TODO show error
 		});
 	}
+
+	@Override
+	protected void onActivityResult(int request, int result, Intent data) {
+		super.onActivityResult(request, result, data);
+
+		// User has come back from the image picker with an image
+		if (request == PICK_IMAGE && result == RESULT_OK && data.getData() != null)
+		{
+			try{
+				Uri uri = data.getData();
+				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+
+				// Encode the bitmap image to base64
+				ByteArrayOutputStream boas = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
+				byte[] imageBytes = boas.toByteArray();
+				String imageString = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+
+				// Send the picture to the input text box to be sent
+				input.sendImage(imageString);
+
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
