@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
  * to add our own ClientID, a unique String of the current client
  */
 
-public class customInetSocketAddress extends InetSocketAddress {
+public class CustomInetSocketAddress extends InetSocketAddress {
 
     private String ClientID;
     public String getClientID() {
@@ -17,7 +17,7 @@ public class customInetSocketAddress extends InetSocketAddress {
     public void setClientID(String clientID) {
         ClientID = clientID;
     }
-    public customInetSocketAddress(int i) {
+    public CustomInetSocketAddress(int i) {
         super(i);
     }
 
