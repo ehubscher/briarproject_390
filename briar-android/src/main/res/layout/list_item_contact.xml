@@ -32,17 +32,25 @@
 				tools:src="@mipmap/ic_launcher_round"/>
 
 			<TextView
-				android:id="@+id/unreadCountView"
-				android:layout_width="wrap_content"
-				android:layout_height="@dimen/unread_bubble_size"
-				android:layout_gravity="right|top"
-				android:background="@drawable/bubble"
-				android:gravity="center"
-				android:minWidth="@dimen/unread_bubble_size"
-				android:textColor="@color/briar_text_primary_inverse"
-				android:textSize="@dimen/unread_bubble_text_size"
-				android:textStyle="bold"
-				tools:text="123"/>
+			android:id="@+id/unreadCountView"
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/unread_bubble_size"
+			android:layout_gravity="right|top"
+			android:background="@drawable/bubble"
+			android:gravity="center"
+			android:minWidth="@dimen/unread_bubble_size"
+			android:textColor="@color/briar_text_primary_inverse"
+			android:textSize="@dimen/unread_bubble_text_size"
+			android:textStyle="bold"
+			tools:text="123"/>
+
+            <TextView
+                android:id="@+id/favouriteView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:background="@android:drawable/btn_star_big_on"
+                android:gravity="center"/>
 
 		</FrameLayout>
 
