@@ -260,18 +260,23 @@ public class ConversationActivity extends BriarActivity
 			@Override
 			public void onClick(View v) {
 
-			    //Check if button is pressed
-                //if button is pressed then change the state of the button pressed
-			    if(favourite_star.isActivated()){
-
-                    //TODO Remove contact from favourite list
-
-			        favourite_star.setActivated(false);;
-                }
-                else{
-
-			        //TODO add contact to the favourite list
-			        favourite_star.setActivated(true);
+                try {
+                    //Check if button is pressed
+                    //if button is pressed then change the state of the button pressed
+                    if(favourite_star.isActivated()){
+                        //Remove contact from favourite list
+                        contactManager.setFavourite(contactId, false);
+                        favourite_star.setActivated(false);
+                    }
+                    else{
+                        //add contact to the favourite list
+                        contactManager.setFavourite(contactId, true);
+                        favourite_star.setActivated(true);
+                    }
+                } catch (NoSuchContactException e) {
+                    finishOnUiThread();
+                } catch (DbException e) {
+                    if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
                 }
 			}
 		});
@@ -379,6 +384,16 @@ public class ConversationActivity extends BriarActivity
 					Contact contact = contactManager.getContact(contactId);
 					contactName = contact.getAuthor().getName();
 					contactAuthorId = contact.getAuthor().getId();
+
+                    //The favourite_star button
+                    favourite_star = findViewById(R.id.favourite_star);
+
+                    if(contact.isFavourite()){
+                        favourite_star.setActivated(true);
+                    }
+                    else{
+                        favourite_star.setActivated(false);
+                    }
 				}
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
