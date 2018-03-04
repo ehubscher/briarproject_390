@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+
+<RelativeLayout
 	android:id="@+id/postList"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="org.briarproject.briar.android.profile.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
 	<ImageView
-		android:id="@+id/icon_image"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:layout_gravity="center"
-		android:src="@drawable/ic_android_black_24dp"
-		android:adjustViewBounds="true"/>
+		android:id="@+id/image_profile"
+		android:layout_width="120dp"
+		android:layout_height="120dp"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="10dp"
+		android:padding="5dp"
+		android:src="@drawable/avatar"/>
 
+	<TextView
+	  android:id="@+id/choose_avatar"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:layout_centerHorizontal="true"
+	  android:gravity="center"
+	  android:layout_marginTop="140dp"
+	  android:text="Choose your avatar"/>
 
 	<GridView xmlns:android="http://schemas.android.com/apk/res/android"
 	          android:id="@+id/grid_view"
-	          android:layout_width="fill_parent"
-	          android:layout_height="fill_parent"
-	          android:numColumns="auto_fit"
+	          android:layout_width="match_parent"
+	          android:layout_height="wrap_content"
+	          android:columnWidth="90dp"
+	          android:numColumns="3"
 	          android:verticalSpacing="10dp"
 	          android:horizontalSpacing="10dp"
-	          android:columnWidth="90dp"
 	          android:stretchMode="columnWidth"
-	          android:gravity="center"
+	          android:layout_centerVertical="true"
+	          android:layout_marginLeft="100dp"
 		/>
 
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
 
