@@ -82,6 +82,12 @@ public interface ContactManager {
 	void setContactActive(Transaction txn, ContactId c, boolean active)
 			throws DbException;
 
+    /**
+     * Marks a contact as favourite or not.
+     */
+    void setFavourite(ContactId c, boolean favourite)
+            throws DbException;
+
 	/**
 	 * Return true if a contact with this name and public key already exists
 	 */

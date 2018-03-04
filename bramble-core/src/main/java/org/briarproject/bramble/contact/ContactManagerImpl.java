@@ -148,6 +148,17 @@ class ContactManagerImpl implements ContactManager {
 	}
 
 	@Override
+    public void setFavourite(ContactId c, boolean favourite) throws DbException {
+        Transaction txn = db.startTransaction(false);
+        try {
+            db.setFavourite(txn, c, favourite);
+            db.commitTransaction(txn);
+        } finally {
+            db.endTransaction(txn);
+        }
+    }
+
+	@Override
 	public boolean contactExists(Transaction txn, AuthorId remoteAuthorId,
 			AuthorId localAuthorId) throws DbException {
 		return db.containsContact(txn, remoteAuthorId, localAuthorId);
