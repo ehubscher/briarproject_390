@@ -2,7 +2,6 @@ package org.briarproject.bramble.restClient;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class SampleUserBriarServerServiceTest {
 
     SampleUserBriarServerService sampleUserBriarServerService = new SampleUserBriarServerService();
+
     /**
      * This TEST is built to test the retrofit2 lib. with Briar SERVER API
      */
@@ -35,6 +35,9 @@ public class SampleUserBriarServerServiceTest {
         Assert.assertTrue((resultFromAPI != null && !resultFromAPI.isEmpty()));
     }
 
+    /**
+     * Test the creation of a new user
+     */
     @Test
     public void CreateNewUserTest(){
         ExecutorService executorService = Executors.newFixedThreadPool(1);

@@ -2,12 +2,7 @@ package org.briarproject.bramble.restClient;
 
 import org.briarproject.bramble.api.sync.Request;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
-
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +23,7 @@ public class SampleUserBriarServerService {
 
     public  volatile static  String ResultFromBriar = "";
 
+    //TODO: Find a better way to hide the API Password
     private final String pass = "qwerty";
 
 

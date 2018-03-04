@@ -1,6 +1,5 @@
 package org.briarproject.bramble.restClient;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,6 +11,7 @@ import retrofit2.http.Path;
 
 /**
  * Created by Winterhart on 3/3/2018.
+ * This class is used to test Briar API Implementation
  */
 
 public interface BriarServerService {
@@ -27,6 +27,11 @@ public interface BriarServerService {
     @POST("users/{userID}")
     Call<String> ObtainUserInfo(@Path("userID") String userID ,  @Body String bodyJSON);
 
+    /**
+     * This method is creating a new user
+     * @param bodyJSON -> all data needed to create a user, in JSON format
+     * @return a JSON body with information confirming the creation
+     */
     @Headers("Content-Type: application/json")
     @POST("users")
     Call<String> CreateUser(@Body String bodyJSON);
