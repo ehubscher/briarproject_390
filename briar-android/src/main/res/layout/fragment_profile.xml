@@ -4,8 +4,8 @@
 	android:id="@+id/postList"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="org.briarproject.briar.android.profile.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
@@ -20,26 +20,25 @@
 		android:src="@drawable/avatar"/>
 
 	<TextView
-	  android:id="@+id/choose_avatar"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_centerHorizontal="true"
-	  android:gravity="center"
-	  android:layout_marginTop="140dp"
-	  android:text="Choose your avatar"/>
+		android:id="@+id/choose_avatar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:gravity="center"
+		android:layout_marginTop="140dp"
+		android:text="Choose your avatar"/>
 
 	<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-	          android:id="@+id/grid_view"
-	          android:layout_width="match_parent"
-	          android:layout_height="wrap_content"
-	          android:columnWidth="90dp"
-	          android:numColumns="3"
-	          android:verticalSpacing="10dp"
-	          android:horizontalSpacing="10dp"
-	          android:stretchMode="columnWidth"
-	          android:layout_centerVertical="true"
-	          android:layout_marginLeft="100dp"
-		/>
+		android:id="@+id/grid_view"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:verticalSpacing="15dp"
+		android:horizontalSpacing="0dp"
+		android:numColumns="3"
+		android:padding="5dp"
+		android:layout_marginTop="180dp"
+		android:stretchMode="columnWidth"
+		android:gravity="center"/>
 
 </RelativeLayout>
 

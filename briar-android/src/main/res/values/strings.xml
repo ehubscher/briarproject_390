@@ -418,7 +418,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- Profile -->
-    <string name="title_activity_profile">Profile Activity</string>
+    <string name="title_activity_profile">Profile</string>
     <string name="profile_empty_state">This page does not contain any avatars yet.</string>
 
 

@@ -30,7 +30,6 @@ public class ProfileFragment extends BaseFragment {
 			R.drawable.frog,
 			R.drawable.penguin,
 			R.drawable.robot
-
 	};
 
 	@Override
@@ -40,7 +39,6 @@ public class ProfileFragment extends BaseFragment {
 
 	@Override
 	public void injectFragment(ActivityComponent component) {
-
 	}
 
 	@Override
@@ -107,7 +105,9 @@ public class ProfileFragment extends BaseFragment {
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setPadding(8, 8, 8, 8);
+				imageView.setPadding(0, 0, 0, 0);
+				imageView.setMinimumHeight(30);
+				imageView.setMinimumWidth(30);
 			} else {
 				imageView = (ImageView) convertView;
 			}
