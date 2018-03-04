@@ -477,8 +477,7 @@ public interface DatabaseComponent {
 	/**
 	 * Marks the given contact as favourite or not.
 	 */
-	void setFavourite(Transaction txn, ContactId c, boolean active)
-			throws DbException;
+	void setFavourite(Transaction transaction, ContactId contactId, boolean active) throws DbException;
 
 	/**
 	 * Sets the given group's visibility to the given contact.

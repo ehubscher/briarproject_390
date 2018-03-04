@@ -801,13 +801,14 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 	}
 
 	@Override
-	public void setFavourite(Transaction transaction, ContactId c,
-								 boolean favourite) throws DbException {
-		if (transaction.isReadOnly()) throw new IllegalArgumentException();
-		T txn = unbox(transaction);
-		if (!db.containsContact(txn, c))
+	public void setFavourite(Transaction transaction, ContactId contactId, boolean favourite) throws DbException {
+		if (transaction.isReadOnly()){
+		    throw new IllegalArgumentException();
+        }
+		T newTransaction = unbox(transaction);
+		if (!db.containsContact(newTransaction, contactId))
 			throw new NoSuchContactException();
-		db.setFavourite(txn, c, favourite);
+		db.setFavourite(newTransaction, contactId, favourite);
 	}
 
 	@Override

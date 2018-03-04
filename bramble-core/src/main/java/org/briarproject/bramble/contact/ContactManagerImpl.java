@@ -148,13 +148,14 @@ class ContactManagerImpl implements ContactManager {
 	}
 
 	@Override
-    public void setFavourite(ContactId c, boolean favourite) throws DbException {
-        Transaction txn = db.startTransaction(false);
+    public void setFavourite(ContactId contactId, boolean favourite) throws DbException {
+		boolean isReadOnly = false;
+        Transaction transaction = db.startTransaction(isReadOnly);
         try {
-            db.setFavourite(txn, c, favourite);
-            db.commitTransaction(txn);
+            db.setFavourite(transaction, contactId, favourite);
+            db.commitTransaction(transaction);
         } finally {
-            db.endTransaction(txn);
+            db.endTransaction(transaction);
         }
     }
 

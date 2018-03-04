@@ -611,7 +611,7 @@ interface Database<T> {
 	/**
 	 * Marks the given contact as favourite.
 	 */
-	void setFavourite(T txn, ContactId c, boolean favourite)
+	void setFavourite(T transaction, ContactId contactId, boolean favourite)
 			throws DbException;
 
 	/**
