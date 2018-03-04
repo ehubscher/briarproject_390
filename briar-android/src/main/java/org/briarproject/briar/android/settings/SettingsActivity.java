@@ -1,14 +1,22 @@
 package org.briarproject.briar.android.settings;
 
+
 import android.os.Bundle;
+
 import android.support.v7.app.ActionBar;
+
 import android.view.MenuItem;
+
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
 
+
+
+
 public class SettingsActivity extends BriarActivity {
+
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -23,6 +31,14 @@ public class SettingsActivity extends BriarActivity {
 		setContentView(R.layout.activity_settings);
 	}
 
+
+	@Override
+	public void onStart(){
+		super.onStart();
+
+	}
+
+
 	@Override
 	public void injectActivity(ActivityComponent component) {
 		component.inject(this);
@@ -31,7 +47,7 @@ public class SettingsActivity extends BriarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			onBackPressed();
+			super.onBackPressed();
 			return true;
 		}
 		return false;

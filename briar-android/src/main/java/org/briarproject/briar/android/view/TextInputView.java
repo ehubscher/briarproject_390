@@ -15,6 +15,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.briarproject.briar.R;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
@@ -130,8 +132,17 @@ public class TextInputView extends KeyboardAwareLinearLayout
 		}
 	}
 
+    //send the base64 image String
+    public void sendImage(String imageString){
+	    ui.editText.setText("ImageTag:" + imageString);
+
+	    //Fake button press to send the image automatically after
+        ImageButton btn_send = findViewById(R.id.btn_send);
+        btn_send.performClick();
+	}
+
 	public void setText(String text) {
-		ui.editText.setText(text);
+	    ui.editText.setText(text);
 	}
 
 	public Editable getText() {

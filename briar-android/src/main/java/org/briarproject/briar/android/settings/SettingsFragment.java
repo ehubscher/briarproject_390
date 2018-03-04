@@ -2,11 +2,13 @@ package org.briarproject.briar.android.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -69,14 +71,11 @@ import static org.briarproject.briar.api.android.AndroidNotificationManager.PREF
 @ParametersNotNullByDefault
 public class SettingsFragment extends PreferenceFragmentCompat
 		implements EventListener, Preference.OnPreferenceChangeListener {
-
 	public static final String SETTINGS_NAMESPACE = "android-ui";
 	public static final String BT_NAMESPACE = BluetoothConstants.ID.getString();
 	public static final String TOR_NAMESPACE = TorConstants.ID.getString();
-
 	private static final Logger LOG =
 			Logger.getLogger(SettingsFragment.class.getName());
-
 	private SettingsActivity listener;
 	private ListPreference enableBluetooth;
 	private ListPreference torNetwork;
@@ -86,20 +85,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyBlogPosts;
 	private CheckBoxPreference notifyVibration;
 	private CheckBoxPreference notifyLockscreen;
-
 	private Preference notifySound;
-
+	private ListPreference selectedTheme;
 	// Fields that are accessed from background threads must be volatile
 	volatile Settings settings;
 	@Inject
 	volatile SettingsManager settingsManager;
 	@Inject
 	volatile EventBus eventBus;
-
 	@Inject
 	AndroidExecutor androidExecutor;
 	@Inject
 	TestDataCreator testDataCreator;
+	private final String themeLocation = "pref_theme";
 
 	@Override
 	public void onAttach(Context context) {
@@ -113,7 +111,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	@Override
 	public void onCreatePreferences(Bundle bundle, String s) {
 		addPreferencesFromResource(R.xml.settings);
-
 		enableBluetooth = (ListPreference) findPreference("pref_key_bluetooth");
 		torNetwork = (ListPreference) findPreference("pref_key_tor_network");
 		notifyPrivateMessages = (CheckBoxPreference) findPreference(
@@ -129,7 +126,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyLockscreen = (CheckBoxPreference) findPreference(
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
-
+	    /* ----------------- THEME ----------------------*/
+		//Add listener to listPreference component
+		selectedTheme = (ListPreference) findPreference("pref_theme");
+		selectedTheme.setOnPreferenceChangeListener(this);
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
 		notifyPrivateMessages.setOnPreferenceChangeListener(this);
@@ -159,13 +159,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			startActivityForResult(i, REQUEST_RINGTONE);
 			return true;
 		});
-
 		findPreference("pref_key_send_feedback").setOnPreferenceClickListener(
 				preference -> {
 					triggerFeedback();
 					return true;
 				});
-
 		Preference testData = findPreference("pref_key_test_data");
 		if (IS_DEBUG_BUILD) {
 			testData.setOnPreferenceClickListener(preference -> {
@@ -177,7 +175,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		} else {
 			testData.setVisible(false);
 		}
-
 		loadSettings();
 	}
 
@@ -208,36 +205,35 @@ public class SettingsFragment extends PreferenceFragmentCompat
 						btSettings.getBoolean(PREF_BT_ENABLE, false);
 				int torSetting = torSettings.getInt(PREF_TOR_NETWORK,
 						PREF_TOR_NETWORK_ALWAYS);
-				displaySettings(btSetting, torSetting);
+                /*---- THEME ---*/
+				//Get theme settings from settingsManager
+				Settings themeSettings = settingsManager.getSettings("theme");
+				int themeSetting = themeSettings.getInt(themeLocation, 1);
+				displaySettings(btSetting, torSetting, themeSetting);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			}
 		});
 	}
 
-	private void displaySettings(boolean btSetting, int torSetting) {
+	private void displaySettings(boolean btSetting, int torSetting,
+			int themeSetting) {
 		listener.runOnUiThreadUnlessDestroyed(() -> {
 			enableBluetooth.setValue(Boolean.toString(btSetting));
 			torNetwork.setValue(Integer.toString(torSetting));
-
+			selectedTheme.setValue(Integer.toString(themeSetting));
 			notifyPrivateMessages.setChecked(settings.getBoolean(
 					PREF_NOTIFY_PRIVATE, true));
-
 			notifyGroupMessages.setChecked(settings.getBoolean(
 					PREF_NOTIFY_GROUP, true));
-
 			notifyForumPosts.setChecked(settings.getBoolean(
 					PREF_NOTIFY_FORUM, true));
-
 			notifyBlogPosts.setChecked(settings.getBoolean(
 					PREF_NOTIFY_BLOG, true));
-
 			notifyVibration.setChecked(settings.getBoolean(
 					PREF_NOTIFY_VIBRATION, true));
-
 			notifyLockscreen.setChecked(settings.getBoolean(
 					PREF_NOTIFY_LOCK_SCREEN, false));
-
 			String text;
 			if (settings.getBoolean(PREF_NOTIFY_SOUND, true)) {
 				String ringtoneName = settings.get(PREF_NOTIFY_RINGTONE_NAME);
@@ -291,8 +287,42 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			Settings s = new Settings();
 			s.putBoolean(PREF_NOTIFY_LOCK_SCREEN, (Boolean) o);
 			storeSettings(s);
+		} else if (preference == selectedTheme) {
+			int themeSetting = Integer.parseInt((String) o);
+			storeThemeSettings(themeSetting);
 		}
 		return true;
+	}
+
+	/* ----------------- THEME ----------------------*/
+	private void storeThemeSettings(int selectedTheme) {
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(
+						this.getActivity().getApplicationContext());
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt("pref_theme", selectedTheme);
+		editor.commit();
+        /* Adding theme number to settingsManager*/
+		listener.runOnDbThread(() -> {
+			try {
+				Settings s = new Settings();
+				s.putInt("pref_theme", selectedTheme);
+				long now = System.currentTimeMillis();
+				settingsManager.mergeSettings(s, "theme");
+				long duration = System.currentTimeMillis() - now;
+				if (LOG.isLoggable(INFO))
+					LOG.info("Merging settings took " + duration + " ms");
+			} catch (DbException e) {
+				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+			}
+		});
+		//Restart application
+		Intent i = this.getActivity().getBaseContext().getPackageManager()
+				.getLaunchIntentForPackage(
+						this.getActivity().getBaseContext().getPackageName());
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+				Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(i);
 	}
 
 	private void enableOrDisableBluetooth(boolean enable) {
@@ -391,5 +421,4 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			}
 		}
 	}
-
 }

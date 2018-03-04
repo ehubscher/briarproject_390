@@ -1,8 +1,13 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +87,11 @@ import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 import org.thoughtcrime.securesms.components.util.FutureTaskListener;
 import org.thoughtcrime.securesms.components.util.ListenableFutureTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -142,7 +152,12 @@ public class ConversationActivity extends BriarActivity
 	private ImageView toolbarStatus;
 	private TextView toolbarTitle;
 	private BriarRecyclerView list;
-	private TextInputView textInputView;
+
+    //Declared variables for the Image selector
+	private ImageButton imageButton;
+	final Context context = this;
+    public static final int PICK_IMAGE = 1;
+    private TextInputView textInputView;
 
 	private final ListenableFutureTask<String> contactNameTask =
 			new ListenableFutureTask<>(new Callable<String>() {
@@ -216,6 +231,24 @@ public class ConversationActivity extends BriarActivity
 
 		textInputView = findViewById(R.id.text_input_container);
 		textInputView.setListener(this);
+
+
+        //the add_image button
+        imageButton = findViewById(R.id.open_image_browser);
+
+        //the listener
+        imageButton.setOnClickListener(new View.OnClickListener() {
+
+        	//On click the image selector will pop open
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            }
+        });
+
 	}
 
 	@Override
@@ -232,6 +265,30 @@ public class ConversationActivity extends BriarActivity
 					Snackbar.LENGTH_SHORT);
 			snackbar.getView().setBackgroundResource(R.color.briar_primary);
 			snackbar.show();
+		}
+
+		//to recognize when the user comes back from the image selector with an image
+		if(request == PICK_IMAGE && result == RESULT_OK && data.getData() != null){
+
+            Uri uri;
+            Bitmap bitmap;
+
+		    try{
+		        uri = data.getData();
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+
+                //Enocodes the bitmap image into base64 string
+                ByteArrayOutputStream boas = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
+                byte[] imageBytes = boas.toByteArray();
+                String imageString = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+
+                //Send the picture to the input text box to be sent
+                textInputView.sendImage(imageString);
+
+            }catch(IOException e){
+		        e.printStackTrace();
+            }
 		}
 	}
 

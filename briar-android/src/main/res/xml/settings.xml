@@ -2,6 +2,10 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--this should be moved back down, only for speeding up testing-->
+	<Preference
+		android:key="pref_key_test_data"
+		android:title="Create Test Data"/>
 	<PreferenceCategory
 		android:title="@string/network_settings_title">
 
@@ -22,6 +26,23 @@
 			android:persistent="false"
 			android:summary="%s"
 			android:title="@string/tor_network_setting"/>
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:layout="@layout/divider_preference"/>
+
+	<!-- Customize theme -->
+	<PreferenceCategory
+		android:title="@string/style_settings_title">
+
+		<ListPreference
+			android:defaultValue="1"
+			android:entries="@array/theme_setting_names"
+			android:entryValues="@array/theme_setting_values"
+			android:key="pref_theme"
+			android:persistent="false"
+			android:summary="%s"
+			android:title="@string/theme_settings_title"/>
 
 	</PreferenceCategory>
 
@@ -121,9 +142,5 @@
 			android:title="@string/send_feedback"/>
 
 	</PreferenceCategory>
-
-	<Preference
-		android:key="pref_key_test_data"
-		android:title="Create Test Data"/>
 
 </PreferenceScreen>
