@@ -18,6 +18,21 @@ import org.briarproject.briar.android.fragment.BaseFragment;
 
 public class ProfileFragment extends BaseFragment {
 
+	ImageView profileImage;
+	// references to our images
+	private Integer[] mThumbIds = {
+			R.drawable.pig,
+			R.drawable.panda,
+			R.drawable.dog,
+			R.drawable.cat,
+			R.drawable.bunny,
+			R.drawable.monkey,
+			R.drawable.frog,
+			R.drawable.penguin,
+			R.drawable.robot
+
+	};
+
 	@Override
 	public String getUniqueTag() {
 		return null;
@@ -38,15 +53,16 @@ public class ProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 	    getActivity().setTitle(R.string.title_activity_profile);
-	    GridView allIcons = rootView.findViewById(R.id.grid_view);
+
+	     GridView allIcons = rootView.findViewById(R.id.grid_view);
 	    allIcons.setAdapter(new ImageAdapter(rootView.getContext()));
 
 	    allIcons.setOnItemClickListener((parent, v, position, id) -> {
-		    // empty
+		    profileImage = rootView.findViewById(R.id.image_profile);
+		    profileImage.setImageResource(mThumbIds[position]);
 	    });
 
 	    return rootView;
-
 
     }
 
@@ -100,12 +116,6 @@ public class ProfileFragment extends BaseFragment {
 			return imageView;
 		}
 
-		// references to our images
-		private Integer[] mThumbIds = {
-				R.drawable.ic_android_black_24dp,
-				R.drawable.ic_sentiment_very_satisfied_black_24dp,
-				R.drawable.ic_mood_black_24dp,
-		};
 	}
 }
 
