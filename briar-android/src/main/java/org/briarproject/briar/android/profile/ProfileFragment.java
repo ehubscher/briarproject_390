@@ -1,7 +1,9 @@
 package org.briarproject.briar.android.profile;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,9 +57,16 @@ public class ProfileFragment extends BaseFragment {
 
 	     GridView allIcons = rootView.findViewById(R.id.grid_view);
 	    allIcons.setAdapter(new ImageAdapter(rootView.getContext()));
+		profileImage = rootView.findViewById(R.id.image_profile);
+
+
+	    /*Retrieving stored theme*/
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+		int avatarId= settings.getInt("pref_avatar",0);
+	    if(avatarId != 0)
+	    	profileImage.setImageResource(mThumbIds[avatarId]);
 
 	    allIcons.setOnItemClickListener((parent, v, position, id) -> {
-		    profileImage = rootView.findViewById(R.id.image_profile);
 		    profileImage.setImageResource(mThumbIds[position]);
 		    imageNb=position+1;//0 is saved for the default (user using Identicons)
 	    });
@@ -68,13 +77,23 @@ public class ProfileFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getActivity(), "Saved Avatar #" + Integer.toString(imageNb), Toast.LENGTH_LONG).show();
+				storeAvatar();
 				//TODO: broadcast new ContactAvatarChangedEvent
+
 			}
 		});
 
 		return rootView;
-
     }
+
+    private void storeAvatar(){
+		//Store avatar number in preferences
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt("pref_avatar", imageNb-1);
+		editor.commit();
+	}
 
     @Override
 	public void onStart() {
