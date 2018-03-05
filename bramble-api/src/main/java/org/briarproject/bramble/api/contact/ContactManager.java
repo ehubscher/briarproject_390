@@ -82,6 +82,12 @@ public interface ContactManager {
 	void setContactActive(Transaction txn, ContactId c, boolean active)
 			throws DbException;
 
+	/**
+	 * set the avatar id for the contact
+	 */
+	void setAvatarId(ContactId c, int avatarId)
+			throws DbException;
+
     /**
      * Marks a contact as favourite or not.
      */

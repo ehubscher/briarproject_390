@@ -3,6 +3,7 @@ package org.briarproject.bramble.db;
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.contact.event.ContactAddedEvent;
+import org.briarproject.bramble.api.contact.event.ContactAvatarChangedEvent;
 import org.briarproject.bramble.api.contact.event.ContactRemovedEvent;
 import org.briarproject.bramble.api.contact.event.ContactStatusChangedEvent;
 import org.briarproject.bramble.api.contact.event.ContactVerifiedEvent;
@@ -798,6 +799,18 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 			throw new NoSuchContactException();
 		db.setContactActive(txn, c, active);
 		transaction.attach(new ContactStatusChangedEvent(c, active));
+	}
+
+	@Override
+	public void setAvatarId(Transaction transaction, ContactId c, int avatarId) throws DbException {
+		if (transaction.isReadOnly()){
+			throw new IllegalArgumentException();
+		}
+		T txn = unbox(transaction);
+		if (!db.containsContact(txn, c))
+			throw new NoSuchContactException();
+		db.setAvatarId(txn, c, avatarId);
+		transaction.attach(new ContactAvatarChangedEvent(c, avatarId));
 	}
 
 	@Override

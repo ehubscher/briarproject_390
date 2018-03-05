@@ -329,7 +329,7 @@ public class InviteeProtocolEngineTest extends AbstractProtocolEngineTest {
 						getRandomBytes(5));
 		Contact notCreatorContact =
 				new Contact(contactId, notCreator, localAuthor.getId(), true,
-						true, false);
+						true, false, 0);
 
 		expectGetContactId();
 		context.checking(new Expectations() {{

@@ -410,9 +410,33 @@ public class ConversationActivity extends BriarActivity
 
 	private void displayContactDetails() {
 		runOnUiThreadUnlessDestroyed(() -> {
-			//noinspection ConstantConditions
-			toolbarAvatar.setImageDrawable(
-					new IdenticonDrawable(contactAuthorId.getBytes()));
+            //noinspection ConstantConditions
+		    try{
+		        int avatarId = contactManager.getContact(contactId).getAvatarId();
+                if(avatarId !=0 && avatarId < 9){
+                    // references to our images
+                    Integer[] mThumbIds = {
+                            R.drawable.pig,
+                            R.drawable.panda,
+                            R.drawable.dog,
+                            R.drawable.cat,
+                            R.drawable.bunny,
+                            R.drawable.monkey,
+                            R.drawable.frog,
+                            R.drawable.penguin,
+                            R.drawable.robot
+                    };
+                    toolbarAvatar.setImageResource(mThumbIds[avatarId]);
+                }
+                else{//Use Identicon by default
+                    toolbarAvatar.setImageDrawable(
+                            new IdenticonDrawable(contactAuthorId.getBytes()));
+                }
+            } catch (NoSuchContactException e) {
+                finishOnUiThread();
+            } catch (DbException e) {
+                if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+            }
 			toolbarTitle.setText(contactName);
 		});
 	}

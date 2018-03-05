@@ -609,6 +609,12 @@ interface Database<T> {
 			throws DbException;
 
 	/**
+	 * Set the avatarId for the contact
+	 */
+	void setAvatarId(T txn, ContactId c, int avatarId)
+			throws DbException;
+
+	/**
 	 * Marks the given contact as favourite.
 	 */
 	void setFavourite(T transaction, ContactId contactId, boolean favourite)
