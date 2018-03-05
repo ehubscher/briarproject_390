@@ -1,15 +1,15 @@
 package org.briarproject.briar.android.profile;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -19,6 +19,7 @@ import org.briarproject.briar.android.fragment.BaseFragment;
 public class ProfileFragment extends BaseFragment {
 
 	ImageView profileImage;
+	int imageNb;
 	// references to our images
 	private Integer[] mThumbIds = {
 			R.drawable.pig,
@@ -58,9 +59,20 @@ public class ProfileFragment extends BaseFragment {
 	    allIcons.setOnItemClickListener((parent, v, position, id) -> {
 		    profileImage = rootView.findViewById(R.id.image_profile);
 		    profileImage.setImageResource(mThumbIds[position]);
+		    imageNb=position+1;//0 is saved for the default (user using Identicons)
 	    });
 
-	    return rootView;
+	    /* SAVE BUTTON */
+		Button button = (Button) rootView.findViewById(R.id.profile_save_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Saved Avatar #" + Integer.toString(imageNb), Toast.LENGTH_LONG).show();
+				//TODO: broadcast new ContactAvatarChangedEvent
+			}
+		});
+
+		return rootView;
 
     }
 

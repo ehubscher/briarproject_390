@@ -41,10 +41,10 @@ public class ContactItemViewHolder<I extends ContactItem>
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
 		Author author = item.getContact().getAuthor();
-		avatar.setImageDrawable(
-				new IdenticonDrawable(author.getId().getBytes()));
 		String contactName = author.getName();
 		name.setText(contactName);
+		avatar.setImageDrawable(
+				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
 		if (bulb != null) {
 			// online/offline
@@ -53,6 +53,15 @@ public class ContactItemViewHolder<I extends ContactItem>
 			} else {
 				bulb.setImageResource(R.drawable.contact_disconnected);
 			}
+		}
+
+		//TODO: Sets avatar to either custom avatar
+		if(item.currentAvatar() !=0){
+			//Use custom avatar
+		}
+		else{//Use Identicon by default
+			avatar.setImageDrawable(
+				new IdenticonDrawable(author.getId().getBytes()));
 		}
 
 		//Set visibility of the the star next to each conversation with contacts

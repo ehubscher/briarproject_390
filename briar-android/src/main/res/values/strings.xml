@@ -420,6 +420,7 @@
     <!-- Profile -->
     <string name="title_activity_profile">Profile</string>
     <string name="profile_empty_state">This page does not contain any avatars yet.</string>
+    <string name="profile_save_button">Save Avatar</string>
 
 
 </resources>
