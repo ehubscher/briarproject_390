@@ -506,7 +506,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			// Create a contact row
 			String sql = "INSERT INTO contacts"
 					+ " (authorId, name, publicKey, localAuthorId,"
-					+ " verified, active, favourite)"
+					+ " verified, active, favourite, avatarId)"
 					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = txn.prepareStatement(sql);
 			ps.setBytes(1, remote.getId().getBytes());
