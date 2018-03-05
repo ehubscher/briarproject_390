@@ -55,9 +55,21 @@ public class ContactItemViewHolder<I extends ContactItem>
 			}
 		}
 
-		//TODO: Sets avatar to either custom avatar
-		if(item.currentAvatar() !=0){
-			//Use custom avatar
+		if(item.currentAvatar() !=0 && item.currentAvatar() < 9){
+			int imageNb = item.currentAvatar();
+			// references to our images
+			Integer[] mThumbIds = {
+					R.drawable.pig,
+					R.drawable.panda,
+					R.drawable.dog,
+					R.drawable.cat,
+					R.drawable.bunny,
+					R.drawable.monkey,
+					R.drawable.frog,
+					R.drawable.penguin,
+					R.drawable.robot
+			};
+			avatar.setImageResource(mThumbIds[imageNb]);
 		}
 		else{//Use Identicon by default
 			avatar.setImageDrawable(

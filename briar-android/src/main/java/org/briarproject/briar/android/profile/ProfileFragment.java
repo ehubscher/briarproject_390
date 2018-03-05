@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.briarproject.bramble.api.contact.event.ContactAvatarChangedEvent;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.fragment.BaseFragment;
@@ -79,7 +80,6 @@ public class ProfileFragment extends BaseFragment {
 				Toast.makeText(getActivity(), "Saved Avatar #" + Integer.toString(imageNb), Toast.LENGTH_LONG).show();
 				storeAvatar();
 				//TODO: broadcast new ContactAvatarChangedEvent
-
 			}
 		});
 
