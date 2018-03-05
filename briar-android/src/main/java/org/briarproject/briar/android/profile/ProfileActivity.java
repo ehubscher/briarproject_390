@@ -29,13 +29,6 @@ public class ProfileActivity extends BriarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.activity_profile);
-
-	    GridView gridView = findViewById(R.id.grid_view);
-	    gridView.setAdapter(new ImageAdapter(this));
-
-	    gridView.setOnItemClickListener((parent, v, position, id) -> Toast.makeText(getBaseContext(),
-			    "pic" + (position + 1) + " selected",
-			    Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -56,53 +49,5 @@ public class ProfileActivity extends BriarActivity {
         }
         return false;
     }
-
-	public class ImageAdapter extends BaseAdapter
-	{
-		private Context context;
-		private Integer[] mThumbIds = {
-				R.drawable.ic_android_black_24dp,
-				R.drawable.ic_sentiment_very_satisfied_black_24dp,
-				R.drawable.ic_mood_black_24dp,
-		};
-
-		public ImageAdapter(Context c)
-		{
-			context = c;
-		}
-
-		//---returns the number of images---
-		public int getCount() {
-			return mThumbIds.length;
-		}
-
-		//---returns the ID of an item---
-		public Object getItem(int position) {
-			return null;
-		}
-
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		//---returns an ImageView view---
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ImageView imageView;
-			if (convertView == null) {
-				// if it's not recycled, initialize some attributes
-				imageView = new ImageView(context);
-				imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setPadding(8, 8, 8, 8);
-			} else {
-				imageView = (ImageView) convertView;
-			}
-
-			imageView.setImageResource(mThumbIds[position]);
-			return imageView;
-		}
-
-	}
-
 }
 
