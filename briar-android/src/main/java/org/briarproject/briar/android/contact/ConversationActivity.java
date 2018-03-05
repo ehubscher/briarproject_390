@@ -252,26 +252,16 @@ public class ConversationActivity extends BriarActivity
 		if(request == textInputView.ATTACH_IMAGES) {
             Uri uri;
             Bitmap bitmap;
-            Bitmap thumbnail;
 
 		    try{
 		        uri = data.getData();
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-				thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 96, 96);
 
-				/*
                 ByteArrayOutputStream boas = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
-                byte[] imageBytes = boas.toByteArray();
-                String imageString = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
-				*/
 
-                textInputView.setText("thumbnail");
-
-                //TODO: What we need to decode the string for later
-                //imageBytes = android.util.Base64.decode(imageString, android.util.Base64.DEFAULT);
-                //Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                //imageButton.setImageBitmap(decodeImage);
+                textInputView.setText("media");
+                textInputView.addMedia(bitmap);
 
             } catch(IOException e) {
 		        e.printStackTrace();

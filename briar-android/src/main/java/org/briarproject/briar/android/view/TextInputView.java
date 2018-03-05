@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.IBinder;
 import android.support.annotation.CallSuper;
@@ -16,8 +17,11 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.briarproject.briar.R;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
@@ -78,15 +82,20 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 		ui.emojiToggle.attach(ui.emojiDrawer);
 		ui.emojiToggle.setOnClickListener(v -> onEmojiToggleClicked());
+
 		ui.editText.setOnClickListener(v -> showSoftKeyboard());
 		ui.editText.setOnKeyListener((v, keyCode, event) -> {
-			if (keyCode == KEYCODE_BACK && isEmojiDrawerOpen()) {
-				hideEmojiDrawer();
-				return true;
+			if (keyCode == KEYCODE_BACK) {
+			    if(isEmojiDrawerOpen()) {
+			        hideEmojiDrawer();
+                    return true;
+                }
 			}
-			if (keyCode == KEYCODE_ENTER && event.isCtrlPressed()) {
-				trySendMessage();
-				return true;
+			if (keyCode == KEYCODE_ENTER) {
+			    if(event.isCtrlPressed()) {
+                    trySendMessage();
+                    return true;
+                }
 			}
 			return false;
 		});
@@ -139,6 +148,23 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 	public Editable getText() {
 		return ui.editText.getText();
+	}
+
+	public void addMedia(Bitmap img) {
+        if (!ui.selectedMediaDrawer.isShown()) {
+            ui.selectedMediaDrawer.setVisibility(VISIBLE);
+        }
+
+        ViewGroup.LayoutParams params = getLayoutParams();
+       // params.height = getKeyboardHeight();
+        //setLayoutParams(params);
+
+        ui.editText.requestFocus();
+
+        SelectedMediaView media = new SelectedMediaView(getContext());
+        media.setImageBitmap(img);
+
+        ui.selectedMediaDrawer.addView(media);
 	}
 
 	public void setHint(@StringRes int res) {
@@ -197,18 +223,20 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 	protected class ViewHolder {
 		private ImageButton imageButton;
-
 		private final EmojiToggle emojiToggle;
+
+        final View sendButton;
 		final EmojiEditText editText;
-		final View sendButton;
 		final EmojiDrawer emojiDrawer;
+		final LinearLayout selectedMediaDrawer;
 
 		private ViewHolder() {
 			imageButton = findViewById(R.id.open_image_browser);
 			emojiToggle = findViewById(R.id.emoji_toggle);
+            sendButton = findViewById(R.id.btn_send);
 			editText = findViewById(R.id.input_text);
 			emojiDrawer = findViewById(R.id.emoji_drawer);
-			sendButton = findViewById(R.id.btn_send);
+			selectedMediaDrawer = findViewById(R.id.selected_media_container);
 
 			imageButton.setOnClickListener(new View.OnClickListener() {
 				@Override
