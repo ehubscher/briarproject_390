@@ -64,7 +64,7 @@ public class BlogSharingManagerImplTest extends BrambleMockTestCase {
 	private final Author author = new Author(authorId, "Author",
 			getRandomBytes(MAX_PUBLIC_KEY_LENGTH));
 	private final Contact contact =
-			new Contact(contactId, author, localAuthorId, true, true, false);
+			new Contact(contactId, author, localAuthorId, true, true, false, 0);
 	private final Collection<Contact> contacts =
 			Collections.singletonList(contact);
 	private final Group contactGroup =
