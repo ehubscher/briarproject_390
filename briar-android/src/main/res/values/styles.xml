@@ -129,7 +129,4 @@
 
     <style name="BriarTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-	<style name="BriarTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-	<style name="BriarTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>
