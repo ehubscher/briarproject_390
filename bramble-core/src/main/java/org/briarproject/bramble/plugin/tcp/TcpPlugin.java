@@ -204,6 +204,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	@Override
 	public void poll(Collection<ContactId> connected) {
+
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
@@ -266,7 +267,11 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
-		String addr = split[0], port = split[1];
+		// Hack the current implementation to try to connect to cellphone on LTE
+		// The port passed was the port previously used but it still a success
+		// This demonstrate use that we can Hack the TCP process to inject our value...
+		
+		String addr = "142.169.78.151" , port = "42517";
 		// Ensure getByName() won't perform a DNS lookup
 		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
 		try {
@@ -312,6 +317,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		List<InetAddress> addrs = new ArrayList<>();
 		for (NetworkInterface iface : ifaces)
 			addrs.addAll(Collections.list(iface.getInetAddresses()));
+
 		return addrs;
 	}
 }
