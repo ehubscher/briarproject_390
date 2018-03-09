@@ -267,11 +267,38 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
-		// Hack the current implementation to try to connect to cellphone on LTE
-		// The port passed was the port previously used but it still a success
-		// This demonstrate use that we can Hack the TCP process to inject our value...
-		
-		String addr = "142.169.78.151" , port = "42517";
+		String addr = split[0], port = split[1];
+		// Ensure getByName() won't perform a DNS lookup
+		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
+		try {
+			InetAddress a = InetAddress.getByName(addr);
+			int p = Integer.parseInt(port);
+			return new InetSocketAddress(a, p);
+		} catch (UnknownHostException e) {
+			if (LOG.isLoggable(WARNING))
+				// not scrubbing to enable us to find the problem
+				LOG.warning("Invalid address: " + addr);
+			return null;
+		} catch (NumberFormatException e) {
+			if (LOG.isLoggable(WARNING))
+				LOG.warning("Invalid port: " + port);
+			return null;
+		}
+	}
+
+	/**
+	 * This method is a custom hack of the TCP method, it will only be used by CustomWanTcpPlugin.java
+	 * It is mostly similar to parseSocketAddress , however, it will go and use information from internet
+	 * @param ipPort Port by what's briar remember , (we might not use the value)
+	 * @param UserID Custom User ID , implemented...
+	 * @return The right socket to establish connection
+	 */
+	@Nullable
+	InetSocketAddress InjectSocketAddressFromServer(String ipPort, String UserID){
+		if (StringUtils.isNullOrEmpty(ipPort)) return null;
+		String[] split = ipPort.split(":");
+		if (split.length != 2) return null;
+		String addr = split[0], port = split[1];
 		// Ensure getByName() won't perform a DNS lookup
 		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
 		try {
