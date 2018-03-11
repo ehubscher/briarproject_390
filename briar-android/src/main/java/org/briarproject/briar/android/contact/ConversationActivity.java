@@ -250,22 +250,8 @@ public class ConversationActivity extends BriarActivity
 
 		//to recognize when the user comes back from the image selector
 		if(request == textInputView.ATTACH_IMAGES) {
-            Uri uri;
-            Bitmap bitmap;
-
-		    try{
-		        uri = data.getData();
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-
-                ByteArrayOutputStream boas = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
-
-                textInputView.setText("media");
-                textInputView.addMedia(bitmap);
-
-            } catch(IOException e) {
-		        e.printStackTrace();
-            }
+			textInputView.setText("mediaDrawer");
+			textInputView.addMedia(data.getData());
 		}
 	}
 

@@ -4,6 +4,7 @@ apply plugin: 'org.sonarqube'
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
         mavenLocal()
         google()
     }

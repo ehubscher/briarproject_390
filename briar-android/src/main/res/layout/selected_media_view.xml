@@ -3,18 +3,16 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="75dp"
+    android:layout_height="100dp">
 
-    <org.briarproject.briar.android.view.SelectedMediaView
-        android:layout_width="75dp"
-        android:layout_height="100dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="16dp"></org.briarproject.briar.android.view.SelectedMediaView>
+    <FrameLayout
+        android:id="@+id/selectedMedia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/selectedMediaDeleteButton"
         android:layout_width="26dp"
         android:layout_height="29dp"
         app:srcCompat="@drawable/action_delete_black"/>

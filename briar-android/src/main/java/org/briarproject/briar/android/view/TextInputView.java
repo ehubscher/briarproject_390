@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.support.annotation.CallSuper;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
@@ -20,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.briarproject.briar.R;
@@ -29,6 +30,9 @@ import org.thoughtcrime.securesms.components.emoji.EmojiDrawer;
 import org.thoughtcrime.securesms.components.emoji.EmojiDrawer.EmojiEventListener;
 import org.thoughtcrime.securesms.components.emoji.EmojiEditText;
 import org.thoughtcrime.securesms.components.emoji.EmojiToggle;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import javax.annotation.Nullable;
 
@@ -150,21 +154,38 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 		return ui.editText.getText();
 	}
 
-	public void addMedia(Bitmap img) {
+	public void addMedia(Uri mediaUri) {
         if (!ui.selectedMediaDrawer.isShown()) {
             ui.selectedMediaDrawer.setVisibility(VISIBLE);
         }
 
+        /*
         ViewGroup.LayoutParams params = getLayoutParams();
-       // params.height = getKeyboardHeight();
-        //setLayoutParams(params);
+       	params.height = getKeyboardHeight();
+        setLayoutParams(params);
+		*/
 
-        ui.editText.requestFocus();
+		Bitmap bitmap = null;
+		String mediaType = getContext().getContentResolver().getType(mediaUri);
+		SelectedMediaView media = new SelectedMediaView(getContext());
+		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 
-        SelectedMediaView media = new SelectedMediaView(getContext());
-        media.setImageBitmap(img);
+		try {
+			bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mediaUri);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if("image/jpg".equals(mediaType) || "image/jpeg".equals(mediaType)) {
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
+			media.setImage(bitmap);
+		} else if("image/png".equals(mediaType)) {
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, boas);
+			media.setImage(bitmap);
+		}
 
         ui.selectedMediaDrawer.addView(media);
+		ui.editText.requestFocus();
 	}
 
 	public void setHint(@StringRes int res) {
@@ -232,12 +253,6 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 		private ViewHolder() {
 			imageButton = findViewById(R.id.open_image_browser);
-			emojiToggle = findViewById(R.id.emoji_toggle);
-            sendButton = findViewById(R.id.btn_send);
-			editText = findViewById(R.id.input_text);
-			emojiDrawer = findViewById(R.id.emoji_drawer);
-			selectedMediaDrawer = findViewById(R.id.selected_media_container);
-
 			imageButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -247,6 +262,12 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 					((Activity)getContext()).startActivityForResult(Intent.createChooser(intent, "Select Picture"), ATTACH_IMAGES);
 				}
 			});
+
+			emojiToggle = findViewById(R.id.emoji_toggle);
+            sendButton = findViewById(R.id.btn_send);
+			editText = findViewById(R.id.input_text);
+			emojiDrawer = findViewById(R.id.emoji_drawer);
+			selectedMediaDrawer = findViewById(R.id.selected_media_container);
 		}
 	}
 
