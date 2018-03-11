@@ -1,5 +1,7 @@
 package org.briarproject.bramble.restClient;
 
+import com.google.gson.JsonElement;
+
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +34,7 @@ public class SampleUserBriarServerServiceTest {
             executorService.awaitTermination(2, TimeUnit.SECONDS);
         }catch (InterruptedException ee){ee.printStackTrace();}
         String resultFromAPI =  sampleUserBriarServerService.ResultFromBriar;
+        JsonElement stuff = sampleUserBriarServerService.ObtainUserJSON ;
         Assert.assertTrue((resultFromAPI != null && !resultFromAPI.isEmpty()));
     }
 

@@ -1,7 +1,9 @@
 package org.briarproject.bramble.restClient;
 
-import org.briarproject.bramble.api.sync.Request;
-import org.json.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import org.json.*;
 import java.util.logging.Logger;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,6 +24,7 @@ public class SampleUserBriarServerService {
             Logger.getLogger(SampleUserBriarServerService.class.getName());
 
     public  volatile static  String ResultFromBriar = "";
+    public volatile static JsonElement ObtainUserJSON = null;
 
     //TODO: Find a better way to hide the API Password
     private final String pass = "qwerty";
@@ -41,7 +44,12 @@ public class SampleUserBriarServerService {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 // Let's try to write the response from API in a LOG
-                if(response.body() != null) ResultFromBriar = response.body().toString();
+                if(response.body() != null){
+                    ResultFromBriar = response.body().toString();
+                    JsonParser parser = new JsonParser();
+                    ObtainUserJSON = parser.parse(ResultFromBriar);
+
+                }
                 LOG.info("FROM BRIAR API :   " + ResultFromBriar);
             }
             @Override
