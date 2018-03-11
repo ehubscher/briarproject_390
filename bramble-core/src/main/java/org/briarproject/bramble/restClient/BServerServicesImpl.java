@@ -110,7 +110,7 @@ public class BServerServicesImpl implements BServerServices{
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
+                        LOG.info(" BRIAR SERVER : Failure to create user Exception: " + t.getMessage());
                     }
                 });
             }
@@ -122,12 +122,13 @@ public class BServerServicesImpl implements BServerServices{
             LOG.info(ee.getMessage());
         }
 
-        boolean DidItWorked = (resultFromQuery != null & !resultFromQuery.isEmpty());
+        boolean DidItWorked = (resultFromQuery != null && !resultFromQuery.isEmpty());
         return DidItWorked;
     }
 
     @Override
     public boolean UpdateUserInfo(SavedUser savedUser) {
+        // This method is not yet implemented on the briar server
         return false;
     }
 }

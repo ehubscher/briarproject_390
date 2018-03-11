@@ -56,7 +56,7 @@ public class BServerServicesImplTest {
     }
     @Test
     public void UpdateUserInfo(){
-
+        // This method is not yet implemented on the briar server
     }
 
     private String GenerateFakeUserName(){
