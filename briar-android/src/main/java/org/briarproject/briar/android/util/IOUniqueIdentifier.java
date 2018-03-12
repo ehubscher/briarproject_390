@@ -38,27 +38,19 @@ public class IOUniqueIdentifier {
     /**
      * The constructor is handling the construction of the file and unique ID in it...
      */
-    public IOUniqueIdentifier(Activity activity){
+    public IOUniqueIdentifier(){
 
-        // If the uniqueID doesn't exist build it
-        if(!DoesItExist()){
-            String unique = GenerateUniqueID();
-            try {
-                WriteUniqueIdToFile(unique, activity);
-            } catch (IOException e) {
-                LOG.info(e.getMessage());
-            }
-        }
     }
     /**
      * This method is writing the UniqueID into a file inside Android/Documents/config.txt
      * @param uniqueIdentifier A unique String ID received by the method
      * @throws IOException : may be throw
      */
-    private void WriteUniqueIdToFile(String uniqueIdentifier, Activity activity) throws IOException {
+    public void writeUniqueIdToFile(String uniqueIdentifier, Activity activity) throws IOException {
+        // If the uniqueID doesn't exist build it
         // Prevent any too small string of being inserted...
         if(uniqueIdentifier.isEmpty() | uniqueIdentifier.length() < 9)return;
-        if(!DoesItExist()){
+        if(!doesFileExists()){
             verifyStoragePermissions(activity);
             FileWriter fileWriter;
             try{
@@ -72,9 +64,9 @@ public class IOUniqueIdentifier {
     }
 
     /**
-     * Can be used by the test or upon removing briar
+     * Can be used by the test or upon removing briar (will be used in further dev.)
      */
-    public void RemoveConfigFile(){
+    public void removeConfigFile(){
         if(path.exists() & fileToCreate.exists()){
             path.delete();
             LOG.info("*** WARNING *** Directory Documents/briar has been deleted");
@@ -85,7 +77,7 @@ public class IOUniqueIdentifier {
      * Helper function, Check if the file exist
      * @return True is it's exist
      */
-    private Boolean DoesItExist(){
+    private Boolean doesFileExists(){
         if(path.exists() & fileToCreate.exists()){
             return true;
         }
@@ -99,7 +91,7 @@ public class IOUniqueIdentifier {
     public String GetUniqueID(){
         String uniqueID = "";
         BufferedReader reader;
-        if(DoesItExist()){
+        if(doesFileExists()){
             try{
                 reader = new BufferedReader(new FileReader(fileToCreate));
                 StringBuilder dataOut = new StringBuilder();
@@ -124,7 +116,7 @@ public class IOUniqueIdentifier {
      * it is based on: https://dzone.com/articles/generate-random-alpha-numeric
      * @return
      */
-    public static String GenerateUniqueID(){
+    public static String generateUniqueID(){
         String unique = "";
         String allPossibleChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder uniqueBuilder = new StringBuilder();

@@ -25,7 +25,7 @@ public interface BriarServerService {
      */
     @Headers("Content-Type: application/json")
     @POST("users/{userID}")
-    Call<String> ObtainUserInfo(@Path("userID") String userID ,  @Body String bodyJSON);
+    Call<String> obtainUserData(@Path("userID") String userID , @Body String bodyJSON);
 
     /**
      * This method is creating a new user
@@ -34,7 +34,7 @@ public interface BriarServerService {
      */
     @Headers("Content-Type: application/json")
     @POST("users")
-    Call<String> CreateUser(@Body String bodyJSON);
+    Call<String> createUser(@Body String bodyJSON);
 
 
     public static final Retrofit retrofit = new Retrofit.Builder()

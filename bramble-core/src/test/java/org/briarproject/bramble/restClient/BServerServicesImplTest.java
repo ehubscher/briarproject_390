@@ -20,9 +20,9 @@ public class BServerServicesImplTest {
      * All the threading manager as been transfered to BServerServicesImpl...
      */
     @Test
-    public void  ObtainUserInfoTest(){
+    public void obtainUserInfoTest(){
         BServerServicesImpl services = new BServerServicesImpl();
-        SavedUser returnedUser = services.ObtainUserInfo("1233345");
+        SavedUser returnedUser = services.obtainUserInfo("1233345");
         Assert.assertTrue(returnedUser != null);
     }
 
@@ -31,10 +31,10 @@ public class BServerServicesImplTest {
      * The method called is returning true if creation was successful...
      */
     @Test
-    public void CreateNewUserTest(){
+    public void createNewUserTest(){
         BServerServicesImpl services = new BServerServicesImpl();
-        SavedUser userToCreate = new SavedUser(GenerateFakeUserName(), GenerateFakeIp(), GenerateFakePort());
-        Assert.assertTrue(services.CreateNewUser(userToCreate));
+        SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort());
+        Assert.assertTrue(services.createNewUser(userToCreate));
 
     }
 
@@ -43,23 +43,23 @@ public class BServerServicesImplTest {
      * Create and Obtain info for a user...
      */
     @Test
-    public void CreateAndObtainDataForUser(){
+    public void createAndObtainDataForUser(){
         BServerServicesImpl services = new BServerServicesImpl();
-        String username = GenerateFakeUserName();
-        SavedUser userToCreate = new SavedUser(username, GenerateFakeIp(), GenerateFakePort());
-        if(!services.CreateNewUser(userToCreate)){
+        String username = generateFakeUserName();
+        SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort());
+        if(!services.createNewUser(userToCreate)){
             Assert.fail();
         }
-        SavedUser returnedUser = services.ObtainUserInfo(username);
+        SavedUser returnedUser = services.obtainUserInfo(username);
         // Check if the returned user has the data previously passed
         Assert.assertTrue(returnedUser.getUsername().equals(username));
     }
     @Test
-    public void UpdateUserInfo(){
+    public void updateUserInfo(){
         // This method is not yet implemented on the briar server
     }
 
-    private String GenerateFakeUserName(){
+    private String generateFakeUserName(){
         String fakeUserName = "";
         String allPossibleChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder uniqueBuilder = new StringBuilder();
@@ -72,7 +72,7 @@ public class BServerServicesImplTest {
         return fakeUserName;
     }
 
-    private String GenerateFakeIp(){
+    private String generateFakeIp(){
         String fakeIp  = "";
         String allPossibleNumber = "123456789";
         StringBuilder makingFakeIp = new StringBuilder();
@@ -90,7 +90,7 @@ public class BServerServicesImplTest {
         return fakeIp;
     }
 
-    private int GenerateFakePort(){
+    private int generateFakePort(){
         int Port = 0000;
         String allPossibleNumber = "123456789";
         StringBuilder makingPort = new StringBuilder();

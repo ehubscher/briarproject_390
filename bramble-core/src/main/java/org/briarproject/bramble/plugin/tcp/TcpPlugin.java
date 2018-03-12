@@ -294,7 +294,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	 * @return The right socket to establish connection
 	 */
 	@Nullable
-	InetSocketAddress InjectSocketAddressFromServer(String ipPort, String UserID){
+	InetSocketAddress injectSocketAddressFromServer(String ipPort, String UserID){
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;

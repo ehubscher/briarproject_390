@@ -31,7 +31,7 @@ public class BServerServicesImpl implements BServerServices{
             Logger.getLogger(BServerServicesImpl.class.getName());
     protected BServerServicesImpl(){}
     @Override
-    public SavedUser ObtainUserInfo(String userID) {
+    public SavedUser obtainUserInfo(String userID) {
 
         BriarServerService service = ServerConfig.getServerService();
         JSONObject parameters =  new JSONObject();
@@ -40,7 +40,7 @@ public class BServerServicesImpl implements BServerServices{
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                service.ObtainUserInfo(userID, parameters.toString()).enqueue(new Callback<String>() {
+                service.obtainUserData(userID, parameters.toString()).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         CreatedUser = null;
@@ -88,7 +88,7 @@ public class BServerServicesImpl implements BServerServices{
     }
 
     @Override
-    public boolean CreateNewUser(SavedUser savedUser) {
+    public boolean createNewUser(SavedUser savedUser) {
         BriarServerService serv = ServerConfig.getServerService();
         resultFromQuery = null;
 
@@ -102,7 +102,7 @@ public class BServerServicesImpl implements BServerServices{
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                serv.CreateUser(parameters.toString()).enqueue(new Callback<String>() {
+                serv.createUser(parameters.toString()).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         resultFromQuery = response.body();
@@ -127,7 +127,7 @@ public class BServerServicesImpl implements BServerServices{
     }
 
     @Override
-    public boolean UpdateUserInfo(SavedUser savedUser) {
+    public boolean updateUserInfo(SavedUser savedUser) {
         // This method is not yet implemented on the briar server
         return false;
     }

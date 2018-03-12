@@ -47,7 +47,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     protected List<InetSocketAddress> getLocalSocketAddresses() {
         // Use the same address and port as last time if available
         TransportProperties p = callback.getLocalProperties();
-        InetSocketAddress old = InjectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
+        InetSocketAddress old = injectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
         List<InetSocketAddress> addrs = new LinkedList<>();
         for (InetAddress a : getLocalIpAddresses()) {
             if (isAcceptableAddress(a)) {
@@ -84,7 +84,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     @Override
     protected List<InetSocketAddress> getRemoteSocketAddresses(
             TransportProperties p) {
-        InetSocketAddress parsed = InjectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
+        InetSocketAddress parsed = injectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
 
         if (parsed == null) return Collections.emptyList();
         return Collections.singletonList(parsed);

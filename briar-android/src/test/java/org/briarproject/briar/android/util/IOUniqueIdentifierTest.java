@@ -17,13 +17,13 @@ public class IOUniqueIdentifierTest {
      * id , even if it is possible , we can reduce the risk by testing the function random id...
      */
     @Test
-    public void GenerateUniqueIDTest(){
+    public void generateUniqueIDTest(){
         boolean added = false;
         Set<String> allGeneratedUniqueID = new HashSet<>();
         int numberOfUniqueIdToCreate = 0;
         int maxIDGenerated = 10000;
         while (numberOfUniqueIdToCreate < maxIDGenerated){
-            added = allGeneratedUniqueID.add(IOUniqueIdentifier.GenerateUniqueID());
+            added = allGeneratedUniqueID.add(IOUniqueIdentifier.generateUniqueID());
             if(!added)break;
             numberOfUniqueIdToCreate++;
         }
