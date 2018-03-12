@@ -88,7 +88,7 @@ public class IOUniqueIdentifier {
      * Getting the String inside the text file...
      * @return
      */
-    public String GetUniqueID(){
+    public String getUniqueID(){
         String uniqueID = "";
         BufferedReader reader;
         if(doesFileExists()){

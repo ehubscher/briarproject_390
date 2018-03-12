@@ -240,7 +240,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 // Bootstraping the Unique ID process to login startup CREATE OR GET UNIQUE ID
                 IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
                 try{
-					ioUniqueIdentifier.writeUniqueIdToFile(ioUniqueIdentifier.GetUniqueID(), activity);
+					ioUniqueIdentifier.writeUniqueIdToFile(ioUniqueIdentifier.getUniqueID(), activity);
 				}catch (IOException ee){
                 	LOG.info("Problem while writing file : " + ee.getMessage());
 				}
