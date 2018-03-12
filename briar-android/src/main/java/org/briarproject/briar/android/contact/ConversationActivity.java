@@ -667,12 +667,20 @@ public class ConversationActivity extends BriarActivity
 
 	@Override
 	public void onSendClick(String text) {
-		if (text.equals("")) return;
+		if (text.equals("")) {
+			return;
+		}
+
 		text = StringUtils.truncateUtf8(text, MAX_PRIVATE_MESSAGE_BODY_LENGTH);
 		long timestamp = System.currentTimeMillis();
 		timestamp = Math.max(timestamp, getMinTimestampForNewMessage());
-		if (messagingGroupId == null) loadGroupId(text, timestamp);
-		else createMessage(text, timestamp);
+
+		if (messagingGroupId == null) {
+			loadGroupId(text, timestamp);
+		} else {
+			createMessage(text, timestamp);
+		}
+
 		textInputView.setText("");
 	}
 
@@ -699,8 +707,7 @@ public class ConversationActivity extends BriarActivity
 		cryptoExecutor.execute(() -> {
 			try {
 				//noinspection ConstantConditions init in loadGroupId()
-				storeMessage(privateMessageFactory.createPrivateMessage(
-						messagingGroupId, timestamp, body), body);
+				storeMessage(privateMessageFactory.createPrivateMessage(messagingGroupId, timestamp, body), body);
 			} catch (FormatException e) {throw new RuntimeException(e);
 			}
 		});

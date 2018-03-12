@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,8 +54,8 @@ public class SelectedMediaView extends FrameLayout {
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LinearLayout container = (LinearLayout) v.getParent();//findViewById(R.id.selected_media_container);
-                    container.removeView(v);
+                    ViewGroup container = ((ViewGroup)v.getParent().getParent());
+                    container.removeView((ViewGroup)v.getParent());
                 }
             });
         }

@@ -159,12 +159,6 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
             ui.selectedMediaDrawer.setVisibility(VISIBLE);
         }
 
-        /*
-        ViewGroup.LayoutParams params = getLayoutParams();
-       	params.height = getKeyboardHeight();
-        setLayoutParams(params);
-		*/
-
 		Bitmap bitmap = null;
 		String mediaType = getContext().getContentResolver().getType(mediaUri);
 		SelectedMediaView media = new SelectedMediaView(getContext());
