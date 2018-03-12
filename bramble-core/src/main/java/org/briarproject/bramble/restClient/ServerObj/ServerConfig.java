@@ -13,6 +13,7 @@ public class ServerConfig {
     private static ServerConfig Config;
     private static BriarServerService serverService = null;
     private final String serverSecret = "qwerty";
+    private final String baseUrl = "http://159.203.34.239:8080/";
 
     private ServerConfig(){}
     public String getServerPassword() {
@@ -35,5 +36,9 @@ public class ServerConfig {
 
     public String getServerSecret(){
         return serverSecret;
+    }
+
+    public String getServerAddress(){
+        return baseUrl;
     }
 }

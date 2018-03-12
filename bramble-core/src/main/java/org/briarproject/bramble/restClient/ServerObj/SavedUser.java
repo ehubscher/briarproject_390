@@ -5,37 +5,37 @@ package org.briarproject.bramble.restClient.ServerObj;
  */
 
 public class SavedUser {
-    private String Username;
-    private String IpAddress;
-    private int Port;
+    private String username;
+    private String ipAddress;
+    private int port;
 
     public SavedUser(String username, String ip, int port){
-        this.Username = username;
-        this.IpAddress = ip;
-        this.Port = port;
+        this.username = username;
+        this.ipAddress = ip;
+        this.port = port;
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
+        this.username = username;
     }
 
     public String getIpAddress() {
-        return IpAddress;
+        return ipAddress;
     }
 
     public void setIpAddress(String ipAddress) {
-        IpAddress = ipAddress;
+        this.ipAddress = ipAddress;
     }
 
     public int getPort() {
-        return Port;
+        return port;
     }
 
     public void setPort(int port) {
-        Port = port;
+        this.port = port;
     }
 }

@@ -25,7 +25,7 @@ public class BServerServicesImpl implements BServerServices{
 
     ServerConfig config = ServerConfig.getServerConfig();
     // These variable are used to exchange data between the threads...
-    private volatile static SavedUser CreatedUser = null;
+    private volatile static SavedUser createdUser = null;
     private volatile static String resultFromQuery = null;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
@@ -43,7 +43,7 @@ public class BServerServicesImpl implements BServerServices{
                 service.obtainUserData(userID, parameters.toString()).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        CreatedUser = null;
+                        createdUser = null;
                         if(response.body() != null && !response.body().isEmpty()){
                             JsonParser parser = new JsonParser();
                             JsonElement element = parser.parse(response.body());
@@ -59,7 +59,7 @@ public class BServerServicesImpl implements BServerServices{
                                     String convertedIP = ip.getAsString();
                                     int convertedPort = port.getAsInt();
                                     // Store info in a SavedUser object...
-                                    CreatedUser = new SavedUser(convertedUsername, convertedIP, convertedPort);
+                                    createdUser = new SavedUser(convertedUsername, convertedIP, convertedPort);
 
                                 }catch (Exception ee){
                                     LOG.info("PROBLEM WHILE EXECUTING ObtainUserInfo : " + ee.getMessage());
@@ -84,7 +84,7 @@ public class BServerServicesImpl implements BServerServices{
             LOG.info(ee.getMessage());
         }
 
-        return CreatedUser;
+        return createdUser;
     }
 
     @Override
@@ -122,8 +122,8 @@ public class BServerServicesImpl implements BServerServices{
             LOG.info(ee.getMessage());
         }
 
-        boolean DidItWorked = (resultFromQuery != null && !resultFromQuery.isEmpty());
-        return DidItWorked;
+        boolean didItWorked = (resultFromQuery != null && !resultFromQuery.isEmpty());
+        return didItWorked;
     }
 
     @Override

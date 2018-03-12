@@ -1,5 +1,7 @@
 package org.briarproject.bramble.restClient;
 
+import org.briarproject.bramble.restClient.ServerObj.ServerConfig;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -15,8 +17,7 @@ import retrofit2.http.Path;
  */
 
 public interface BriarServerService {
-    String BASE_URL = "http://159.203.34.239:8080/";
-
+    ServerConfig config = ServerConfig.getServerConfig();
     /**
      * This method is made to get info from a user
      * @param userID -> The user ID we want to know about
@@ -38,7 +39,7 @@ public interface BriarServerService {
 
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(config.getServerAddress())
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build();
