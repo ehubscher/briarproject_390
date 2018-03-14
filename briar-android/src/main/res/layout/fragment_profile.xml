@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_profile">
 
 	<ImageView
-		android:id="@+id/image_profile"
+		android:id="@+id/image_avatar"
 		android:layout_width="120dp"
 		android:layout_height="120dp"
 		android:layout_alignParentTop="true"
@@ -19,35 +19,14 @@
 		android:padding="5dp"
 		android:src="@drawable/avatar"/>
 
-	<TextView
-		android:id="@+id/choose_avatar"
+	<Button
+		android:id="@+id/choose_avatar_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:gravity="center"
 		android:layout_marginTop="140dp"
 		android:text="Choose your avatar"/>
-
-	<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-		android:id="@+id/grid_view"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:verticalSpacing="15dp"
-		android:horizontalSpacing="0dp"
-		android:numColumns="3"
-		android:padding="5dp"
-		android:layout_marginTop="180dp"
-		android:stretchMode="columnWidth"
-		android:gravity="center"/>
-
-	<Button
-		android:id="@+id/profile_save_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/profile_save_button"
-		android:layout_marginTop="330dp"
-		android:layout_centerHorizontal="true"
-		/>
 
 </RelativeLayout>
 
