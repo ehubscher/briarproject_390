@@ -17,13 +17,15 @@ import android.widget.Toast;
 import org.briarproject.briar.android.activity.ActivityComponent;
 
 import org.briarproject.briar.android.fragment.BaseFragment;
-import org.briarproject.briar.android.profile.ProfileFragment;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class AvatarActivityFragment extends BaseFragment {
 
+	ImageView avatarImageInProfile;
+	View profileView;
 
 	ImageView avatarImage;
 	int imageNb;
@@ -64,16 +66,19 @@ public class AvatarActivityFragment extends BaseFragment {
 		allIcons.setAdapter(new AvatarActivityFragment.ImageAdapter(rootView.getContext()));
 		avatarImage = rootView.findViewById(R.id.image_avatar);
 
-
+		profileView = inflater.inflate(R.layout.fragment_profile, container,false);
+		avatarImageInProfile = profileView.findViewById(R.id.image_avatar_profile);
 	    /*Retrieving stored avatar*/
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		int avatarId= settings.getInt("pref_avatar",0);
-		if(avatarId != 0)
+		if(avatarId != 0) {
 			avatarImage.setImageResource(mThumbIds[avatarId]);
-
+			avatarImageInProfile.setImageResource((mThumbIds[avatarId]));
+		}
 		allIcons.setOnItemClickListener((parent, v, position, id) -> {
 			avatarImage.setImageResource(mThumbIds[position]);
+			avatarImageInProfile.setImageResource(mThumbIds[position]);
 			imageNb=position+1;//0 is saved for the default (user using Identicons)
 		});
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +46,24 @@ public class ProfileFragment extends BaseFragment {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 	    getActivity().setTitle(R.string.title_activity_profile);
 
+	    Button button = (Button) rootView.findViewById(R.id.choose_avatar_button);
+	    button.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    changeFragment();
+		    }
+	    });
 
 
 		return rootView;
+    }
+
+    private void changeFragment() {
+	    AvatarActivityFragment avatarFragment = new AvatarActivityFragment();
+	    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+	    fragmentTransaction.replace(R.id.profile_fragment, avatarFragment);
+	    fragmentTransaction.addToBackStack(null);
+	    fragmentTransaction.commit();
     }
 
     @Override

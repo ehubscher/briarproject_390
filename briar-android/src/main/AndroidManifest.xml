@@ -80,7 +80,7 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="org.briarproject.briar.android.navdrawer.NavDrawerActivity"/>
 		</activity>
-		
+
 		<activity
 			android:name=".android.privategroup.creation.CreateGroupActivity"
 			android:label="@string/groups_create_group_title"
