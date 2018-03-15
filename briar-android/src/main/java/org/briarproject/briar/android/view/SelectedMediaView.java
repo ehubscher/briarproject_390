@@ -2,6 +2,7 @@ package org.briarproject.briar.android.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import org.briarproject.briar.R;
 
@@ -19,7 +19,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class SelectedMediaView extends FrameLayout {
     protected final ViewHolder ui;
-    protected SelectedMediaListener listener;
+    protected Uri uri;
+    protected String mediaType;
 
     public SelectedMediaView(Context context) {
         this(context, null);
@@ -35,6 +36,22 @@ public class SelectedMediaView extends FrameLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View mediaView = inflater.inflate(R.layout.selected_media_view, this, true);
         ui = new ViewHolder();
+    }
+
+    public Uri getUri() {
+        return this.uri;
+    }
+
+    public String getType() {
+        return this.mediaType;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
+    public void setType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public void setImage(Bitmap bitmap) {
@@ -59,9 +76,5 @@ public class SelectedMediaView extends FrameLayout {
                 }
             });
         }
-    }
-
-    protected interface SelectedMediaListener {
-        void OnDelete();
     }
 }

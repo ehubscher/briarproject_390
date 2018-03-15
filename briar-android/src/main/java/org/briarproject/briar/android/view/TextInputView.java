@@ -16,6 +16,7 @@ import android.support.annotation.UiThread;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,8 @@ import org.thoughtcrime.securesms.components.emoji.EmojiToggle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -110,7 +113,29 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 	private void trySendMessage() {
 		if (listener != null) {
-			listener.onSendClick(ui.editText.getText().toString());
+			List<SelectedMediaView> selectedMedia = getSelectedMedia();
+
+			if(selectedMedia.size() > 0) {
+				Bitmap bitmap = null;
+				ByteArrayOutputStream boas = new ByteArrayOutputStream();
+
+				for(SelectedMediaView media: selectedMedia) {
+					if(media.getType().equals("image/jpg") || media.getType().equals("image/jpeg")) {
+						bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
+
+						media.setImage(bitmap);
+					} else if(media.getType().equals("image/png")) {
+						bitmap.compress(Bitmap.CompressFormat.PNG, 100, boas);
+						media.setImage(bitmap);
+					}
+
+					byte[] mediaBytes = boas.toByteArray();
+
+					listener.onSendClick(Base64.encodeToString(mediaBytes, android.util.Base64.DEFAULT));
+				}
+			}
+
+			listener.onSendClick(getText().toString());
 		}
 	}
 
@@ -159,9 +184,13 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
             ui.selectedMediaDrawer.setVisibility(VISIBLE);
         }
 
-		Bitmap bitmap = null;
-		String mediaType = getContext().getContentResolver().getType(mediaUri);
 		SelectedMediaView media = new SelectedMediaView(getContext());
+
+		String mediaType = getContext().getContentResolver().getType(mediaUri);
+		media.setUri(mediaUri);
+		media.setType(mediaType);
+
+		Bitmap bitmap = null;
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 
 		try {
@@ -170,16 +199,31 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 			e.printStackTrace();
 		}
 
-		if("image/jpg".equals(mediaType) || "image/jpeg".equals(mediaType)) {
+		if(mediaType.equals("image/jpg") || mediaType.equals("image/jpeg")) {
 			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
+
 			media.setImage(bitmap);
-		} else if("image/png".equals(mediaType)) {
+		} else if(mediaType.equals("image/png")) {
 			bitmap.compress(Bitmap.CompressFormat.PNG, 100, boas);
 			media.setImage(bitmap);
 		}
 
         ui.selectedMediaDrawer.addView(media);
 		ui.editText.requestFocus();
+	}
+
+	public List<SelectedMediaView> getSelectedMedia() {
+		List<SelectedMediaView> selectedMedia = new ArrayList<>();
+
+		for(int i = 0; i < ui.selectedMediaDrawer.getChildCount(); i++) {
+			selectedMedia.add(((SelectedMediaView) ui.selectedMediaDrawer.getChildAt(i)));
+		}
+
+		return selectedMedia;
+	}
+
+	public void clearSelectedMediaDrawer() {
+		ui.selectedMediaDrawer.removeAllViews();
 	}
 
 	public void setHint(@StringRes int res) {
@@ -253,7 +297,10 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 					Intent intent = new Intent();
 					intent.setType("image/*");
 					intent.setAction(Intent.ACTION_GET_CONTENT);
-					((Activity)getContext()).startActivityForResult(Intent.createChooser(intent, "Select Picture"), ATTACH_IMAGES);
+					((Activity)getContext()).startActivityForResult(
+							Intent.createChooser(intent, "Select Media"),
+							ATTACH_IMAGES
+					);
 				}
 			});
 

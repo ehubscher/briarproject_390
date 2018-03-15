@@ -127,15 +127,11 @@ import static uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.S
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
-public class ConversationActivity extends BriarActivity
-		implements EventListener, ConversationListener, TextInputListener {
-
+public class ConversationActivity extends BriarActivity implements EventListener, ConversationListener, TextInputListener {
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 
-	private static final Logger LOG =
-			Logger.getLogger(ConversationActivity.class.getName());
-	private static final String SHOW_ONBOARDING_INTRODUCTION =
-			"showOnboardingIntroduction";
+	private static final Logger LOG = Logger.getLogger(ConversationActivity.class.getName());
+	private static final String SHOW_ONBOARDING_INTRODUCTION = "showOnboardingIntroduction";
 
 	@Inject
 	AndroidNotificationManager notificationManager;
@@ -250,8 +246,8 @@ public class ConversationActivity extends BriarActivity
 
 		//to recognize when the user comes back from the image selector
 		if(request == textInputView.ATTACH_IMAGES) {
-			textInputView.setText("mediaDrawer");
-			textInputView.addMedia(data.getData());
+			Uri selectedMediaUri = data.getData();
+			textInputView.addMedia(selectedMediaUri);
 		}
 	}
 
@@ -677,10 +673,10 @@ public class ConversationActivity extends BriarActivity
 
 		if (messagingGroupId == null) {
 			loadGroupId(text, timestamp);
-		} else {
-			createMessage(text, timestamp);
 		}
 
+		createMessage(text, timestamp);
+		textInputView.clearSelectedMediaDrawer();
 		textInputView.setText("");
 	}
 
@@ -693,9 +689,8 @@ public class ConversationActivity extends BriarActivity
 	private void loadGroupId(String body, long timestamp) {
 		runOnDbThread(() -> {
 			try {
-				messagingGroupId =
-						messagingManager.getConversationId(contactId);
-				createMessage(body, timestamp);
+				messagingGroupId = messagingManager.getConversationId(contactId);
+				//createMessage(body, timestamp);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			}
@@ -719,12 +714,22 @@ public class ConversationActivity extends BriarActivity
 				long now = System.currentTimeMillis();
 				messagingManager.addLocalMessage(m);
 				long duration = System.currentTimeMillis() - now;
-				if (LOG.isLoggable(INFO))
+
+				if (LOG.isLoggable(INFO)) {
 					LOG.info("Storing message took " + duration + " ms");
+				}
+
 				Message message = m.getMessage();
 				PrivateMessageHeader h = new PrivateMessageHeader(
-						message.getId(), message.getGroupId(),
-						message.getTimestamp(), true, false, false, false);
+						message.getId(),
+						message.getGroupId(),
+						message.getTimestamp(),
+						true,
+						false,
+						false,
+						false
+				);
+
 				ConversationItem item = ConversationItem.from(h);
 				item.setBody(body);
 				bodyCache.put(message.getId(), body);
