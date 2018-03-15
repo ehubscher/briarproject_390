@@ -22,8 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.briarproject.briar.R;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
@@ -171,8 +172,17 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 		}
 	}
 
+    //send the base64 image String
+    public void sendImage(String imageString){
+	    ui.editText.setText("ImageTag:" + imageString);
+
+	    //Fake button press to send the image automatically after
+        ImageButton btn_send = findViewById(R.id.btn_send);
+        btn_send.performClick();
+	}
+
 	public void setText(String text) {
-		ui.editText.setText(text);
+	    ui.editText.setText(text);
 	}
 
 	public Editable getText() {
@@ -201,7 +211,6 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 		if(mediaType.equals("image/jpg") || mediaType.equals("image/jpeg")) {
 			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
-
 			media.setImage(bitmap);
 		} else if(mediaType.equals("image/png")) {
 			bitmap.compress(Bitmap.CompressFormat.PNG, 100, boas);

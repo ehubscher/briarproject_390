@@ -17,7 +17,7 @@ Thumbs.db
 local.properties
 
 # Android Studio
-.idea/*
+.idea/
 !.idea/runConfigurations/
 !.idea/codeStyleSettings.xml
 .gradle

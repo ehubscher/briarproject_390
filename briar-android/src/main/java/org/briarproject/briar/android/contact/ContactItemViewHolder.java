@@ -24,6 +24,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 	protected final ViewGroup layout;
 	protected final ImageView avatar;
 	protected final TextView name;
+    private final TextView favourite_contact;
 	@Nullable
 	protected final ImageView bulb;
 
@@ -33,6 +34,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 		layout = (ViewGroup) v;
 		avatar = v.findViewById(R.id.avatarView);
 		name = v.findViewById(R.id.nameView);
+        favourite_contact = v.findViewById(R.id.favouriteView);
 		// this can be null as not all layouts that use this ViewHolder have it
 		bulb = v.findViewById(R.id.bulbView);
 	}
@@ -52,6 +54,14 @@ public class ContactItemViewHolder<I extends ContactItem>
 				bulb.setImageResource(R.drawable.contact_disconnected);
 			}
 		}
+
+		//Set visibility of the the star next to each conversation with contacts
+        if(item.getContact().isFavourite()){
+            favourite_contact.setVisibility(View.VISIBLE);
+        }
+        else{
+            favourite_contact.setVisibility(View.GONE);
+        }
 
 		layout.setOnClickListener(v -> {
 			if (listener != null) listener.onItemClick(avatar, item);
