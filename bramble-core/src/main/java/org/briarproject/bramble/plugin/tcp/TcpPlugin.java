@@ -1,5 +1,7 @@
 package org.briarproject.bramble.plugin.tcp;
 
+
+
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
@@ -11,7 +13,6 @@ import org.briarproject.bramble.api.plugin.duplex.DuplexPluginCallback;
 import org.briarproject.bramble.api.plugin.duplex.DuplexTransportConnection;
 import org.briarproject.bramble.api.properties.TransportProperties;
 import org.briarproject.bramble.util.StringUtils;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -24,6 +25,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -346,5 +348,22 @@ abstract class TcpPlugin implements DuplexPlugin {
 			addrs.addAll(Collections.list(iface.getInetAddresses()));
 
 		return addrs;
+	}
+
+	/**
+	 * This function has been added to get the public IP of a device
+	 * This method has been taken from: https://www.ipify.org/
+	 * @return public ip of device
+	 */
+	private String getPublicIpOfDevice(){
+		String publicIpV4 = "";
+		try{
+            java.util.Scanner s = new java.util.Scanner(new java.net.URL("https://api.ipify.org").openStream(), "UTF-8").useDelimiter("\\A");
+            publicIpV4 = s.next();
+		}catch (Exception ee){
+			LOG.info("PROBLEM WHILE getPublicIpOfDevice  "  + ee.getMessage());
+		}finally {
+			return publicIpV4;
+		}
 	}
 }

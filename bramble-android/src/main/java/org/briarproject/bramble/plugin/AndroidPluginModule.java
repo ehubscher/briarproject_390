@@ -56,9 +56,6 @@ public class AndroidPluginModule {
         };
 		DuplexPluginFactory bluetooth = new DroidtoothPluginFactory(ioExecutor,
 				androidExecutor, appContext, random, eventBus, backoffFactory);
-		DuplexPluginFactory tor = new TorPluginFactory(ioExecutor, appContext,
-				locationUtils, reporter, eventBus, torSocketFactory,
-				backoffFactory);
 		DuplexPluginFactory lan = new AndroidLanTcpPluginFactory(ioExecutor,
 				backoffFactory, appContext);
 
@@ -66,7 +63,7 @@ public class AndroidPluginModule {
 		DuplexPluginFactory customWan = new CustomWanTcpPluginFactory(ioExecutor, backoffFactory, shutdownManager);
 		// Addition the plugin to the plugin list...
 		Collection<DuplexPluginFactory> duplex =
-				Arrays.asList(bluetooth, tor, lan, customWan);
+				Arrays.asList(bluetooth, lan, customWan);
 		@NotNullByDefault
 		PluginConfig pluginConfig = new PluginConfig() {
 
