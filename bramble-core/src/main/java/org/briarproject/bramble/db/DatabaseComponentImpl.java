@@ -801,6 +801,17 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 	}
 
 	@Override
+	public void setFavourite(Transaction transaction, ContactId contactId, boolean favourite) throws DbException {
+		if (transaction.isReadOnly()){
+		    throw new IllegalArgumentException();
+        }
+		T newTransaction = unbox(transaction);
+		if (!db.containsContact(newTransaction, contactId))
+			throw new NoSuchContactException();
+		db.setFavourite(newTransaction, contactId, favourite);
+	}
+
+	@Override
 	public void setGroupVisibility(Transaction transaction, ContactId c,
 			GroupId g, Visibility v) throws DbException {
 		if (transaction.isReadOnly()) throw new IllegalArgumentException();
