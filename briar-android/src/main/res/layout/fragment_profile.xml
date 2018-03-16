@@ -26,7 +26,20 @@
 		android:layout_centerHorizontal="true"
 		android:gravity="center"
 		android:layout_marginTop="140dp"
-		android:text="Choose your avatar"/>
+		android:text="Change avatar"/>
+
+	<Button
+		android:id="@+id/set_status_button"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="200dp"
+		android:paddingLeft="30dp"
+		android:drawableLeft="@drawable/contact_connected"
+		android:drawablePadding="-50dp"
+		android:background="@color/menu_background"
+		android:text="Set a Status"/>
+
+
 
 </RelativeLayout>
 

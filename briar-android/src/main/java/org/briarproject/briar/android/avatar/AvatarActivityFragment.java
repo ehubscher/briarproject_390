@@ -76,6 +76,7 @@ public class AvatarActivityFragment extends BaseFragment {
 			avatarImage.setImageResource(mThumbIds[avatarId]);
 			avatarImageInProfile.setImageResource((mThumbIds[avatarId]));
 		}
+
 		allIcons.setOnItemClickListener((parent, v, position, id) -> {
 			avatarImage.setImageResource(mThumbIds[position]);
 			avatarImageInProfile.setImageResource(mThumbIds[position]);
