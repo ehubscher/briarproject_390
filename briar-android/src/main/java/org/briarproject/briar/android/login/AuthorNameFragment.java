@@ -1,6 +1,8 @@
 package org.briarproject.briar.android.login;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
@@ -73,10 +75,22 @@ public class AuthorNameFragment extends SetupFragment {
 		nextButton.setEnabled(enabled);
 	}
 
+	private void storeInPreferences(String preference, String value){
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString(preference, value);
+		editor.apply();
+	}
+
 	@Override
 	public void onClick(View view) {
 		IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
-		setupController.setAuthorName(authorNameInput.getText().toString() + "<UniqueIdTag>" + ioUniqueIdentifier.getUniqueID() + "</UniqueIdTag>");
+		String uniqueId = ioUniqueIdentifier.getUniqueID();
+
+		setupController.setAuthorName(authorNameInput.getText().toString() + "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>");
+
+		//Store avatar number in preferences
+		storeInPreferences("uniqueId", uniqueId);
 	}
 
 }

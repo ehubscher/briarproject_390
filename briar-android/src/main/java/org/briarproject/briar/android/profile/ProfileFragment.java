@@ -199,9 +199,8 @@ public class ProfileFragment extends BaseFragment {
 		storeInPreferences("pref_avatar",avatarNumber);
 	}
 
-	private void storeInPreferences(String preference,int value){
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	private void storeInPreferences(String preference, int value){
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putInt(preference, value);
 		editor.apply();
