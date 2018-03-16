@@ -16,9 +16,10 @@ public class Contact {
 	private final boolean verified, active, favourite;
 	private final int avatarId;
 	private final int statusId;
+	private final String uniqueId;
 
 	public Contact(ContactId id, Author author, AuthorId localAuthorId,
-				   boolean verified, boolean active, boolean favourite, int avatarId, int status) {
+                   boolean verified, boolean active, boolean favourite, int avatarId, int status, String uniqueId) {
 		this.id = id;
 		this.author = author;
 		this.localAuthorId = localAuthorId;
@@ -26,7 +27,8 @@ public class Contact {
 		this.active = active;
 		this.favourite = favourite;
 		this.avatarId = avatarId;
-		this.statusId=status;
+		this.statusId = status;
+		this.uniqueId = uniqueId;
 	}
 
 	public ContactId getId() {

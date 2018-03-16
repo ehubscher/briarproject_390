@@ -98,7 +98,7 @@ public class GroupInvitationManagerImplTest extends BrambleMockTestCase {
 					getRandomBytes(5));
 	private final Contact contact =
 			new Contact(contactId, author, new AuthorId(getRandomId()), true,
-					true, false, 0, 1);
+					true, false, 0, 1, "1233345");
 	private final Group contactGroup =
 			new Group(new GroupId(getRandomId()), CLIENT_ID, getRandomBytes(5));
 	private final Group privateGroup =
@@ -833,9 +833,9 @@ public class GroupInvitationManagerImplTest extends BrambleMockTestCase {
 	@Test
 	public void testRemovingGroupEndsSessions() throws Exception {
 		Contact contact2 = new Contact(new ContactId(2), author,
-				author.getId(), true, true, false, 0, 1);
+				author.getId(), true, true, false, 0, 1, "1233345");
 		Contact contact3 = new Contact(new ContactId(3), author,
-				author.getId(), true, true, false, 0, 1);
+				author.getId(), true, true, false, 0, 1, "1233345");
 		Collection<Contact> contacts =
 				Arrays.asList(contact, contact2, contact3);
 

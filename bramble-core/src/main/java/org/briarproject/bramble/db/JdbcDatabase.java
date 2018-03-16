@@ -98,6 +98,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 					+ " active BOOLEAN NOT NULL,"
 					+ " favourite BOOLEAN NOT NULL,"
 					+ " avatarId INT NOT NULL,"
+					+ " statusId INT NOT NULL,"
+                    + " uniqueId _STRING NOT NULL,"
 					+ " PRIMARY KEY (contactId),"
 					+ " FOREIGN KEY (localAuthorId)"
 					+ " REFERENCES localAuthors (authorId)"
@@ -506,8 +508,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 			// Create a contact row
 			String sql = "INSERT INTO contacts"
 					+ " (authorId, name, publicKey, localAuthorId,"
-					+ " verified, active, favourite, avatarId)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " verified, active, favourite, avatarId, statusId, uniqueId)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = txn.prepareStatement(sql);
 			ps.setBytes(1, remote.getId().getBytes());
 			ps.setString(2, remote.getName());
@@ -517,7 +519,9 @@ abstract class JdbcDatabase implements Database<Connection> {
 			ps.setBoolean(6, active);
 			ps.setBoolean(7, false);
             ps.setInt(8, 0);
-			int affected = ps.executeUpdate();
+            ps.setInt(9, 1);
+            ps.setString(10, remote.getUniqueId());
+            int affected = ps.executeUpdate();
 			if (affected != 1) throw new DbStateException();
 			ps.close();
 			// Get the new (highest) contact ID
@@ -1008,7 +1012,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT authorId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite, avatarId"
+					+ " localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId"
 					+ " FROM contacts"
 					+ " WHERE contactId = ?";
 			ps = txn.prepareStatement(sql);
@@ -1023,10 +1027,12 @@ abstract class JdbcDatabase implements Database<Connection> {
 			boolean active = rs.getBoolean(6);
 			boolean favourite = rs.getBoolean(7);
             int avatarId = rs.getInt(8);
+            int statusId = rs.getInt(9);
+            String uniqueId = rs.getString(10);
 			rs.close();
 			ps.close();
 			Author author = new Author(authorId, name, publicKey);
-			return new Contact(contactId, author, localAuthorId, verified, active, favourite, avatarId, 1);
+			return new Contact(contactId, author, localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId);
 		} catch (SQLException e) {
 			tryToClose(rs);
 			tryToClose(ps);
@@ -1041,7 +1047,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT contactId, authorId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite, avatarId"
+					+ " localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId"
 					+ " FROM contacts";
 			ps = transaction.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -1057,8 +1063,10 @@ abstract class JdbcDatabase implements Database<Connection> {
 				boolean active = rs.getBoolean(7);
 				boolean favourite = rs.getBoolean(8);
 				int avatarId = rs.getInt(9);
+				int statusId = rs.getInt(10);
+				String uniqueId = rs.getString(11);
 				contacts.add(new Contact(contactId, author, localAuthorId,
-						verified, active, favourite, avatarId, 1));
+						verified, active, favourite, avatarId, statusId, uniqueId));
 			}
 			rs.close();
 			ps.close();
@@ -1100,7 +1108,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT contactId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite, avatarId"
+					+ " localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId"
 					+ " FROM contacts"
 					+ " WHERE authorId = ?";
 			ps = txn.prepareStatement(sql);
@@ -1116,9 +1124,11 @@ abstract class JdbcDatabase implements Database<Connection> {
 				boolean active = rs.getBoolean(6);
                 boolean favourite = rs.getBoolean(7);
                 int avatarId = rs.getInt(8);
+                int statusId = rs.getInt(9);
+                String uniqueId = rs.getString(10);
 				Author author = new Author(remote, name, publicKey);
 				contacts.add(new Contact(c, author, localAuthorId, verified,
-						active, favourite, avatarId, 1));
+						active, favourite, avatarId, statusId, uniqueId));
 			}
 			rs.close();
 			ps.close();
