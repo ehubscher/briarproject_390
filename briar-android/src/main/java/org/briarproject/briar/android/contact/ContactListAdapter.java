@@ -41,21 +41,9 @@ public class ContactListAdapter extends
 	public int compare(ContactListItem c1, ContactListItem c2) {
 		long time1 = c1.getTimestamp();
 		long time2 = c2.getTimestamp();
-		boolean favourite1 = c1.getContact().isFavourite();
-		boolean favourite2 = c2.getContact().isFavourite();
-
-		//Show conversations with favourite contacts first
-        if(favourite1 && !favourite2){
-            return -1;
-        }
-        else if(!favourite1 && favourite2){
-            return 1;
-        }
-        else{
-            if (time1 < time2) return 1;
-            if (time1 > time2) return -1;
-            return 0;
-        }
+		if (time1 < time2) return 1;
+		if (time1 > time2) return -1;
+		return 0;
 	}
 
 }

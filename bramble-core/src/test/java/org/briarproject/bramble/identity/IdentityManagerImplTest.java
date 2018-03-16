@@ -99,7 +99,7 @@ public class IdentityManagerImplTest extends BrambleMockTestCase {
 				TestUtils.getRandomBytes(42));
 		Contact contact =
 				new Contact(new ContactId(1), author, localAuthor.getId(),
-						false, true, false, 0);
+						false, true);
 		contacts.add(contact);
 
 		checkAuthorStatusContext(authorId, contacts);
@@ -108,7 +108,7 @@ public class IdentityManagerImplTest extends BrambleMockTestCase {
 		// add one verified contact
 		Contact contact2 =
 				new Contact(new ContactId(1), author, localAuthor.getId(),
-						true, true, false, 0);
+						true, true);
 		contacts.add(contact2);
 
 		checkAuthorStatusContext(authorId, contacts);

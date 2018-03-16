@@ -83,18 +83,6 @@ public interface ContactManager {
 			throws DbException;
 
 	/**
-	 * set the avatar id for the contact
-	 */
-	void setAvatarId(ContactId c, int avatarId)
-			throws DbException;
-
-    /**
-     * Marks a contact as favourite or not.
-     */
-    void setFavourite(ContactId c, boolean favourite)
-            throws DbException;
-
-	/**
 	 * Return true if a contact with this name and public key already exists
 	 */
 	boolean contactExists(Transaction txn, AuthorId remoteAuthorId,

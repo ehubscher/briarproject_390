@@ -34,14 +34,6 @@
 					android:gravity="center"
 					tools:text="Contact Name"/>
 
-                <ImageButton
-                    android:id="@+id/favourite_star"
-                    android:state_selected="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/star"
-                    android:background="?attr/selectableItemBackground"/>
-
 			</LinearLayout>
 
 		</android.support.v7.widget.Toolbar>
@@ -53,9 +45,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1"
-		android:background="@color/window_background">
-
-    </org.briarproject.briar.android.view.BriarRecyclerView>
+		android:background="@color/window_background"/>
 
 	<org.briarproject.briar.android.view.TextInputView
 		android:id="@+id/text_input_container"

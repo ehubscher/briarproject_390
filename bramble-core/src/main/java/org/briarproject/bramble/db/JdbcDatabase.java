@@ -96,8 +96,6 @@ abstract class JdbcDatabase implements Database<Connection> {
 					+ " localAuthorId _HASH NOT NULL,"
 					+ " verified BOOLEAN NOT NULL,"
 					+ " active BOOLEAN NOT NULL,"
-					+ " favourite BOOLEAN NOT NULL,"
-					+ " avatarId INT NOT NULL,"
 					+ " PRIMARY KEY (contactId),"
 					+ " FOREIGN KEY (localAuthorId)"
 					+ " REFERENCES localAuthors (authorId)"
@@ -506,8 +504,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 			// Create a contact row
 			String sql = "INSERT INTO contacts"
 					+ " (authorId, name, publicKey, localAuthorId,"
-					+ " verified, active, favourite, avatarId)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " verified, active)"
+					+ " VALUES (?, ?, ?, ?, ?, ?)";
 			ps = txn.prepareStatement(sql);
 			ps.setBytes(1, remote.getId().getBytes());
 			ps.setString(2, remote.getName());
@@ -515,8 +513,6 @@ abstract class JdbcDatabase implements Database<Connection> {
 			ps.setBytes(4, local.getBytes());
 			ps.setBoolean(5, verified);
 			ps.setBoolean(6, active);
-			ps.setBoolean(7, false);
-            ps.setInt(8, 0);
 			int affected = ps.executeUpdate();
 			if (affected != 1) throw new DbStateException();
 			ps.close();
@@ -1008,7 +1004,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT authorId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite, avatarId"
+					+ " localAuthorId, verified, active"
 					+ " FROM contacts"
 					+ " WHERE contactId = ?";
 			ps = txn.prepareStatement(sql);
@@ -1021,12 +1017,10 @@ abstract class JdbcDatabase implements Database<Connection> {
 			AuthorId localAuthorId = new AuthorId(rs.getBytes(4));
 			boolean verified = rs.getBoolean(5);
 			boolean active = rs.getBoolean(6);
-			boolean favourite = rs.getBoolean(7);
-            int avatarId = rs.getInt(8);
 			rs.close();
 			ps.close();
 			Author author = new Author(authorId, name, publicKey);
-			return new Contact(c, author, localAuthorId, verified, active, favourite, avatarId);
+			return new Contact(c, author, localAuthorId, verified, active);
 		} catch (SQLException e) {
 			tryToClose(rs);
 			tryToClose(ps);
@@ -1041,7 +1035,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT contactId, authorId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite, avatarId"
+					+ " localAuthorId, verified, active"
 					+ " FROM contacts";
 			ps = txn.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -1055,10 +1049,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 				AuthorId localAuthorId = new AuthorId(rs.getBytes(5));
 				boolean verified = rs.getBoolean(6);
 				boolean active = rs.getBoolean(7);
-				boolean favourite = rs.getBoolean(8);
-				int avatarId = rs.getInt(9);
 				contacts.add(new Contact(contactId, author, localAuthorId,
-						verified, active, favourite, avatarId));
+						verified, active));
 			}
 			rs.close();
 			ps.close();
@@ -1100,7 +1092,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT contactId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite, avatarId"
+					+ " localAuthorId, verified, active"
 					+ " FROM contacts"
 					+ " WHERE authorId = ?";
 			ps = txn.prepareStatement(sql);
@@ -1114,11 +1106,9 @@ abstract class JdbcDatabase implements Database<Connection> {
 				AuthorId localAuthorId = new AuthorId(rs.getBytes(4));
 				boolean verified = rs.getBoolean(5);
 				boolean active = rs.getBoolean(6);
-                boolean favourite = rs.getBoolean(7);
-                int avatarId = rs.getInt(8);
 				Author author = new Author(remote, name, publicKey);
 				contacts.add(new Contact(c, author, localAuthorId, verified,
-						active, favourite, avatarId));
+						active));
 			}
 			rs.close();
 			ps.close();
@@ -2483,42 +2473,6 @@ abstract class JdbcDatabase implements Database<Connection> {
 			throw new DbException(e);
 		}
 	}
-
-    @Override
-    public void setAvatarId(Connection txn, ContactId c, int avatarId)
-            throws DbException {
-        PreparedStatement ps = null;
-        try {
-            String sql = "UPDATE contacts SET avatarId = ? WHERE contactId = ?";
-            ps = txn.prepareStatement(sql);
-            ps.setInt(1, avatarId);
-            ps.setInt(2, c.getInt());
-            int affected = ps.executeUpdate();
-            if (affected < 0 || affected > 1) throw new DbStateException();
-            ps.close();
-        } catch (SQLException e) {
-            tryToClose(ps);
-            throw new DbException(e);
-        }
-    }
-
-    @Override
-    public void setFavourite(Connection txn, ContactId c, boolean favourite)
-            throws DbException {
-        PreparedStatement ps = null;
-        try {
-            String sql = "UPDATE contacts SET favourite = ? WHERE contactId = ?";
-            ps = txn.prepareStatement(sql);
-            ps.setBoolean(1, favourite);
-            ps.setInt(2, c.getInt());
-            int affected = ps.executeUpdate();
-            if (affected < 0 || affected > 1) throw new DbStateException();
-            ps.close();
-        } catch (SQLException e) {
-            tryToClose(ps);
-            throw new DbException(e);
-        }
-    }
 
 	@Override
 	public void setGroupVisibility(Connection txn, ContactId c, GroupId g,

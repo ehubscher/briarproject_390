@@ -11,7 +11,6 @@ public class ContactItem {
 
 	private final Contact contact;
 	private boolean connected;
-	private int avatar;
 
 	public ContactItem(Contact contact) {
 		this(contact, false);
@@ -32,15 +31,6 @@ public class ContactItem {
 
 	void setConnected(boolean connected) {
 		this.connected = connected;
-	}
-
-	/* avatar settings*/
-	int currentAvatar(){
-		return this.avatar;
-	}
-
-	void setAvatar(int avatar){
-		this.avatar=avatar;
 	}
 
 }

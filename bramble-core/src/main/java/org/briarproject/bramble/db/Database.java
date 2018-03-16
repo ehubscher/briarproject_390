@@ -609,18 +609,6 @@ interface Database<T> {
 			throws DbException;
 
 	/**
-	 * Set the avatarId for the contact
-	 */
-	void setAvatarId(T txn, ContactId c, int avatarId)
-			throws DbException;
-
-	/**
-	 * Marks the given contact as favourite.
-	 */
-	void setFavourite(T txn, ContactId c, boolean favourite)
-			throws DbException;
-
-	/**
 	 * Sets the given group's visibility to the given contact to either
 	 * {@link Visibility VISIBLE} or {@link Visibility SHARED}.
 	 */
