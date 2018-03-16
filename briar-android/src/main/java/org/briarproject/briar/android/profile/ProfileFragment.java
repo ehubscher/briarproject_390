@@ -6,23 +6,32 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.avatar.AvatarActivityFragment;
 import org.briarproject.briar.android.fragment.BaseFragment;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 
 public class ProfileFragment extends BaseFragment {
 
 	ImageView avatarImage;
+	int imageNb;
 	// references to our images
 	private Integer[] mThumbIds = {
 			R.drawable.pig,
@@ -37,6 +46,7 @@ public class ProfileFragment extends BaseFragment {
 	};
 
 	Button buttonStatus;
+	Button buttonAvatar;
 
 	@Override
 	public String getUniqueTag() {
@@ -66,7 +76,7 @@ public class ProfileFragment extends BaseFragment {
 				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		int avatarId= settings.getInt("pref_avatar",0);
 		if(avatarId != 0) {
-			avatarImage.setImageResource(mThumbIds[avatarId]);
+			avatarImage.setImageResource(mThumbIds[avatarId - 1]);
 		}
 		else{
 			avatarImage.setImageResource(R.drawable.avatar);
@@ -75,11 +85,11 @@ public class ProfileFragment extends BaseFragment {
 		}
 
 		//Avatar button
-	    Button buttonAvatar = (Button) rootView.findViewById(R.id.choose_avatar_button);
+	    buttonAvatar = (Button) rootView.findViewById(R.id.choose_avatar_button);
 	    buttonAvatar.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-				changeFragment();
+			    avatarMenu();
 		    }
 	    });
 
@@ -155,13 +165,62 @@ public class ProfileFragment extends BaseFragment {
 	}
 
 
-    private void changeFragment() {
-	    AvatarActivityFragment avatarFragment = new AvatarActivityFragment();
-	    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-	    fragmentTransaction.replace(R.id.profile_fragment, avatarFragment);
-	    fragmentTransaction.addToBackStack(null);
-	    fragmentTransaction.commit();
-    }
+	public void avatarMenu() {
+		PopupMenu popup = new PopupMenu(this.getContext(), buttonAvatar);
+		MenuInflater inflater = popup.getMenuInflater();
+		inflater.inflate(R.menu.avatar_menu, popup.getMenu());
+
+		popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			public boolean onMenuItemClick(MenuItem item) {
+				saveAvatar((String)item.getTitle());
+				return true;
+			}
+
+		});
+
+		popup.show();
+	}
+
+	private void saveAvatar(String item){
+		int avatarNumber = 0;
+		switch (item) {
+			case "Pig":
+				avatarNumber = 1;
+				break;
+			case "Panda":
+				avatarNumber = 2;
+				break;
+			case "Dog":
+				avatarNumber = 3;
+				break;
+			case "Cat":
+				avatarNumber = 4;
+				break;
+			case "Bunny":
+				avatarNumber = 5;
+				break;
+			case "Monkey":
+				avatarNumber = 6;
+				break;
+			case "Frog":
+				avatarNumber = 7;
+				break;
+			case "Penguin":
+				avatarNumber = 8;
+				break;
+			case "Robot":
+				avatarNumber = 9;
+				break;
+		}
+
+		//Store avatar number in preferences
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt("pref_avatar", avatarNumber);
+		editor.commit();
+
+	}
 
     @Override
 	public void onStart() {
@@ -176,7 +235,6 @@ public class ProfileFragment extends BaseFragment {
     public static ProfileFragment newInstance() {
 	    return new ProfileFragment();
     }
-
 
 }
 
