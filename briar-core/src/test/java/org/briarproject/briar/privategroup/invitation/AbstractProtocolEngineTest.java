@@ -82,7 +82,7 @@ public abstract class AbstractProtocolEngineTest extends BrambleMockTestCase {
 	protected final ContactId contactId = new ContactId(5);
 	protected final Contact contact =
 			new Contact(contactId, author, new AuthorId(getRandomId()), true,
-					true);
+					true, false, 0);
 
 	protected final InviteMessage inviteMessage =
 			new InviteMessage(new MessageId(getRandomId()), contactGroupId,

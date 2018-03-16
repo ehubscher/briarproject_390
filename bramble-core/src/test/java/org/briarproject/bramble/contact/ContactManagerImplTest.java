@@ -38,7 +38,7 @@ public class ContactManagerImplTest extends BrambleMockTestCase {
 	private final AuthorId local = new AuthorId(getRandomId());
 	private final boolean verified = false, active = true;
 	private final Contact contact =
-			new Contact(contactId, remote, local, verified, active);
+			new Contact(contactId, remote, local, verified, active, false, 0);
 
 	public ContactManagerImplTest() {
 		contactManager = new ContactManagerImpl(db, keyManager);
@@ -132,7 +132,7 @@ public class ContactManagerImplTest extends BrambleMockTestCase {
 	public void testActiveContacts() throws Exception {
 		Collection<Contact> activeContacts = Collections.singletonList(contact);
 		Collection<Contact> contacts = new ArrayList<>(activeContacts);
-		contacts.add(new Contact(new ContactId(3), remote, local, true, false));
+		contacts.add(new Contact(new ContactId(3), remote, local, true, false, false, 0));
 		Transaction txn = new Transaction(null, true);
 		context.checking(new Expectations() {{
 			oneOf(db).startTransaction(true);

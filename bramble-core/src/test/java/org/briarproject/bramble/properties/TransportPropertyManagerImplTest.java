@@ -608,7 +608,7 @@ public class TransportPropertyManagerImplTest extends BrambleMockTestCase {
 		String name = getRandomString(MAX_AUTHOR_NAME_LENGTH);
 		byte[] publicKey = getRandomBytes(MAX_PUBLIC_KEY_LENGTH);
 		return new Contact(c, new Author(a, name, publicKey),
-				localAuthor.getId(), true, active);
+				localAuthor.getId(), true, active, false, 0);
 	}
 
 	private Message getMessage(GroupId g, long timestamp) {

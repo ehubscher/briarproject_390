@@ -120,7 +120,7 @@ public class DatabaseComponentImplTest extends BrambleMockTestCase {
 		transportId = new TransportId("id");
 		maxLatency = Integer.MAX_VALUE;
 		contactId = new ContactId(234);
-		contact = new Contact(contactId, author, localAuthorId, true, true);
+		contact = new Contact(contactId, author, localAuthorId, true, true, false, 0);
 	}
 
 	private DatabaseComponent createDatabaseComponent(Database<Object> database,

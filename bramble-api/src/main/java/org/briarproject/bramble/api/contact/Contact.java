@@ -13,15 +13,18 @@ public class Contact {
 	private final ContactId id;
 	private final Author author;
 	private final AuthorId localAuthorId;
-	private final boolean verified, active;
+	private final boolean verified, active, favourite;
+	private final int avatarId;
 
 	public Contact(ContactId id, Author author, AuthorId localAuthorId,
-			boolean verified, boolean active) {
+				   boolean verified, boolean active, boolean favourite, int avatarId) {
 		this.id = id;
 		this.author = author;
 		this.localAuthorId = localAuthorId;
 		this.verified = verified;
 		this.active = active;
+		this.favourite = favourite;
+		this.avatarId = avatarId;
 	}
 
 	public ContactId getId() {
@@ -36,6 +39,8 @@ public class Contact {
 		return localAuthorId;
 	}
 
+	public int getAvatarId() { return this.avatarId; }
+
 	public boolean isVerified() {
 		return verified;
 	}
@@ -43,6 +48,8 @@ public class Contact {
 	public boolean isActive() {
 		return active;
 	}
+
+	public boolean isFavourite() { return favourite; }
 
 	@Override
 	public int hashCode() {

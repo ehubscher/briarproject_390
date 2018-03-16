@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+	android:id="@+id/avatar_fragment"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="org.briarproject.briar.android.avatar.AvatarActivity"
+	tools:showIn="@layout/activity_avatar">
+
+	<ImageView
+		android:id="@+id/image_avatar"
+		android:layout_width="120dp"
+		android:layout_height="120dp"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="10dp"
+		android:padding="5dp"
+		/>
+
+	<TextView
+		android:id="@+id/choose_avatar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:gravity="center"
+		android:layout_marginTop="140dp"
+		android:text="Choose your avatar"/>
+
+	<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+	          android:id="@+id/grid_view"
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:verticalSpacing="15dp"
+	          android:horizontalSpacing="0dp"
+	          android:numColumns="3"
+	          android:padding="5dp"
+	          android:layout_marginTop="180dp"
+	          android:stretchMode="columnWidth"
+	          android:gravity="center"/>
+
+	<Button
+		android:id="@+id/avatar_save_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/avatar_save_button"
+		android:layout_marginTop="330dp"
+		android:layout_centerHorizontal="true"
+		/>
+
+</RelativeLayout>

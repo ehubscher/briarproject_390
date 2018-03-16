@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_activated="true"
+        android:drawable="@android:drawable/btn_star_big_on" /> <!-- pressed -->
+    <item android:state_activated="false"
+        android:drawable="@android:drawable/btn_star_big_off" /> <!-- not pressed -->
+</selector>

@@ -125,4 +125,8 @@
 		<item name="android:textColor">@color/briar_button_negative</item>
 	</style>
 
+	<style name="BriarTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+	<style name="BriarTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 </resources>

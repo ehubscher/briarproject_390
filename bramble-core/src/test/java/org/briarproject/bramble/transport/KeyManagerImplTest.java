@@ -65,9 +65,9 @@ public class KeyManagerImplTest extends BrambleTestCase {
 		AuthorId localAuthorId = new AuthorId(getRandomId());
 		Collection<Contact> contacts = new ArrayList<>();
 		contacts.add(new Contact(contactId, remoteAuthor, localAuthorId, true,
-				true));
+				true, false, 0));
 		contacts.add(new Contact(inactiveContactId, remoteAuthor, localAuthorId,
-				true, false));
+				true, false, false, 0));
 		SimplexPluginFactory pluginFactory =
 				context.mock(SimplexPluginFactory.class);
 		Collection<SimplexPluginFactory> factories = Collections
