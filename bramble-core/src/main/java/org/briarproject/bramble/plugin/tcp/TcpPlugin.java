@@ -204,6 +204,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	@Override
 	public void poll(Collection<ContactId> connected) {
+
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
@@ -285,6 +286,37 @@ abstract class TcpPlugin implements DuplexPlugin {
 		}
 	}
 
+	/**
+	 * This method is a custom hack of the TCP method, it will only be used by CustomWanTcpPlugin.java
+	 * It is mostly similar to parseSocketAddress , however, it will go and use information from internet
+	 * @param ipPort Port by what's briar remember , (we might not use the value)
+	 * @param UserID Custom User ID , implemented...
+	 * @return The right socket to establish connection
+	 */
+	@Nullable
+	InetSocketAddress injectSocketAddressFromServer(String ipPort, String UserID){
+		if (StringUtils.isNullOrEmpty(ipPort)) return null;
+		String[] split = ipPort.split(":");
+		if (split.length != 2) return null;
+		String addr = split[0], port = split[1];
+		// Ensure getByName() won't perform a DNS lookup
+		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
+		try {
+			InetAddress a = InetAddress.getByName(addr);
+			int p = Integer.parseInt(port);
+			return new InetSocketAddress(a, p);
+		} catch (UnknownHostException e) {
+			if (LOG.isLoggable(WARNING))
+				// not scrubbing to enable us to find the problem
+				LOG.warning("Invalid address: " + addr);
+			return null;
+		} catch (NumberFormatException e) {
+			if (LOG.isLoggable(WARNING))
+				LOG.warning("Invalid port: " + port);
+			return null;
+		}
+	}
+
 	@Override
 	public boolean supportsKeyAgreement() {
 		return false;
@@ -312,6 +344,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		List<InetAddress> addrs = new ArrayList<>();
 		for (NetworkInterface iface : ifaces)
 			addrs.addAll(Collections.list(iface.getInetAddresses()));
+
 		return addrs;
 	}
 }
