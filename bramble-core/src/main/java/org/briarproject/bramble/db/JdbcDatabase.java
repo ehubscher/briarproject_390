@@ -1026,7 +1026,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			rs.close();
 			ps.close();
 			Author author = new Author(authorId, name, publicKey);
-			return new Contact(c, author, localAuthorId, verified, active, favourite, avatarId);
+			return new Contact(c, author, localAuthorId, verified, active, favourite, avatarId, 1);
 		} catch (SQLException e) {
 			tryToClose(rs);
 			tryToClose(ps);
@@ -1058,7 +1058,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 				boolean favourite = rs.getBoolean(8);
 				int avatarId = rs.getInt(9);
 				contacts.add(new Contact(contactId, author, localAuthorId,
-						verified, active, favourite, avatarId));
+						verified, active, favourite, avatarId, 1));
 			}
 			rs.close();
 			ps.close();
@@ -1118,7 +1118,7 @@ abstract class JdbcDatabase implements Database<Connection> {
                 int avatarId = rs.getInt(8);
 				Author author = new Author(remote, name, publicKey);
 				contacts.add(new Contact(c, author, localAuthorId, verified,
-						active, favourite, avatarId));
+						active, favourite, avatarId, 1));
 			}
 			rs.close();
 			ps.close();

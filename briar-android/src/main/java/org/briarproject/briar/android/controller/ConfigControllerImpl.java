@@ -23,7 +23,6 @@ public class ConfigControllerImpl implements ConfigController {
 			DatabaseConfig databaseConfig) {
 		this.briarPrefs = briarPrefs;
 		this.databaseConfig = databaseConfig;
-
 	}
 
 	@Override

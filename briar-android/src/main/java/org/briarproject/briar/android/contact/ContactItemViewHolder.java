@@ -46,17 +46,25 @@ public class ContactItemViewHolder<I extends ContactItem>
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
+		//Set status
+		int status = item.getContact().getStatusId();
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
-				bulb.setImageResource(R.drawable.contact_connected);
+				if(status==1)
+					bulb.setImageResource(R.drawable.contact_connected);
+				else if(status==2)
+					bulb.setImageResource(R.drawable.contact_busy);
+				else
+					bulb.setImageResource(R.drawable.contact_disconnected);
+
 			} else {
 				bulb.setImageResource(R.drawable.contact_disconnected);
 			}
 		}
 
 		if(item.currentAvatar() !=0 && item.currentAvatar() < 9){
-			int imageNb = item.currentAvatar();
+			int imageNb = item.currentAvatar()-1;
 			// references to our images
 			Integer[] mThumbIds = {
 					R.drawable.pig,
