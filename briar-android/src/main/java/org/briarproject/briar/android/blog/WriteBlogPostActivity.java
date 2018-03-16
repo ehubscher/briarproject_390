@@ -182,8 +182,10 @@ public class WriteBlogPostActivity extends BriarActivity
 	protected void onActivityResult(int request, int result, Intent data) {
 		super.onActivityResult(request, result, data);
 
+		boolean isImageSelected = (request == PICK_IMAGE && result == RESULT_OK && data.getData() != null);
+
 		// User has come back from the image picker with an image
-		if (request == PICK_IMAGE && result == RESULT_OK && data.getData() != null)
+		if (isImageSelected)
 		{
 			try{
 				Uri uri = data.getData();
