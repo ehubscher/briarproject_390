@@ -6,6 +6,9 @@ import org.briarproject.bramble.api.plugin.Backoff;
 import org.briarproject.bramble.api.plugin.TransportId;
 import org.briarproject.bramble.api.plugin.duplex.DuplexPluginCallback;
 import org.briarproject.bramble.api.properties.TransportProperties;
+import org.briarproject.bramble.restClient.BServerServices;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.h2.util.New;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -77,8 +80,15 @@ public class CustomWanTcpPlugin extends TcpPlugin {
         return ipv4 && !loop && !link && !site;
     }
 
+    /**
+     * Let's change this method so each time it is called, the saved port on our server will be update...
+     * @return Port Choosen
+     */
     private int chooseEphemeralPort() {
-        return 32768 + (int) (Math.random() * 32768);
+        int NewPort = 32768 + (int) (Math.random() * 32768);
+        // Send the new port to briar server
+        udateDataOnBServer(NewPort);
+        return NewPort;
     }
 
     @Override

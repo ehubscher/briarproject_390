@@ -29,7 +29,7 @@ public class BServerServicesImpl implements BServerServices{
     private volatile static String resultFromQuery = null;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
-    protected BServerServicesImpl(){}
+    public BServerServicesImpl(){}
     @Override
     public SavedUser obtainUserInfo(String userID) {
 
