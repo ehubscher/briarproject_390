@@ -1619,33 +1619,36 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 
     @Test
     public void testSetFavourite() throws Exception {
-        Database<Connection> db = open(false);
-        Connection txn = db.startTransaction();
+		boolean isResume = false;
+        Database<Connection> db = open(isResume);
+        Connection transaction = db.startTransaction();
+
+        boolean isVerified = true;
+        boolean isActive = false;
 
         // Add a contact(not favourite)
-        db.addLocalAuthor(txn, localAuthor);
-        assertEquals(contactId, db.addContact(txn, author, localAuthorId,
-                true, false));
+        db.addLocalAuthor(transaction, localAuthor);
+        assertEquals(contactId, db.addContact(transaction, author, localAuthorId, isVerified, isActive));
 
         // The contact shouldn't be favourite
-        Contact contact = db.getContact(txn, contactId);
+        Contact contact = db.getContact(transaction, contactId);
         assertFalse(contact.isFavourite());
 
         // Set the contact to favourite
-        db.setFavourite(txn, contactId, true);
+        db.setFavourite(transaction, contactId, true);
 
         // The contact should be favourite now
-        contact = db.getContact(txn, contactId);
+        contact = db.getContact(transaction, contactId);
         assertTrue(contact.isFavourite());
 
         // Set the contact to not favourite
-        db.setFavourite(txn, contactId, false);
+        db.setFavourite(transaction, contactId, false);
 
         // The contact shouldn't be favourite again
-        contact = db.getContact(txn, contactId);
+        contact = db.getContact(transaction, contactId);
         assertFalse(contact.isFavourite());
 
-        db.commitTransaction(txn);
+        db.commitTransaction(transaction);
         db.close();
     }
 

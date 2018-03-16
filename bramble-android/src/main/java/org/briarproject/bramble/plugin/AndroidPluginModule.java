@@ -9,6 +9,7 @@ import org.briarproject.bramble.api.lifecycle.ShutdownManager;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.api.plugin.BackoffFactory;
 import org.briarproject.bramble.api.plugin.PluginConfig;
+import org.briarproject.bramble.api.plugin.duplex.DuplexPlugin;
 import org.briarproject.bramble.api.plugin.duplex.DuplexPluginFactory;
 import org.briarproject.bramble.api.plugin.simplex.SimplexPluginFactory;
 import org.briarproject.bramble.api.reporting.DevReporter;
@@ -16,6 +17,7 @@ import org.briarproject.bramble.api.system.AndroidExecutor;
 import org.briarproject.bramble.api.system.LocationUtils;
 import org.briarproject.bramble.plugin.droidtooth.DroidtoothPluginFactory;
 import org.briarproject.bramble.plugin.tcp.AndroidLanTcpPluginFactory;
+import org.briarproject.bramble.plugin.tcp.CustomWanTcpPluginFactory;
 import org.briarproject.bramble.plugin.tcp.WanTcpPluginFactory;
 import org.briarproject.bramble.plugin.tor.TorPluginFactory;
 
@@ -52,9 +54,6 @@ public class AndroidPluginModule {
                 return false;
             }
         };
-
-        // Addition of an instance of the WAN plugin using the Duplexfactory
-        DuplexPluginFactory wan = new WanTcpPluginFactory(ioExecutor, backoffFactory, shutdownManager);
 		DuplexPluginFactory bluetooth = new DroidtoothPluginFactory(ioExecutor,
 				androidExecutor, appContext, random, eventBus, backoffFactory);
 		DuplexPluginFactory tor = new TorPluginFactory(ioExecutor, appContext,
@@ -62,9 +61,12 @@ public class AndroidPluginModule {
 				backoffFactory);
 		DuplexPluginFactory lan = new AndroidLanTcpPluginFactory(ioExecutor,
 				backoffFactory, appContext);
+
+		// Addition of our custom WAN Tcp plugin
+		DuplexPluginFactory customWan = new CustomWanTcpPluginFactory(ioExecutor, backoffFactory, shutdownManager);
 		// Addition the plugin to the plugin list...
 		Collection<DuplexPluginFactory> duplex =
-				Arrays.asList(bluetooth, tor, lan, wan);
+				Arrays.asList(bluetooth, tor, lan, customWan);
 		@NotNullByDefault
 		PluginConfig pluginConfig = new PluginConfig() {
 

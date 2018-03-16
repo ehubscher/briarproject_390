@@ -51,7 +51,9 @@ public class Contact {
 		return active;
 	}
 
-	public boolean isFavourite() { return favourite; }
+	public boolean isFavourite() {
+		return favourite;
+	}
 
 	public int getStatusId(){return statusId;}
 

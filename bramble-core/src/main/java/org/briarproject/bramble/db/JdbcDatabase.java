@@ -1003,7 +1003,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 	}
 
 	@Override
-	public Contact getContact(Connection txn, ContactId c) throws DbException {
+	public Contact getContact(Connection txn, ContactId contactId) throws DbException {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
@@ -1012,7 +1012,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 					+ " FROM contacts"
 					+ " WHERE contactId = ?";
 			ps = txn.prepareStatement(sql);
-			ps.setInt(1, c.getInt());
+			ps.setInt(1, contactId.getInt());
 			rs = ps.executeQuery();
 			if (!rs.next()) throw new DbStateException();
 			AuthorId authorId = new AuthorId(rs.getBytes(1));
@@ -1026,7 +1026,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			rs.close();
 			ps.close();
 			Author author = new Author(authorId, name, publicKey);
-			return new Contact(c, author, localAuthorId, verified, active, favourite, avatarId, 1);
+			return new Contact(contactId, author, localAuthorId, verified, active, favourite, avatarId, 1);
 		} catch (SQLException e) {
 			tryToClose(rs);
 			tryToClose(ps);
@@ -1035,7 +1035,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 	}
 
 	@Override
-	public Collection<Contact> getContacts(Connection txn)
+	public Collection<Contact> getContacts(Connection transaction)
 			throws DbException {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -1043,7 +1043,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			String sql = "SELECT contactId, authorId, name, publicKey,"
 					+ " localAuthorId, verified, active, favourite, avatarId"
 					+ " FROM contacts";
-			ps = txn.prepareStatement(sql);
+			ps = transaction.prepareStatement(sql);
 			rs = ps.executeQuery();
 			List<Contact> contacts = new ArrayList<>();
 			while (rs.next()) {
@@ -2503,19 +2503,22 @@ abstract class JdbcDatabase implements Database<Connection> {
     }
 
     @Override
-    public void setFavourite(Connection txn, ContactId c, boolean favourite)
+    public void setFavourite(Connection transaction, ContactId contactId, boolean favourite)
             throws DbException {
-        PreparedStatement ps = null;
+        PreparedStatement preparedStatement = null;
         try {
             String sql = "UPDATE contacts SET favourite = ? WHERE contactId = ?";
-            ps = txn.prepareStatement(sql);
-            ps.setBoolean(1, favourite);
-            ps.setInt(2, c.getInt());
-            int affected = ps.executeUpdate();
-            if (affected < 0 || affected > 1) throw new DbStateException();
-            ps.close();
+            preparedStatement = transaction.prepareStatement(sql);
+            //set the values at the index position indicated for the query above then looks if the statement was affected
+            preparedStatement.setBoolean(1, favourite);
+            preparedStatement.setInt(2, contactId.getInt());
+            int affected = preparedStatement.executeUpdate();
+            if (affected < 0 || affected > 1){
+                throw new DbStateException();
+            }
+            preparedStatement.close();
         } catch (SQLException e) {
-            tryToClose(ps);
+            tryToClose(preparedStatement);
             throw new DbException(e);
         }
     }
