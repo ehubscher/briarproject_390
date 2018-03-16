@@ -609,6 +609,12 @@ interface Database<T> {
 			throws DbException;
 
 	/**
+	 * Marks the given contact as active or inactive.
+	 */
+	void setContactStatus(T transaction, String uniqueId, int statusId)
+			throws DbException;
+
+	/**
 	 * Set the avatarId for the contact
 	 */
 	void setAvatarId(T txn, ContactId c, int avatarId)

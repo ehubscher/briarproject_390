@@ -1065,8 +1065,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 				int avatarId = rs.getInt(9);
 				int statusId = rs.getInt(10);
 				String uniqueId = rs.getString(11);
-				contacts.add(new Contact(contactId, author, localAuthorId,
-						verified, active, favourite, avatarId, statusId, uniqueId));
+				contacts.add(new Contact(contactId, author, localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId));
 			}
 			rs.close();
 			ps.close();
@@ -1127,8 +1126,7 @@ abstract class JdbcDatabase implements Database<Connection> {
                 int statusId = rs.getInt(9);
                 String uniqueId = rs.getString(10);
 				Author author = new Author(remote, name, publicKey);
-				contacts.add(new Contact(c, author, localAuthorId, verified,
-						active, favourite, avatarId, statusId, uniqueId));
+				contacts.add(new Contact(c, author, localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId));
 			}
 			rs.close();
 			ps.close();
@@ -2493,6 +2491,24 @@ abstract class JdbcDatabase implements Database<Connection> {
 			throw new DbException(e);
 		}
 	}
+
+    @Override
+    public void setContactStatus(Connection transaction, String uniqueId, int statusId)
+            throws DbException {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE contacts SET statusId = ? WHERE uniqueId = ?";
+            ps = transaction.prepareStatement(sql);
+            ps.setInt(1, statusId);
+            ps.setString(2, uniqueId);
+            int affected = ps.executeUpdate();
+            if (affected < 0 || affected > 1) throw new DbStateException();
+            ps.close();
+        } catch (SQLException e) {
+            tryToClose(ps);
+            throw new DbException(e);
+        }
+    }
 
     @Override
     public void setAvatarId(Connection txn, ContactId c, int avatarId)

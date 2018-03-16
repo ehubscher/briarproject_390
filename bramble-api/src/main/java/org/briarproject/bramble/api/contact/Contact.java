@@ -19,7 +19,7 @@ public class Contact {
 	private final String uniqueId;
 
 	public Contact(ContactId id, Author author, AuthorId localAuthorId,
-                   boolean verified, boolean active, boolean favourite, int avatarId, int status, String uniqueId) {
+				   boolean verified, boolean active, boolean favourite, int avatarId, int status, String uniqueId) {
 		this.id = id;
 		this.author = author;
 		this.localAuthorId = localAuthorId;
@@ -42,6 +42,10 @@ public class Contact {
 	public AuthorId getLocalAuthorId() {
 		return localAuthorId;
 	}
+
+	public String getUniqueId() {
+	    return this.uniqueId;
+    }
 
 	public int getAvatarId() { return this.avatarId; }
 
