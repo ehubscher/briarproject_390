@@ -5,33 +5,23 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
-import org.briarproject.briar.android.avatar.AvatarActivityFragment;
 import org.briarproject.briar.android.fragment.BaseFragment;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 
 public class ProfileFragment extends BaseFragment {
 
 	ImageView avatarImage;
-	int imageNb;
 	// references to our images
 	private Integer[] mThumbIds = {
 			R.drawable.pig,
@@ -67,11 +57,9 @@ public class ProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 	    getActivity().setTitle(R.string.title_activity_profile);
-
-	    //Set image
 		avatarImage = rootView.findViewById(R.id.image_avatar_profile);
 
-	    /*Retrieving stored avatar*/
+	    //Retrieving stored avatar
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		int avatarId= settings.getInt("pref_avatar",0);
@@ -102,7 +90,7 @@ public class ProfileFragment extends BaseFragment {
 			}
 		});
 
-		/*Retrieving stored status*/
+		//Retrieving stored status
 		int statusID=settings.getInt("current_status",1);
 		Drawable status;
 		if(statusID==2){
@@ -153,13 +141,8 @@ public class ProfileFragment extends BaseFragment {
 			status_num=1;
 		}
 		buttonStatus.setCompoundDrawablesWithIntrinsicBounds(status,null,null,null);
-
 		//Store avatar number in preferences
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.putInt("current_status", status_num);
-		editor.commit();
+		storeInPreferences("current_status",status_num);
 
 		//TODO: broadcast event
 	}
@@ -175,7 +158,6 @@ public class ProfileFragment extends BaseFragment {
 				saveAvatar((String)item.getTitle());
 				return true;
 			}
-
 		});
 
 		popup.show();
@@ -213,14 +195,16 @@ public class ProfileFragment extends BaseFragment {
 				break;
 		}
 		avatarImage.setImageResource(mThumbIds[avatarNumber - 1]);
-
 		//Store avatar number in preferences
+		storeInPreferences("pref_avatar",avatarNumber);
+	}
+
+	private void storeInPreferences(String preference,int value){
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putInt("pref_avatar", avatarNumber);
-		editor.commit();
-
+		editor.putInt(preference, value);
+		editor.apply();
 	}
 
     @Override

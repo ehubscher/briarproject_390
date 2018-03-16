@@ -32,7 +32,7 @@
 		android:id="@+id/set_status_button"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="200dp"
+		android:layout_marginTop="220dp"
 		android:paddingLeft="30dp"
 		android:drawableLeft="@drawable/contact_connected"
 		android:drawablePadding="-50dp"
