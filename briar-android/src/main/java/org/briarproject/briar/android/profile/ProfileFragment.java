@@ -212,6 +212,7 @@ public class ProfileFragment extends BaseFragment {
 				avatarNumber = 9;
 				break;
 		}
+		avatarImage.setImageResource(mThumbIds[avatarNumber - 1]);
 
 		//Store avatar number in preferences
 		SharedPreferences preferences = PreferenceManager
