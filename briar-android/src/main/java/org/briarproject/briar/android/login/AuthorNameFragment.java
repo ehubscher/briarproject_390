@@ -11,6 +11,7 @@ import android.widget.Button;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.util.IOUniqueIdentifier;
 
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
@@ -74,7 +75,8 @@ public class AuthorNameFragment extends SetupFragment {
 
 	@Override
 	public void onClick(View view) {
-		setupController.setAuthorName(authorNameInput.getText().toString());
+		IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
+		setupController.setAuthorName(authorNameInput.getText().toString() + "<UniqueIdTag>" + ioUniqueIdentifier.getUniqueID() + "</UniqueIdTag>");
 	}
 
 }

@@ -41,37 +41,6 @@ public class IOUniqueIdentifier {
     public IOUniqueIdentifier(){
 
     }
-    /**
-     * This method is writing the UniqueID into a file inside Android/Documents/config.txt
-     * @param uniqueIdentifier A unique String ID received by the method
-     * @throws IOException : may be throw
-     */
-    public void writeUniqueIdToFile(String uniqueIdentifier, Activity activity) throws IOException {
-        // If the uniqueID doesn't exist build it
-        // Prevent any too small string of being inserted...
-        if(uniqueIdentifier.isEmpty() | uniqueIdentifier.length() < 9)return;
-        if(!doesFileExists()){
-            verifyStoragePermissions(activity);
-            FileWriter fileWriter;
-            try{
-                fileWriter = new FileWriter(fileToCreate);
-                fileWriter.append(uniqueIdentifier);
-                fileWriter.close();
-            }catch (IOException ee){
-                LOG.info("FROM IOUniqueIdentifier " + ee.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Can be used by the test or upon removing briar (will be used in further dev.)
-     */
-    public void removeConfigFile(){
-        if(path.exists() & fileToCreate.exists()){
-            path.delete();
-            LOG.info("*** WARNING *** Directory Documents/briar has been deleted");
-        }
-    }
 
     /**
      * Helper function, Check if the file exist
@@ -128,27 +97,6 @@ public class IOUniqueIdentifier {
         unique = uniqueBuilder.toString();
         return unique;
 
-    }
-
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 
 }
