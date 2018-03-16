@@ -148,10 +148,21 @@ class ContactManagerImpl implements ContactManager {
 	}
 
 	@Override
-	public void setAvatarId(ContactId c, int avatarId) throws DbException {
+	public void setContactStatus(String uniqueId, int statusId) throws DbException {
         Transaction txn = db.startTransaction(false);
         try {
-            db.setAvatarId(txn, c, avatarId);
+            db.setContactStatus(txn, uniqueId, statusId);
+            db.commitTransaction(txn);
+        } finally {
+            db.endTransaction(txn);
+        }
+	}
+
+	@Override
+	public void setAvatarId(String uniqueId, int avatarId) throws DbException {
+        Transaction txn = db.startTransaction(false);
+        try {
+            db.setAvatarId(txn, uniqueId, avatarId);
             db.commitTransaction(txn);
         } finally {
             db.endTransaction(txn);

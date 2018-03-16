@@ -83,9 +83,15 @@ public interface ContactManager {
 			throws DbException;
 
 	/**
+	 * Marks a contact as active or inactive.
+	 */
+	void setContactStatus(String uniqueId, int statusId)
+			throws DbException;
+
+	/**
 	 * set the avatar id for the contact
 	 */
-	void setAvatarId(ContactId c, int avatarId)
+	void setAvatarId(String uniqueId, int avatarId)
 			throws DbException;
 
     /**

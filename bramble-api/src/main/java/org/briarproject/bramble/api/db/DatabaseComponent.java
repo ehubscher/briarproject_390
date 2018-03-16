@@ -471,13 +471,20 @@ public interface DatabaseComponent {
 	/**
 	 * Marks the given contact as active or inactive.
 	 */
-	void setContactActive(Transaction txn, ContactId c, boolean active)
+	void setContactActive(Transaction transaction, ContactId contactId, boolean active)
 			throws DbException;
+
+	/**
+	 * Marks the given contact as the selected status.
+	 */
+	void setContactStatus(Transaction transaction, String uniqueId, int statusId)
+			throws DbException;
+
 
 	/**
 	 * Set the avatar id for the contact
 	 */
-	void setAvatarId(Transaction txn, ContactId c, int avatarId)
+	void setAvatarId(Transaction transaction, String uniqueId, int avatarId)
 			throws DbException;
 
 	/**

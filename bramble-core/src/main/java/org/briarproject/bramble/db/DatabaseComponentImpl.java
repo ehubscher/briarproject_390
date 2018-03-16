@@ -802,15 +802,23 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 	}
 
 	@Override
-	public void setAvatarId(Transaction transaction, ContactId c, int avatarId) throws DbException {
+	public void setContactStatus(Transaction transaction, String uniqueId, int statusId) throws DbException {
+		if (transaction.isReadOnly()) throw new IllegalArgumentException();
+		T newTransaction = unbox(transaction);
+		if (!db.containsContact(newTransaction, uniqueId))
+			throw new NoSuchContactException();
+		db.setContactStatus(newTransaction, uniqueId, statusId);
+	}
+
+	@Override
+	public void setAvatarId(Transaction transaction, String uniqueId, int avatarId) throws DbException {
 		if (transaction.isReadOnly()){
 			throw new IllegalArgumentException();
 		}
 		T txn = unbox(transaction);
-		if (!db.containsContact(txn, c))
+		if (!db.containsContact(txn, uniqueId))
 			throw new NoSuchContactException();
-		db.setAvatarId(txn, c, avatarId);
-		transaction.attach(new ContactAvatarChangedEvent(c, avatarId));
+		db.setAvatarId(txn, uniqueId, avatarId);
 	}
 
 	@Override

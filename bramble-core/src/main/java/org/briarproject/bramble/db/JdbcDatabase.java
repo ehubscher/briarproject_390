@@ -833,6 +833,28 @@ abstract class JdbcDatabase implements Database<Connection> {
 	}
 
 	@Override
+	public boolean containsContact(Connection txn, String uniqueId)
+			throws DbException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT NULL FROM contacts WHERE uniqueId = ?";
+			ps = txn.prepareStatement(sql);
+			ps.setString(1, uniqueId);
+			rs = ps.executeQuery();
+			boolean found = rs.next();
+			if (rs.next()) throw new DbStateException();
+			rs.close();
+			ps.close();
+			return found;
+		} catch (SQLException e) {
+			tryToClose(rs);
+			tryToClose(ps);
+			throw new DbException(e);
+		}
+	}
+
+	@Override
 	public boolean containsGroup(Connection txn, GroupId g)
 			throws DbException {
 		PreparedStatement ps = null;
@@ -2511,14 +2533,14 @@ abstract class JdbcDatabase implements Database<Connection> {
     }
 
     @Override
-    public void setAvatarId(Connection txn, ContactId c, int avatarId)
+    public void setAvatarId(Connection txn, String uniqueId, int avatarId)
             throws DbException {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE contacts SET avatarId = ? WHERE contactId = ?";
+            String sql = "UPDATE contacts SET avatarId = ? WHERE uniqueId = ?";
             ps = txn.prepareStatement(sql);
             ps.setInt(1, avatarId);
-            ps.setInt(2, c.getInt());
+            ps.setString(2, uniqueId);
             int affected = ps.executeUpdate();
             if (affected < 0 || affected > 1) throw new DbStateException();
             ps.close();
