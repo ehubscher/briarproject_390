@@ -93,10 +93,11 @@ public class BServerServicesImpl implements BServerServices{
         resultFromQuery = null;
 
         JSONObject parameters = new JSONObject();
+        parameters.put("port", savedUser.getPort());
         parameters.put("ip", savedUser.getIpAddress());
         parameters.put("phoneGeneratedId", savedUser.getUsername());
         parameters.put("password", config.getServerPassword());
-        parameters.put("port", savedUser.getPort());
+
 
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
@@ -118,12 +119,10 @@ public class BServerServicesImpl implements BServerServices{
         // Wait for the call to server to be done...
         try{
             executorService.awaitTermination(2, TimeUnit.SECONDS);
-        }catch (InterruptedException ee){
-            LOG.info(ee.getMessage());
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }
-
-        boolean didItWorked = (resultFromQuery != null && !resultFromQuery.isEmpty());
-        return didItWorked;
+        return (resultFromQuery != null && !resultFromQuery.isEmpty());
     }
 
     @Override

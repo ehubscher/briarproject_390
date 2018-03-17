@@ -3,6 +3,7 @@ package org.briarproject.bramble.restClient;
 
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -30,6 +31,7 @@ public class BServerServicesImplTest {
      * This test is going to create a user in the database...
      * The method called is returning true if creation was successful...
      */
+    @Ignore
     @Test
     public void createNewUserTest(){
         BServerServicesImpl services = new BServerServicesImpl();
@@ -42,6 +44,7 @@ public class BServerServicesImplTest {
      * Combine the two methods to verify the server ,
      * Create and Obtain info for a user...
      */
+    @Ignore
     @Test
     public void createAndObtainDataForUser(){
         BServerServicesImpl services = new BServerServicesImpl();
@@ -54,6 +57,7 @@ public class BServerServicesImplTest {
         // Check if the returned user has the data previously passed
         Assert.assertTrue(returnedUser.getUsername().equals(username));
     }
+    @Ignore
     @Test
     public void updateUserInfo(){
         // This method is not yet implemented on the briar server
