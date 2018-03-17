@@ -68,7 +68,6 @@ public class ProfileFragment extends BaseFragment {
 		}
 		else{
 			avatarImage.setImageResource(R.drawable.avatar);
-			//TODO: display user's identicon
 			//avatarImage.setImageResource(new IdenticonDrawable(author.getId().getBytes())));
 		}
 
