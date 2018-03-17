@@ -323,12 +323,6 @@
 			android:parentActivityName=".android.navdrawer.NavDrawerActivity"
 			android:theme="@style/BriarTheme.NoActionBar">
 		</activity>
-		<activity
-			android:name=".android.avatar.AvatarActivity"
-			android:label="@string/title_activity_avatar"
-			android:parentActivityName=".android.profile.ProfileActivity"
-			android:theme="@style/BriarTheme.NoActionBar">
-		</activity>
 	</application>
 
 </manifest>

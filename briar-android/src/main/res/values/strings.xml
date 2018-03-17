@@ -420,9 +420,4 @@
 	<!-- Profile -->
 	<string name="title_activity_profile">Profile</string>
 
-	<!-- Avatar -->
-	<string name="avatar_save_button">Save Avatar</string>
-	<string name="title_activity_avatar">AvatarActivity</string>
-
-
 </resources>
