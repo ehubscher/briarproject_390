@@ -26,7 +26,8 @@ public class BServerServicesImpl implements BServerServices{
     ServerConfig config = ServerConfig.getServerConfig();
     // These variable are used to exchange data between the threads...
     private volatile static SavedUser createdUser = null;
-    private volatile static String resultFromQuery = null;
+    private volatile static String resultFromQueryCreateUser = null;
+    private volatile static String resultFromQueryUpdateUser = null;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
     public BServerServicesImpl(){}
@@ -90,7 +91,7 @@ public class BServerServicesImpl implements BServerServices{
     @Override
     public boolean createNewUser(SavedUser savedUser) {
         BriarServerService serv = ServerConfig.getServerService();
-        resultFromQuery = null;
+        resultFromQueryCreateUser = null;
 
         JSONObject parameters = new JSONObject();
         parameters.put("port", savedUser.getPort());
@@ -106,7 +107,7 @@ public class BServerServicesImpl implements BServerServices{
                 serv.createUser(parameters.toString()).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        resultFromQuery = response.body();
+                        resultFromQueryCreateUser = response.body();
                     }
 
                     @Override
@@ -122,12 +123,44 @@ public class BServerServicesImpl implements BServerServices{
         }catch (Exception ee){
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }
-        return (resultFromQuery != null && !resultFromQuery.isEmpty());
+        return (resultFromQueryCreateUser != null && !resultFromQueryCreateUser.isEmpty());
     }
 
     @Override
     public boolean updateUserInfo(SavedUser savedUser) {
-        // This method is not yet implemented on the briar server
-        return false;
+        BriarServerService serv = ServerConfig.getServerService();
+        resultFromQueryUpdateUser = null;
+
+        JSONObject parameters = new JSONObject();
+        parameters.put("port", savedUser.getPort());
+        parameters.put("ip", savedUser.getIpAddress());
+        parameters.put("password", config.getServerPassword());
+
+
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                serv.updateUserData(savedUser.getUsername() ,parameters.toString()).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        resultFromQueryUpdateUser = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // On failure resultFromQuery will be empty...
+                        LOG.info(" BRIAR SERVER : Failure to create user Exception: " + t.getMessage());
+                    }
+                });
+            }
+        });
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(2, TimeUnit.SECONDS);
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
+        }
+        return (resultFromQueryUpdateUser != null && !resultFromQueryUpdateUser.isEmpty());
     }
 }

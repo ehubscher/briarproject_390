@@ -20,10 +20,11 @@ public class BServerServicesImplTest {
      * This TEST is built to test the retrofit2 lib. with Briar SERVER API
      * All the threading manager as been transfered to BServerServicesImpl...
      */
+    @Ignore
     @Test
     public void obtainUserInfoTest(){
         BServerServicesImpl services = new BServerServicesImpl();
-        SavedUser returnedUser = services.obtainUserInfo("1233345");
+        SavedUser returnedUser = services.obtainUserInfo("1233345DDDDD");
         Assert.assertTrue(returnedUser != null);
     }
 
