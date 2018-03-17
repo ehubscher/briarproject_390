@@ -15,49 +15,49 @@ import java.util.Random;
 
 public class BServerServicesImplTest {
 
-    /**
-     * This TEST is built to test the retrofit2 lib. with Briar SERVER API
-     * All the threading manager as been transfered to BServerServicesImpl...
-     */
-    @Test
-    public void obtainUserInfoTest(){
-        BServerServicesImpl services = new BServerServicesImpl();
-        SavedUser returnedUser = services.obtainUserInfo("1233345");
-        Assert.assertTrue(returnedUser != null);
-    }
-
-    /**
-     * This test is going to create a user in the database...
-     * The method called is returning true if creation was successful...
-     */
-    @Test
-    public void createNewUserTest(){
-        BServerServicesImpl services = new BServerServicesImpl();
-        SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort());
-        Assert.assertTrue(services.createNewUser(userToCreate));
-
-    }
-
-    /**
-     * Combine the two methods to verify the server ,
-     * Create and Obtain info for a user...
-     */
-    @Test
-    public void createAndObtainDataForUser(){
-        BServerServicesImpl services = new BServerServicesImpl();
-        String username = generateFakeUserName();
-        SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort());
-        if(!services.createNewUser(userToCreate)){
-            Assert.fail();
-        }
-        SavedUser returnedUser = services.obtainUserInfo(username);
-        // Check if the returned user has the data previously passed
-        Assert.assertTrue(returnedUser.getUsername().equals(username));
-    }
-    @Test
-    public void updateUserInfo(){
-        // This method is not yet implemented on the briar server
-    }
+//    /**
+//     * This TEST is built to test the retrofit2 lib. with Briar SERVER API
+//     * All the threading manager as been transfered to BServerServicesImpl...
+//     */
+//    @Test
+//    public void obtainUserInfoTest(){
+//        BServerServicesImpl services = new BServerServicesImpl();
+//        SavedUser returnedUser = services.obtainUserInfo("1233345");
+//        Assert.assertTrue(returnedUser != null);
+//    }
+//
+//    /**
+//     * This test is going to create a user in the database...
+//     * The method called is returning true if creation was successful...
+//     */
+//    @Test
+//    public void createNewUserTest(){
+//        BServerServicesImpl services = new BServerServicesImpl();
+//        SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort());
+//        Assert.assertTrue(services.createNewUser(userToCreate));
+//
+//    }
+//
+//    /**
+//     * Combine the two methods to verify the server ,
+//     * Create and Obtain info for a user...
+//     */
+//    @Test
+//    public void createAndObtainDataForUser(){
+//        BServerServicesImpl services = new BServerServicesImpl();
+//        String username = generateFakeUserName();
+//        SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort());
+//        if(!services.createNewUser(userToCreate)){
+//            Assert.fail();
+//        }
+//        SavedUser returnedUser = services.obtainUserInfo(username);
+//        // Check if the returned user has the data previously passed
+//        Assert.assertTrue(returnedUser.getUsername().equals(username));
+//    }
+//    @Test
+//    public void updateUserInfo(){
+//        // This method is not yet implemented on the briar server
+//    }
 
     private String generateFakeUserName(){
         String fakeUserName = "";
