@@ -12,4 +12,3 @@ https://github.com/jhubscher/briarproject_390/projects
 Official Project location:
 https://code.briarproject.org/akwizgran/briar
 
-//test
