@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.activity;
 
+import android.content.Intent;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public abstract class BaseActivity extends AppCompatActivity
 			new ArrayList<>();
 	private boolean destroyed = false;
 	private ScreenFilterDialogFragment dialogFrag;
+	protected static final int PICK_IMAGE = 200;
+
 	private static final Logger LOG =
 			Logger.getLogger(BaseActivity.class.getName());
 	public abstract void injectActivity(ActivityComponent component);
@@ -168,6 +171,12 @@ public abstract class BaseActivity extends AppCompatActivity
 		IBinder token = view.getWindowToken();
 		Object o = getSystemService(INPUT_METHOD_SERVICE);
 		((InputMethodManager) o).hideSoftInputFromWindow(token, 0);
+	}
+	public void showImagePicker(View view) {
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
 	}
 	@UiThread
 	public void handleDbException(DbException e) {

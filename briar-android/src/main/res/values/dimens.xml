@@ -62,5 +62,4 @@
 	<dimen name="min_custom_keyboard_size">110dp</dimen>
 	<dimen name="min_custom_keyboard_top_margin">170dp</dimen>
 	<dimen name="fab_margin">16dp</dimen>
-
 </resources>
