@@ -23,7 +23,7 @@ public class IOUniqueIdentifierTest {
         int numberOfUniqueIdToCreate = 0;
         int maxIDGenerated = 10000;
         while (numberOfUniqueIdToCreate < maxIDGenerated){
-            added = allGeneratedUniqueID.add(IOUniqueIdentifier.generateUniqueID());
+            added = allGeneratedUniqueID.add(IOUniqueIdentifier.getUniqueID());
             if(!added)break;
             numberOfUniqueIdToCreate++;
         }

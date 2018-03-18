@@ -40,22 +40,12 @@ public class IOUniqueIdentifier {
     public IOUniqueIdentifier(){
 
     }
-
-    /**
-     * Can be used by the test or upon removing briar (will be used in further dev.)
-     */
-    public void removeConfigFile(){
-        if(path.exists() & fileToCreate.exists()){
-            path.delete();
-            LOG.info("*** WARNING *** Directory Documents/briar has been deleted");
-        }
-    }
     /**
      * This method is commonly used to created unique String
      * it is based on: https://dzone.com/articles/generate-random-alpha-numeric
      * @return
      */
-    public static String generateUniqueID(){
+    public static String getUniqueID(){
         String unique = "";
         String allPossibleChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder uniqueBuilder = new StringBuilder();

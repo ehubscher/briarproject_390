@@ -84,8 +84,7 @@ public class AuthorNameFragment extends SetupFragment {
 
 	@Override
 	public void onClick(View view) {
-		IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
-		String uniqueId = ioUniqueIdentifier.getUniqueID();
+		String uniqueId = IOUniqueIdentifier.getUniqueID();
 
 		setupController.setAuthorName(authorNameInput.getText().toString() + "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>");
 
