@@ -19,9 +19,9 @@
 			android:id="@+id/open_image_browser"
 			android:layout_width="@dimen/text_input_height"
 			android:layout_height="@dimen/text_input_height"
-			app:srcCompat="@android:drawable/ic_menu_camera"
 			android:background="?attr/selectableItemBackground"
-			android:padding="@dimen/margin_small"/>
+			android:padding="@dimen/margin_small"
+			app:srcCompat="@android:drawable/ic_menu_camera" />
 
 		<org.thoughtcrime.securesms.components.emoji.EmojiToggle
 			android:id="@+id/emoji_toggle"

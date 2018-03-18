@@ -3,6 +3,8 @@ package org.briarproject.briar.android.blog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
@@ -47,6 +49,7 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 	private final ImageView reblogButton;
 	private final TextView body;
 	private final ViewGroup commentContainer;
+	private final ImageView imageView;
 	private final boolean fullText;
 
 	@NonNull
@@ -65,6 +68,7 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 		reblogButton = v.findViewById(R.id.commentView);
 		body = v.findViewById(R.id.bodyView);
 		commentContainer = v.findViewById(R.id.commentContainer);
+		imageView = v.findViewById(R.id.imageView);
 	}
 
 	void setVisibility(int visibility) {
@@ -111,17 +115,32 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 			author.setAuthorNotClickable();
 		}
 
-		// post body
-		Spanned bodyText = getSpanned(item.getBody());
-		if (fullText) {
-			body.setText(bodyText);
-			body.setTextIsSelectable(true);
-			makeLinksClickable(body);
-		} else {
-			body.setTextIsSelectable(false);
-			if (bodyText.length() > TEASER_LENGTH)
-				bodyText = getTeaser(ctx, bodyText);
-			body.setText(bodyText);
+		String bodyString = item.getBody();
+
+		// Check for image
+		if (bodyString.startsWith("ImageTag:")){
+
+			String encodedString = bodyString.substring(9);
+
+			byte[] imageBytes = android.util.Base64.decode(encodedString, android.util.Base64.DEFAULT);
+			Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+			body.setText("Image:");
+			imageView.setImageBitmap(decodeImage);
+		}
+		else
+		{
+			Spanned bodyText = getSpanned(bodyString);
+			if (fullText) {
+				body.setText(bodyText);
+				body.setTextIsSelectable(true);
+				makeLinksClickable(body);
+			} else {
+				body.setTextIsSelectable(false);
+				if (bodyText.length() > TEASER_LENGTH)
+					bodyText = getTeaser(ctx, bodyText);
+				body.setText(bodyText);
+			}
 		}
 
 		// reblog button
