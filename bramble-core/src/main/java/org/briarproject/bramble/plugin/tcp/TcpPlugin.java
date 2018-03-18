@@ -314,8 +314,8 @@ abstract class TcpPlugin implements DuplexPlugin {
         // of an IP/PORT..
         if(userInfo != null){
             // If user was found
-            addr = userInfo.getIpAddress();
-            port = Integer.toString(userInfo.getPort());
+            //addr = userInfo.getIpAddress();
+           // port = Integer.toString(userInfo.getPort());
 
         }else{
 		    // If server do not successfully get the User, we go the normal WAN TCP Way
