@@ -24,7 +24,7 @@ public class BServerServicesImplTest {
     @Test
     public void obtainUserInfoTest(){
         BServerServicesImpl services = new BServerServicesImpl();
-        SavedUser returnedUser = services.obtainUserInfo("1233345DDDDD");
+        SavedUser returnedUser = services.obtainUserInfo("1233345");
         Assert.assertTrue(returnedUser != null);
     }
 
@@ -61,7 +61,11 @@ public class BServerServicesImplTest {
     @Ignore
     @Test
     public void updateUserInfo(){
-        // This method is not yet implemented on the briar server
+       BServerServicesImpl services = new BServerServicesImpl();
+       SavedUser user = new SavedUser("1233345", generateFakeIp(), generateFakePort());
+       boolean e = services.updateUserInfo(user);
+       int f= 2;
+       Assert.assertTrue(e);
     }
 
     private String generateFakeUserName(){
