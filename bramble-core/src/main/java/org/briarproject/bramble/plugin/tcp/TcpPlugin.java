@@ -3,6 +3,7 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 import org.briarproject.bramble.api.contact.ContactId;
+import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
 import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
@@ -61,7 +62,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected volatile ServerSocket socket = null;
 	protected volatile String currentUserID;
 	protected volatile String currentIP;
-
+	protected volatile String currentTargetUserID;
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
 	 * in order of preference. At most one of the addresses will be bound.
@@ -217,6 +218,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 				callback.getRemoteProperties();
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
+            currentTargetUserID = c.getUniqueID();
 			if (!connected.contains(c)) connectAndCallBack(c, e.getValue());
 		}
 	}
@@ -296,19 +298,30 @@ abstract class TcpPlugin implements DuplexPlugin {
 	 * This method is a custom hack of the TCP method, it will only be used by CustomWanTcpPlugin.java
 	 * It is mostly similar to parseSocketAddress , however, it will go and use information from internet
 	 * @param ipPort Port by what's briar remember , (we might not use the value)
-	 * @param UserID Custom User ID , implemented...
 	 * @return The right socket to establish connection
 	 */
 	@Nullable
-	InetSocketAddress injectSocketAddressFromServer(String ipPort, String UserID){
+	InetSocketAddress injectSocketAddressFromServer(String ipPort){
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
 		// Go Get IP/PORT for userID on our Server
 		BServerServicesImpl services = new BServerServicesImpl();
-		SavedUser userInfo = services.obtainUserInfo(UserID);
-		// TODO: Replace split[0] by userinfo.getIp() and split[1] by Interger.toString(userinfo.getPort())...
-		String addr = split[0], port = split[1];
+		SavedUser userInfo = null;
+		//= services.obtainUserInfo(currentTargetUserID);
+        String addr = "", port = "";
+		// This is where the magic happen, this small portion of code is not protected againts injection
+        // of an IP/PORT..
+        if(userInfo != null){
+            // If user was found
+            addr = userInfo.getIpAddress();
+            port = Integer.toString(userInfo.getPort());
+
+        }else{
+		    // If server do not successfully get the User, we go the normal WAN TCP Way
+            addr = split[0];
+            port = split[1];
+        }
 		// Ensure getByName() won't perform a DNS lookup
 		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
 		try {
@@ -368,7 +381,8 @@ abstract class TcpPlugin implements DuplexPlugin {
 		currentIP = IpifyServices.getPublicIpOfDevice();
 		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
 		BServerServicesImpl services = new BServerServicesImpl();
-		services.updateUserInfo(currentUser);
+		//TODO: Uncomment at the end..to enable
+		//services.updateUserInfo(currentUser);
 	}
 
 }

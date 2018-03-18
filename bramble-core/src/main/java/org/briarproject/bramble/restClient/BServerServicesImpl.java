@@ -80,7 +80,7 @@ public class BServerServicesImpl implements BServerServices{
 
         // Wait for the call to server to be done...
         try{
-            executorService.awaitTermination(2, TimeUnit.SECONDS);
+            executorService.awaitTermination(4, TimeUnit.SECONDS);
         }catch (InterruptedException ee){
             LOG.info(ee.getMessage());
         }

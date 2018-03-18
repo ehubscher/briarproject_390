@@ -50,7 +50,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     protected List<InetSocketAddress> getLocalSocketAddresses() {
         // Use the same address and port as last time if available
         TransportProperties p = callback.getLocalProperties();
-        InetSocketAddress old = injectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
+        InetSocketAddress old = injectSocketAddressFromServer(p.get(PROP_IP_PORT));
         List<InetSocketAddress> addrs = new LinkedList<>();
         for (InetAddress a : getLocalIpAddresses()) {
             if (isAcceptableAddress(a)) {
@@ -86,7 +86,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
      */
     private int chooseEphemeralPort() {
         int NewPort = 32768 + (int) (Math.random() * 32768);
-        // Send the new port to briar server
+        // Send the new port that has been choosen to briar server
         udateDataOnBServer(NewPort);
         return NewPort;
     }
@@ -94,7 +94,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     @Override
     protected List<InetSocketAddress> getRemoteSocketAddresses(
             TransportProperties p) {
-        InetSocketAddress parsed = injectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
+        InetSocketAddress parsed = injectSocketAddressFromServer(p.get(PROP_IP_PORT));
 
         if (parsed == null) return Collections.emptyList();
         return Collections.singletonList(parsed);
