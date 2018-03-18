@@ -173,10 +173,7 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
     //send the base64 image String
     public void sendImage(String imageString){
 	    ui.editText.setText("ImageTag:" + imageString);
-
-	    //Fake button press to send the image automatically after
-        ImageButton btn_send = findViewById(R.id.btn_send);
-        btn_send.performClick();
+	    trySendMessage();
 	}
 
 	public void setText(String text) {
