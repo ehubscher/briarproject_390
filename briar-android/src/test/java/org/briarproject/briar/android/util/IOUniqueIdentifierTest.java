@@ -29,4 +29,14 @@ public class IOUniqueIdentifierTest {
         }
         Assert.assertTrue(added);
     }
+
+    /**
+     * Very simple test to try the function that is generating uniqueID...
+     */
+    @Test
+    public void testSingleUniqueIDGeneration(){
+        String result = "";
+        result = IOUniqueIdentifier.getUniqueID();
+        Assert.assertTrue(!result.isEmpty() & result.length() > 19);
+    }
 }
