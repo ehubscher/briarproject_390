@@ -29,6 +29,4 @@ public class IOUniqueIdentifierTest {
         }
         Assert.assertTrue(added);
     }
-
-    // TODO : Find a way to mock the android ENVIRONMENT to test the other method of IOUniqueIdentifier
 }

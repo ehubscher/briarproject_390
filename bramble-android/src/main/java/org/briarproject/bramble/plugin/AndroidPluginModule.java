@@ -37,23 +37,23 @@ public class AndroidPluginModule {
 
 	@Provides
 	PluginConfig providePluginConfig(@IoExecutor Executor ioExecutor,
-			AndroidExecutor androidExecutor, SecureRandom random,
-			SocketFactory torSocketFactory, BackoffFactory backoffFactory,
-			Application app, LocationUtils locationUtils, DevReporter reporter,
-			EventBus eventBus) {
+									 AndroidExecutor androidExecutor, SecureRandom random,
+									 SocketFactory torSocketFactory, BackoffFactory backoffFactory,
+									 Application app, LocationUtils locationUtils, DevReporter reporter,
+									 EventBus eventBus) {
 		Context appContext = app.getApplicationContext();
-        // Addition of an 'Artificial' ShutdownManager...
-        ShutdownManager shutdownManager = new ShutdownManager() {
-            @Override
-            public int addShutdownHook(Runnable hook) {
-                return 0;
-            }
+		// Addition of an 'Artificial' ShutdownManager...
+		ShutdownManager shutdownManager = new ShutdownManager() {
+			@Override
+			public int addShutdownHook(Runnable hook) {
+				return 0;
+			}
 
-            @Override
-            public boolean removeShutdownHook(int handle) {
-                return false;
-            }
-        };
+			@Override
+			public boolean removeShutdownHook(int handle) {
+				return false;
+			}
+		};
 		DuplexPluginFactory bluetooth = new DroidtoothPluginFactory(ioExecutor,
 				androidExecutor, appContext, random, eventBus, backoffFactory);
 		DuplexPluginFactory tor = new TorPluginFactory(ioExecutor, appContext,

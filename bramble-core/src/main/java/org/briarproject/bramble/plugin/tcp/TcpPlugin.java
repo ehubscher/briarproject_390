@@ -1,5 +1,7 @@
 package org.briarproject.bramble.plugin.tcp;
 
+
+
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
@@ -10,8 +12,10 @@ import org.briarproject.bramble.api.plugin.duplex.DuplexPlugin;
 import org.briarproject.bramble.api.plugin.duplex.DuplexPluginCallback;
 import org.briarproject.bramble.api.plugin.duplex.DuplexTransportConnection;
 import org.briarproject.bramble.api.properties.TransportProperties;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.IpifyServices;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -55,6 +59,8 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	protected volatile boolean running = false;
 	protected volatile ServerSocket socket = null;
+	protected volatile String currentUserID;
+	protected volatile String currentIP;
 
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
@@ -81,7 +87,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected abstract boolean isConnectable(InetSocketAddress remote);
 
 	TcpPlugin(Executor ioExecutor, Backoff backoff,
-			DuplexPluginCallback callback, int maxLatency, int maxIdleTime) {
+			  DuplexPluginCallback callback, int maxLatency, int maxIdleTime) {
 		this.ioExecutor = ioExecutor;
 		this.backoff = backoff;
 		this.callback = callback;
@@ -298,6 +304,10 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
+		// Go Get IP/PORT for userID on our Server
+		BServerServicesImpl services = new BServerServicesImpl();
+		SavedUser userInfo = services.obtainUserInfo(UserID);
+		// TODO: Replace split[0] by userinfo.getIp() and split[1] by Interger.toString(userinfo.getPort())...
 		String addr = split[0], port = split[1];
 		// Ensure getByName() won't perform a DNS lookup
 		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
@@ -347,4 +357,18 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 		return addrs;
 	}
+
+	/**
+	 * This method is updating info on the current user on the current device...
+	 * @param currentPort The new port chosen in CustomWanTcpPlugin
+	 */
+	public void udateDataOnBServer(int currentPort){
+		//TODO: Insert the method to get the current User ID of the current user in lower statement
+		currentUserID = "";
+		currentIP = IpifyServices.getPublicIpOfDevice();
+		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
+		BServerServicesImpl services = new BServerServicesImpl();
+		services.updateUserInfo(currentUser);
+	}
+
 }
