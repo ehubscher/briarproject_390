@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.contact.ContactManager;
+import org.briarproject.bramble.api.contact.event.ContactAvatarChangedEvent;
 import org.briarproject.bramble.api.contact.event.ContactRemovedEvent;
 import org.briarproject.bramble.api.contact.event.ContactStatusChangedEvent;
 import org.briarproject.bramble.api.db.DbException;
@@ -278,6 +279,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					(InvitationResponseReceivedEvent) e;
 			InvitationResponse ir = m.getResponse();
 			updateItem(m.getContactId(), ir);
+		} else if(e instanceof ContactAvatarChangedEvent){
+			setAvatar(((ContactAvatarChangedEvent) e).getContactId(), ((ContactAvatarChangedEvent) e).getAvatarId());
 		}
 	}
 
@@ -310,6 +313,18 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			ContactListItem item = adapter.getItemAt(position);
 			if (item != null) {
 				item.setConnected(connected);
+				adapter.notifyItemChanged(position);
+			}
+		});
+	}
+
+	private void setAvatar(ContactId c,int avatar){
+		runOnUiThreadUnlessDestroyed(() -> {
+			adapter.incrementRevision();
+			int position = adapter.findItemPosition(c);
+			ContactListItem item = adapter.getItemAt(position);
+			if (item != null) {
+				item.setAvatar(avatar);
 				adapter.notifyItemChanged(position);
 			}
 		});

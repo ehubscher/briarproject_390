@@ -14,15 +14,21 @@ public class Contact {
 	private final Author author;
 	private final AuthorId localAuthorId;
 	private final boolean verified, active, favourite;
+	private final int avatarId;
+	private final int statusId;
+	private final String uniqueId;
 
 	public Contact(ContactId id, Author author, AuthorId localAuthorId,
-				   boolean verified, boolean active, boolean favourite) {
+				   boolean verified, boolean active, boolean favourite, int avatarId, int status, String uniqueId) {
 		this.id = id;
 		this.author = author;
 		this.localAuthorId = localAuthorId;
 		this.verified = verified;
 		this.active = active;
 		this.favourite = favourite;
+		this.avatarId = avatarId;
+		this.statusId = status;
+		this.uniqueId = uniqueId;
 	}
 
 	public ContactId getId() {
@@ -37,6 +43,12 @@ public class Contact {
 		return localAuthorId;
 	}
 
+	public String getUniqueId() {
+	    return this.uniqueId;
+    }
+
+	public int getAvatarId() { return this.avatarId; }
+
 	public boolean isVerified() {
 		return verified;
 	}
@@ -48,6 +60,8 @@ public class Contact {
 	public boolean isFavourite() {
 		return favourite;
 	}
+
+	public int getStatusId(){return statusId;}
 
 	@Override
 	public int hashCode() {

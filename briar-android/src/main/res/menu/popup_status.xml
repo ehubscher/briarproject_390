@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/connected"
+        android:title="Connected"
+        android:drawableLeft="@drawable/contact_connected"/>
+
+    <item
+        android:id="@+id/busy"
+        android:title="Busy"
+        android:drawableLeft="@drawable/contact_busy" />
+
+    <item
+        android:id="@+id/disconnected"
+        android:title="Disconnected"
+        android:drawableLeft="@drawable/contact_disconnected" />
+</menu>
