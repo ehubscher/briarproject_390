@@ -39,21 +39,15 @@ class ConversationItemViewHolder extends ViewHolder {
 	void bind(ConversationItem item) {
 		if (item.getBody() == null) {
 			text.setText("\u2026");
-		}else {
-			//check if the body string is a base64 encode image
+		} else {
 			if(item.getBody().startsWith("ImageTag:")){
-
 			    String encodedString = item.getBody().substring(9);
 
 				byte[] imageBytes = android.util.Base64.decode(encodedString, android.util.Base64.DEFAULT);
 				Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-                text.setText("Image:");
 				imageView.setImageBitmap(decodeImage);
-
-			}
-			//Displays the normal text if the string isn't a base64 image
-			else{
+			} else{
 				text.setText(StringUtils.trim(item.getBody()));
 			}
 		}

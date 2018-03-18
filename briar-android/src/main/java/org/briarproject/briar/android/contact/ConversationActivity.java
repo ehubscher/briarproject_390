@@ -231,22 +231,6 @@ public class ConversationActivity extends BriarActivity implements EventListener
 		textInputView = findViewById(R.id.text_input_container);
 		textInputView.setListener(this);
 
-        //the add_image button
-        imageButton = findViewById(R.id.open_image_browser);
-
-        //the listener
-        imageButton.setOnClickListener(new View.OnClickListener() {
-
-        	//On click the image selector will pop open
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-            }
-        });
-
         //The favourite_star button
 		favourite_star = findViewById(R.id.favourite_star);
 

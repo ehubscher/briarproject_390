@@ -117,22 +117,20 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 			List<SelectedMediaView> selectedMedia = getSelectedMedia();
 
 			if(selectedMedia.size() > 0) {
-				Bitmap bitmap = null;
 				ByteArrayOutputStream boas = new ByteArrayOutputStream();
 
 				for(SelectedMediaView media: selectedMedia) {
-					if(media.getType().equals("image/jpg") || media.getType().equals("image/jpeg")) {
-						bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
-
-						media.setImage(bitmap);
-					} else if(media.getType().equals("image/png")) {
-						bitmap.compress(Bitmap.CompressFormat.PNG, 100, boas);
-						media.setImage(bitmap);
+					if(
+							media.getType().equals("image/jpg") ||
+							media.getType().equals("image/jpeg") ||
+							media.getType().equals("image/png")) {
+						Bitmap bitmap = media.getImage();
+						bitmap.compress(Bitmap.CompressFormat.JPEG, 40, boas);
 					}
 
 					byte[] mediaBytes = boas.toByteArray();
 
-					listener.onSendClick(Base64.encodeToString(mediaBytes, android.util.Base64.DEFAULT));
+					listener.onSendClick("ImageTag:" + Base64.encodeToString(mediaBytes, android.util.Base64.DEFAULT));
 				}
 			}
 

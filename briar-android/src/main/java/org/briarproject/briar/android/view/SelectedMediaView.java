@@ -21,6 +21,7 @@ public class SelectedMediaView extends FrameLayout {
     protected final ViewHolder ui;
     protected Uri uri;
     protected String mediaType;
+    protected Bitmap image;
 
     public SelectedMediaView(Context context) {
         this(context, null);
@@ -34,7 +35,7 @@ public class SelectedMediaView extends FrameLayout {
         super(context, attrs, defStyleAttr);
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View mediaView = inflater.inflate(R.layout.selected_media_view, this, true);
+        inflater.inflate(R.layout.selected_media_view, this, true);
         ui = new ViewHolder();
     }
 
@@ -46,6 +47,10 @@ public class SelectedMediaView extends FrameLayout {
         return this.mediaType;
     }
 
+    public Bitmap getImage() {
+        return this.image;
+    }
+
     public void setUri(Uri uri) {
         this.uri = uri;
     }
@@ -55,6 +60,8 @@ public class SelectedMediaView extends FrameLayout {
     }
 
     public void setImage(Bitmap bitmap) {
+        this.image  = bitmap;
+
         ImageView image = new ImageView(this.getContext());
         image.setImageBitmap(bitmap);
         ui.selectedMedia.addView(image);
