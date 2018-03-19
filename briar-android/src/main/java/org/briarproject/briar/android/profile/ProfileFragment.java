@@ -24,10 +24,7 @@ import org.briarproject.briar.android.fragment.BaseFragment;
 public class ProfileFragment extends BaseFragment {
 
 	TextView uniqueIdTag;
-
-	DatabaseConfig databaseConfig;
-
-	ImageView avatarImage;
+    ImageView avatarImage;
 	// references to our images
 	private Integer[] mThumbIds = {
 			R.drawable.pig,
@@ -79,7 +76,7 @@ public class ProfileFragment extends BaseFragment {
 			//avatarImage.setImageResource(new IdenticonDrawable(author.getId().getBytes())));
 		}
 
-		//Set the text field to show the localUserID
+        //Set the text field to show the localUserID
         uniqueIdTag = rootView.findViewById(R.id.localUniqueId);
 		String uniqueId = settings.getString("uniqueId", "1233345");
 		if(!uniqueId.isEmpty()){
