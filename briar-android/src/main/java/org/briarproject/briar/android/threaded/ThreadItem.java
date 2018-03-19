@@ -4,7 +4,11 @@ import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.identity.Author.Status;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.api.sync.MessageId;
+import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.api.client.MessageTree.MessageNode;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -30,7 +34,17 @@ public abstract class ThreadItem implements MessageNode {
 			boolean isRead) {
 		this.messageId = messageId;
 		this.parentId = parentId;
-		this.text = text;
+
+		//parse to remove unwanted tags from the text element
+		final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdTag><AvatarIdTag>(.+?)</AvatarIdTag>(.+)");
+		final Matcher matcher = pattern.matcher(text);
+		if(matcher.find()){
+			this.text = matcher.group(3);
+		}
+		else{
+			this.text = text;
+		}
+
 		this.timestamp = timestamp;
 		this.author = author;
 		this.status = status;

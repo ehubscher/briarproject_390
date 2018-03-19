@@ -42,8 +42,7 @@ class ConversationItemViewHolder extends ViewHolder {
 	@Inject
 	volatile ContactManager contactManager;
 
-    private static final Logger LOG =
-            Logger.getLogger(ConversationActivity.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConversationActivity.class.getName());
 
 	ConversationItemViewHolder(View v) {
 		super(v);
@@ -59,7 +58,7 @@ class ConversationItemViewHolder extends ViewHolder {
 			text.setText("\u2026");
 		}else {
 
-		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+)</UniqueIdtag><AvatarIdTag>(.+)</AvatarIdTag>(.+)");
+		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdTag><AvatarIdTag>(.+?)</AvatarIdTag>(.+)");
 		    final Matcher matcher = pattern.matcher(StringUtils.trim(item.getBody()));
 
 		    if(matcher.find()){
@@ -67,7 +66,7 @@ class ConversationItemViewHolder extends ViewHolder {
 		            //the first group in the pattern is the uniqueId and the second group is the avatarId
                     contactManager.setAvatarId(matcher.group(1), Integer.valueOf(matcher.group(2)));
                 }
-                catch (DbException e) {
+                catch (Exception e) {
                     if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
                 }
 
