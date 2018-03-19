@@ -22,6 +22,8 @@ import android.widget.ImageButton;
 
 import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.BriarApplication;
+import org.briarproject.briar.android.BriarService;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
 import org.thoughtcrime.securesms.components.emoji.EmojiDrawer;
 import org.thoughtcrime.securesms.components.emoji.EmojiDrawer.EmojiEventListener;

@@ -62,9 +62,11 @@ public class BServerServicesImplTest {
 	@Test
 	public void updateUserInfo(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		SavedUser user = new SavedUser("1233345", generateFakeIp(), generateFakePort());
+		String defaultUser = "1233345";
+		String ipp = generateFakeIp();
+		int fakePort = generateFakePort();
+		SavedUser user = new SavedUser(defaultUser, ipp, fakePort);
 		boolean e = services.updateUserInfo(user);
-		int f= 2;
 		Assert.assertTrue(e);
 	}
 

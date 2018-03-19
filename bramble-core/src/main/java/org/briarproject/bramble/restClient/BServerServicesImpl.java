@@ -135,8 +135,10 @@ public class BServerServicesImpl implements BServerServices{
         parameters.put("port", savedUser.getPort());
         parameters.put("ip", savedUser.getIpAddress());
         parameters.put("password", config.getServerPassword());
-
-
+        // prevent unexpected input
+        if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
+            return false;
+        }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
             @Override
@@ -157,7 +159,7 @@ public class BServerServicesImpl implements BServerServices{
         });
         // Wait for the call to server to be done...
         try{
-            executorService.awaitTermination(2, TimeUnit.SECONDS);
+            executorService.awaitTermination(4, TimeUnit.SECONDS);
         }catch (Exception ee){
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }

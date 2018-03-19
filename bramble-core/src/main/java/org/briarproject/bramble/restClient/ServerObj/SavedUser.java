@@ -7,7 +7,7 @@ package org.briarproject.bramble.restClient.ServerObj;
 public class SavedUser {
     private String username;
     private String ipAddress;
-    private int port;
+    private int port = 0000;
 
     public SavedUser(String username, String ip, int port){
         this.username = username;
