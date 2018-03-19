@@ -307,18 +307,17 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (split.length != 2) return null;
 		// Go Get IP/PORT for userID on our Server
 		BServerServicesImpl services = new BServerServicesImpl();
-		SavedUser userInfo = null;
-		//= services.obtainUserInfo(currentTargetUserID);
+		SavedUser userInfo = services.obtainUserInfo(currentTargetUserID);
         String addr = "", port = "";
 		// This is where the magic happen, this small portion of code is not protected againts injection
         // of an IP/PORT..
         if(userInfo != null){
             // If user was found
 			if(userInfo.getIpAddress() != null){
-				//addr = userInfo.getIpAddress();
+				addr = userInfo.getIpAddress();
 			}
 			if(userInfo.getPort() != 0000){
-				// port = Integer.toString(userInfo.getPort());
+				port = Integer.toString(userInfo.getPort());
 			}
 
 
@@ -381,13 +380,15 @@ abstract class TcpPlugin implements DuplexPlugin {
 	 * @param currentPort The new port chosen in CustomWanTcpPlugin
 	 */
 	public void udateDataOnBServer(int currentPort){
-		//TODO: Insert the method to get the current User ID of the current user in lower statement
-		currentUserID = "";
+		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
 		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
 		BServerServicesImpl services = new BServerServicesImpl();
-		//TODO: Uncomment at the end..to enable
-		//services.updateUserInfo(currentUser);
+		// Make sure it is not default user or empty
+		if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
+			services.updateUserInfo(currentUser);
+		}
+
 	}
 
 }

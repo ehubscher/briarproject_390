@@ -10,7 +10,7 @@ public class UniqueIDSingleton {
     public static void setUniqueID(String uniqueID){
             uuniqueID = uniqueID;
 
-    }
+}
     public static String getUniqueID(){
         return uuniqueID;
     }

@@ -9,6 +9,7 @@ import org.briarproject.bramble.api.identity.AuthorId;
 import org.briarproject.bramble.api.identity.IdentityManager;
 import org.briarproject.bramble.api.identity.LocalAuthor;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
 
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -80,6 +81,8 @@ class IdentityManagerImpl implements IdentityManager {
 		}
 		LocalAuthor cached = cachedAuthor;
 		if (cached == null) throw new AssertionError();
+		// Small hook to store the UniqueID
+		UniqueIDSingleton.setUniqueID(cached.getUniqueId());
 		return cached;
 	}
 
