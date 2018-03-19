@@ -113,6 +113,8 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 	}
 
 	private void trySendMessage() {
+		String message = "";
+
 		if (listener != null) {
 			List<SelectedMediaView> selectedMedia = getSelectedMedia();
 
@@ -121,20 +123,20 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 
 				for(SelectedMediaView media: selectedMedia) {
 					if(
-							media.getType().equals("image/jpg") ||
+						media.getType().equals("image/jpg") ||
 							media.getType().equals("image/jpeg") ||
 							media.getType().equals("image/png")) {
 						Bitmap bitmap = media.getImage();
-						bitmap.compress(Bitmap.CompressFormat.JPEG, 40, boas);
+						bitmap.compress(Bitmap.CompressFormat.JPEG, 30, boas);
 					}
 
 					byte[] mediaBytes = boas.toByteArray();
 
-					listener.onSendClick("ImageTag:" + Base64.encodeToString(mediaBytes, android.util.Base64.DEFAULT));
+					message += "%shim%ImageTag:" + Base64.encodeToString(mediaBytes, android.util.Base64.DEFAULT);
 				}
 			}
 
-			listener.onSendClick(getText().toString());
+			listener.onSendClick(getText().toString() + message);
 		}
 	}
 

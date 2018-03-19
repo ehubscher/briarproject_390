@@ -158,17 +158,16 @@ public class ConversationActivity extends BriarActivity implements EventListener
     //Declared variables for the Favourite star
 	private ImageButton favourite_star;
 
-	private final ListenableFutureTask<String> contactNameTask =
-			new ListenableFutureTask<>(new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					Contact c = contactManager.getContact(contactId);
-					contactName = c.getAuthor().getName();
-					return c.getAuthor().getName();
-				}
-			});
-	private final AtomicBoolean contactNameTaskStarted =
-			new AtomicBoolean(false);
+	private final ListenableFutureTask<String> contactNameTask = new ListenableFutureTask<>(new Callable<String>() {
+		@Override
+		public String call() throws Exception {
+			Contact c = contactManager.getContact(contactId);
+			contactName = c.getAuthor().getName();
+			return c.getAuthor().getName();
+		}
+	});
+
+	private final AtomicBoolean contactNameTaskStarted = new AtomicBoolean(false);
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject

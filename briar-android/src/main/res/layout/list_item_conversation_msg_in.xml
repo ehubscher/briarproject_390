@@ -19,6 +19,14 @@
 		android:textSize="@dimen/text_size_medium"
 		tools:text="Short message"/>
 
+	<LinearLayout
+		android:id="@+id/mediaMessageContainer"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:backgroundTint="@color/briar_text_primary"
+		android:orientation="vertical">
+	</LinearLayout>
+
     <ImageView
         android:layout_below="@id/text"
         android:id="@+id/imageView"

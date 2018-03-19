@@ -118,18 +118,41 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 		String bodyString = item.getBody();
 
 		// Check for image
-		if (bodyString.startsWith("ImageTag:")){
-
-			String encodedString = bodyString.substring(9);
+		if (bodyString.contains("ImageTag:")){
+			int imageIndex = bodyString.indexOf("ImageTag:");
+			String encodedString = bodyString.substring(imageIndex, imageIndex + 9);
 
 			byte[] imageBytes = android.util.Base64.decode(encodedString, android.util.Base64.DEFAULT);
-			Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+			Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-			body.setText("Image:");
-			imageView.setImageBitmap(decodeImage);
-		}
-		else
-		{
+			body.setText(bodyString.substring(0, imageIndex));
+			imageView.setImageBitmap(decodedImage);
+
+			/*
+			if (item.getBody().contains("%shim%")) {
+				String[] shims = item.getBody().split("%shim%");
+				String encodedMedia = "";
+
+				if (shims.length > 0) {
+					for (int i = 0; i < shims.length; i++) {
+						if (shims[i].startsWith("ImageTag:")) {
+							SelectedMediaView mediaView = new SelectedMediaView(this.ctx);
+							encodedMedia = shims[i].substring(9);
+							byte[] mediaBytes = android.util.Base64.decode(encodedMedia, android.util.Base64.DEFAULT);
+
+							Bitmap decodedMedia = BitmapFactory.decodeByteArray(mediaBytes, 0, mediaBytes.length);
+							mediaView.setImage(decodedMedia);
+							mediaMessageContainer.addView(mediaView);
+						} else {
+							text.setText(StringUtils.trim(shims[i]));
+						}
+					}
+				}
+			} else {
+				text.setText(StringUtils.trim(item.getBody().toString()));
+			}
+			*/
+		} else {
 			Spanned bodyText = getSpanned(bodyString);
 			if (fullText) {
 				body.setText(bodyText);

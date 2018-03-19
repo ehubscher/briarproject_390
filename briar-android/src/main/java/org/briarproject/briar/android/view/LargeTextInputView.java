@@ -43,15 +43,10 @@ public class LargeTextInputView extends TextInputView {
 		super.setUpViews(context, attrs);
 
 		// get attributes
-		TypedArray attributes = context.obtainStyledAttributes(attrs,
-				R.styleable.LargeTextInputView);
-		String buttonText =
-				attributes.getString(R.styleable.LargeTextInputView_buttonText);
-		int maxLines =
-				attributes
-						.getInteger(R.styleable.LargeTextInputView_maxLines, 0);
-		boolean fillHeight = attributes
-				.getBoolean(R.styleable.LargeTextInputView_fillHeight,
+		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.LargeTextInputView);
+		String buttonText = attributes.getString(R.styleable.LargeTextInputView_buttonText);
+		int maxLines = attributes.getInteger(R.styleable.LargeTextInputView_maxLines, 0);
+		boolean fillHeight = attributes.getBoolean(R.styleable.LargeTextInputView_fillHeight,
 						false);
 		attributes.recycle();
 
