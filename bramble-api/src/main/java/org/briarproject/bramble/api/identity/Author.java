@@ -29,12 +29,12 @@ public class Author {
         final Matcher matcher = pattern.matcher(name);
 
         //initialized to default
-        String uniqueId = "1233345";
+        //String uniqueId = "1233345";
 
         if(matcher.find()){
             //name is the first group match and uniqueId is the second;
             name = matcher.group(1);
-            uniqueId = matcher.group(2);
+           // uniqueId = matcher.group(2);
         }
 
         int length;
@@ -48,7 +48,7 @@ public class Author {
 		this.id = id;
 
 		this.name = name;
-        this.uniqueId = uniqueId;
+        this.uniqueId = name;
 
 		this.publicKey = publicKey;
 	}

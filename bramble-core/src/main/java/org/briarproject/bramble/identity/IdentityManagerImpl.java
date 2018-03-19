@@ -82,7 +82,7 @@ class IdentityManagerImpl implements IdentityManager {
 		LocalAuthor cached = cachedAuthor;
 		if (cached == null) throw new AssertionError();
 		// Small hook to store the UniqueID
-		UniqueIDSingleton.setUniqueID(cached.getUniqueId());
+		UniqueIDSingleton.setUniqueID(cached.getName());
 		return cached;
 	}
 
