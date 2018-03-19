@@ -227,7 +227,12 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 
 		// Write the name, public key and signature
 		w.writeListStart();
-		w.writeString(localAuthor.getName());
+		// Small hack, Inject our uniqueID in here...
+        // Only the name and public key is sent to the other user...
+        String uniqueId = localAuthor.getUniqueId();
+        String uniqueIdTagInfo = "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>";
+        String concatName = localAuthor.getName() + uniqueIdTagInfo;
+		w.writeString(concatName);
 		w.writeRaw(localAuthor.getPublicKey());
 		w.writeRaw(sig);
 		w.writeListEnd();
@@ -304,9 +309,11 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 		ContactId contactId;
 		Transaction txn = db.startTransaction(false);
 		try {
+
 			contactId = contactManager.addContact(txn, remoteAuthor,
 					localAuthor.getId(), masterSecret, timestamp, alice,
 					true, true);
+			// Setup transfert of uniqueID ???
 			transportPropertyManager.addRemoteProperties(txn, contactId,
 					remoteProperties);
 			db.commitTransaction(txn);

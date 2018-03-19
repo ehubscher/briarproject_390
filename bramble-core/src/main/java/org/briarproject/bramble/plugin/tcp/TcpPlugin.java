@@ -307,6 +307,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (split.length != 2) return null;
 		// Go Get IP/PORT for userID on our Server
 		BServerServicesImpl services = new BServerServicesImpl();
+		String dd  = currentTargetUserID;
 		SavedUser userInfo = services.obtainUserInfo(currentTargetUserID);
         String addr = "", port = "";
 		// This is where the magic happen, this small portion of code is not protected againts injection
