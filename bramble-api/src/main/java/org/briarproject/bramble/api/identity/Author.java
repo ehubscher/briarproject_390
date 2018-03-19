@@ -24,8 +24,22 @@ public class Author {
 	private final byte[] publicKey;
 	private final String uniqueId;
 
-	public Author(AuthorId id, String name, byte[] publicKey) {
-		int length;
+	public Author(AuthorId id, String name, byte[] publicKey) {//pattern to separate the uniqueId from the tag
+        final Pattern pattern = Pattern.compile("(.+?)<UniqueIdTag>(.+?)</UniqueIdTag>");
+        final Matcher matcher = pattern.matcher(name);
+
+        String uniqueId;
+
+        if(matcher.find()){
+            //name is the first group match and uniqueId is the second;
+            name = matcher.group(1);
+            uniqueId = matcher.group(2);
+        }
+        else{
+            uniqueId = "1233345";
+        }
+
+        int length;
 		try {
 			length = name.getBytes("UTF-8").length;
 		} catch (UnsupportedEncodingException e) {
@@ -35,20 +49,8 @@ public class Author {
 			throw new IllegalArgumentException();
 		this.id = id;
 
-		//pattern to separate the uniqueId from the tag
-		final Pattern pattern = Pattern.compile("(.+?)<UniqueIdTag>(.+?)</UniqueIdTag>");
-		final Matcher matcher = pattern.matcher(name);
-
-		if(matcher.find()){
-		    //name is the first group match and uniqueId is the second;
-            this.name = matcher.group(1);
-            this.uniqueId = matcher.group(2);
-        }
-        else{
-		    //mostly for test purposes
-            this.name = name;
-            this.uniqueId = "1233345";
-        }
+		this.name = name;
+        this.uniqueId = uniqueId;
 
 		this.publicKey = publicKey;
 	}

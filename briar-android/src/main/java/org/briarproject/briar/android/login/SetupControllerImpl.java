@@ -49,16 +49,16 @@ public class SetupControllerImpl extends PasswordControllerImpl
 
 	@Override
 	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
-		this.setUniqueId();
+		this.authorName = authorName + "UniqueIdTag>"+ this.setUniqueId() +"</UniqueIdTag>";
 		if (setupActivity == null) throw new IllegalStateException();
 		setupActivity.showPasswordFragment();
 	}
 
 	@Override
-    public void setUniqueId(){
+    public String setUniqueId(){
         IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
         this.uniqueId = ioUniqueIdentifier.getUniqueID();
+        return this.uniqueId;
     }
 
 	@Override

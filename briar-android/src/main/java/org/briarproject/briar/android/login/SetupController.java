@@ -12,7 +12,7 @@ public interface SetupController {
 
 	void setAuthorName(String authorName);
 
-	void setUniqueId();
+	String setUniqueId();
 
 	void setPassword(String password);
 

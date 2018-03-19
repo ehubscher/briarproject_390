@@ -23,7 +23,7 @@ import org.briarproject.briar.android.fragment.BaseFragment;
 
 public class ProfileFragment extends BaseFragment {
 
-	TextView uniqueId;
+	TextView uniqueIdTag;
 
 	DatabaseConfig databaseConfig;
 
@@ -64,9 +64,6 @@ public class ProfileFragment extends BaseFragment {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 	    getActivity().setTitle(R.string.title_activity_profile);
 		avatarImage = rootView.findViewById(R.id.image_avatar_profile);
-		uniqueId = rootView.findViewById(R.id.localUniqueId);
-
-		uniqueId.setText(databaseConfig.getLocalUniqueId());
 
 	    //Retrieving stored avatar
 		SharedPreferences settings = PreferenceManager
@@ -80,6 +77,10 @@ public class ProfileFragment extends BaseFragment {
 			//TODO: display user's identicon
 			//avatarImage.setImageResource(new IdenticonDrawable(author.getId().getBytes())));
 		}
+
+		//Set the text field to show the localUserID
+        uniqueIdTag = rootView.findViewById(R.id.localUniqueId);
+        uniqueIdTag.setText(databaseConfig.getLocalUniqueId());
 
 		//Avatar button
 	    buttonAvatar = (Button) rootView.findViewById(R.id.choose_avatar_button);

@@ -122,16 +122,13 @@ public class AppModule {
 
             @Override
             public void setLocalUniqueId(String uniqueId) {
-                this.uniqueId = uniqueId;
+			    this.uniqueId = uniqueId;
             }
 
 			@Override
 			@Nullable
 			public String getLocalUniqueId() {
-			    if(uniqueId.isEmpty()){
-			        return "no uniqueId set";
-                }
-				return uniqueId;
+				return this.uniqueId;
 			}
 
 			@Override
