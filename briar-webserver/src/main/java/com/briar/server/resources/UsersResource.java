@@ -45,12 +45,14 @@ public class UsersResource {
     @Path("/users/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(@PathParam("userId") String phoneGeneratedId, User inputUser) {
+    public Response updateUser(@PathParam("userId") String phoneGeneratedId,
+                               User inputUser) {
         Response response;
 
         inputUser.setPhoneGeneratedId(phoneGeneratedId);
         try {
-            boolean isRequestValid = this.userService.validateUserParams(inputUser);
+            boolean isRequestValid =
+                    this.userService.validateUserParams(inputUser);
             if (!isRequestValid) {
                 // You can't update a user if the request isn't valid
                 // (some mandatory param aren't filled).
@@ -59,7 +61,8 @@ public class UsersResource {
                 return response;
             }
 
-            boolean userExists = this.userService.doesUserExists(phoneGeneratedId);
+            boolean userExists =
+                    this.userService.doesUserExists(phoneGeneratedId);
             if (!userExists) {
                 // You can't update a user if it isn't created
                 response = Response.status(Response.Status.NOT_FOUND).build();
@@ -70,7 +73,8 @@ public class UsersResource {
             boolean isPasswordValid = this.userService.authenticate(inputUser);
             if (!isPasswordValid) {
                 // Can't update the info to a user if you don't have the right password
-                response = Response.status(Response.Status.UNAUTHORIZED).build();
+                response =
+                        Response.status(Response.Status.UNAUTHORIZED).build();
                 System.out.println(response);
                 return response;
             }
@@ -84,7 +88,8 @@ public class UsersResource {
             BriarUser returnObject = this.userService.modifyUser(userInMemory);
 
             // If no error is returned, we send back OK
-            response = Response.status(Response.Status.OK).entity(returnObject).build();
+            response = Response.status(Response.Status.OK).entity(returnObject)
+                               .build();
             System.out.println(response);
             return response;
 
@@ -92,7 +97,8 @@ public class UsersResource {
             // Any exception we catch is an internal server error.
             //TODO Eventually we'll need a log service.
             System.out.println(e);
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                               .build();
             System.out.println(response);
             return response;
         }
@@ -101,11 +107,12 @@ public class UsersResource {
     /**
      * Method used to create the contact information of a user. Input required:
      * {
-     *     port: 1234,
-     *     ip: "123.123.123.123",
-     *     phoneGeneratedId: "someId",
-     *     password: "qwerty"
+     * port: 1234,
+     * ip: "123.123.123.123",
+     * phoneGeneratedId: "someId",
+     * password: "qwerty"
      * }
+     *
      * @param inputUser
      * @return
      */
@@ -125,7 +132,8 @@ public class UsersResource {
             return response;
         }
 
-        boolean userExists = this.userService.doesUserExists(inputUser.getPhoneGeneratedId());
+        boolean userExists = this.userService
+                .doesUserExists(inputUser.getPhoneGeneratedId());
         if (userExists) {
             // You can't create a user if it already exists
             response = Response.status(Response.Status.BAD_REQUEST).build();
@@ -136,12 +144,16 @@ public class UsersResource {
         try {
             BriarUser returnValue = this.userService.addUser(inputUser);
             // Here everything worked and we return the user created
-            response = Response.status(Response.Status.CREATED).entity(returnValue).build();
+            response =
+                    Response.status(Response.Status.CREATED).entity(returnValue)
+                            .build();
             System.out.println(response);
             return response;
         } catch (Exception e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            System.out.println("ERROR: " + e + "\n\n\n" + e.getStackTrace() + "\n\n\n");
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                               .build();
+            System.out.println(
+                    "ERROR: " + e + "\n\n\n" + e.getStackTrace() + "\n\n\n");
             System.out.println("RESPONSE: " + response);
             return response;
         }
@@ -151,8 +163,9 @@ public class UsersResource {
      * Temporary access point to get the user information. Will be deleted in order to make place to a user contact
      * system instead. Expects:
      * {
-     *     "password": "somePassword"
+     * "password": "somePassword"
      * }
+     *
      * @param phoneGeneratedId
      * @param inputUser
      * @return
@@ -161,11 +174,13 @@ public class UsersResource {
     @Path("/hack/users/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response returnUser(@PathParam("userId") String phoneGeneratedId, User inputUser) {
+    public Response returnUser(@PathParam("userId") String phoneGeneratedId,
+                               User inputUser) {
         Response response;
         inputUser.setPhoneGeneratedId(phoneGeneratedId);
 
-        boolean isRequestValid = this.userService.validateHackUserParams(inputUser);
+        boolean isRequestValid =
+                this.userService.validateHackUserParams(inputUser);
         if (!isRequestValid) {
             // You can't update a user if the request isn't valid
             // (some mandatory param aren't filled).
@@ -184,14 +199,18 @@ public class UsersResource {
 
         try {
             User returnUser = this.userService.readUser(phoneGeneratedId);
-            BriarUser returnValue = this.userService.convertUserToBriarUser(returnUser);
+            BriarUser returnValue =
+                    this.userService.convertUserToBriarUser(returnUser);
             // Here everything worked and we return the user created
-            response = Response.status(Response.Status.OK).entity(returnValue).build();
+            response = Response.status(Response.Status.OK).entity(returnValue)
+                               .build();
             System.out.println(response);
             return response;
         } catch (Exception e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            System.out.println("ERROR: " + e + "\n\n\n" + e.getStackTrace() + "\n\n\n");
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                               .build();
+            System.out.println(
+                    "ERROR: " + e + "\n\n\n" + e.getStackTrace() + "\n\n\n");
             System.out.println("RESPONSE: " + response);
             return response;
         }

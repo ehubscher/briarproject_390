@@ -8,7 +8,8 @@ public class User {
     private String ip;
     private int port;
 
-    public User(long id, String phoneGeneratedId, String password, String ip, int port) {
+    public User(long id, String phoneGeneratedId, String password, String ip,
+                int port) {
         this.id = id;
         this.phoneGeneratedId = phoneGeneratedId;
         this.password = password;
@@ -68,15 +69,28 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
 
         User user = (User) o;
 
-        if (getId() != user.getId()) return false;
-        if (!getPhoneGeneratedId().equals(user.getPhoneGeneratedId())) return false;
-        if (!getPassword().equals(user.getPassword())) return false;
-        if (getIp() != null ? !getIp().equals(user.getIp()) : user.getIp() != null) return false;
+        if (getId() != user.getId()) {
+            return false;
+        }
+        if (!getPhoneGeneratedId().equals(user.getPhoneGeneratedId())) {
+            return false;
+        }
+        if (!getPassword().equals(user.getPassword())) {
+            return false;
+        }
+        if (getIp() != null ? !getIp().equals(user.getIp()) :
+                user.getIp() != null) {
+            return false;
+        }
         return true;
 
     }

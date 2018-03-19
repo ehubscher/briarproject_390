@@ -13,7 +13,8 @@ public interface UserMapper {
     @Insert("insert into users " +
             "(phone_generated_id, password, ip, port, is_active, created, modified) " +
             "values (#{phoneGeneratedId}, #{password}, #{ip}, #{port}, 1, current_timestamp(), current_timestamp());")
-    @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id", before = false, resultType = Long.class)
+    @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
+            before = false, resultType = Long.class)
     void addNewUser(User user);
 
     @Update("update users " +

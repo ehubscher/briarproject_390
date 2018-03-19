@@ -5,11 +5,15 @@ import com.briar.server.exception.ObjectDeletedException;
 
 public interface IHandler {
 
-    public boolean exists() throws ObjectDeletedException, ObjectAlreadyExistsException;
+    public boolean exists()
+            throws ObjectDeletedException, ObjectAlreadyExistsException;
 
-    public void add() throws ObjectDeletedException, ObjectAlreadyExistsException;
+    public void add()
+            throws ObjectDeletedException, ObjectAlreadyExistsException;
 
-    public void modify() throws ObjectDeletedException, ObjectAlreadyExistsException;
+    public void modify()
+            throws ObjectDeletedException, ObjectAlreadyExistsException;
 
-    public void remove() throws ObjectDeletedException, ObjectAlreadyExistsException;
+    public void remove()
+            throws ObjectDeletedException, ObjectAlreadyExistsException;
 }

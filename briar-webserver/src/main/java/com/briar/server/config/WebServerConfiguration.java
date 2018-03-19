@@ -26,7 +26,7 @@ public class WebServerConfiguration extends ResourceConfig {
         register(ApiListingResource.class);
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1");
-        beanConfig.setSchemes(new String[] { "http", "https" });
+        beanConfig.setSchemes(new String[]{"http", "https"});
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/");
         beanConfig.setTitle("Briar WebServer API");

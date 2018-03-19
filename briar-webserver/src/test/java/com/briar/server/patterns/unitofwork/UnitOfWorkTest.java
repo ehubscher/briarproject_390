@@ -1,6 +1,9 @@
 package com.briar.server.patterns.unitofwork;
 
-import com.briar.server.exception.*;
+import com.briar.server.exception.DBException;
+import com.briar.server.exception.DataCompromisedException;
+import com.briar.server.exception.ObjectAlreadyExistsException;
+import com.briar.server.exception.ObjectDeletedException;
 import com.briar.server.services.tasks.ITask;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +24,8 @@ public class UnitOfWorkTest {
     private ITask exceptionOnRevertMap;
 
     @Before
-    public void setup() throws DBException, ObjectDeletedException, ObjectAlreadyExistsException {
+    public void setup() throws DBException, ObjectDeletedException,
+            ObjectAlreadyExistsException {
         this.unitOfWork = UnitOfWork.getTestInstance();
         this.workingTask1 = mock(ITask.class);
         this.workingTask2 = mock(ITask.class);
@@ -32,15 +36,21 @@ public class UnitOfWorkTest {
         this.exceptionOnRevertMap = mock(ITask.class);
 
         // Creating the stubs
-        Mockito.doThrow(new DBException()).when(this.dbExceptionOnCommitDb).commitDB();
-        Mockito.doThrow(new DBException()).when(this.dbExceptionOnRevertDb).revertDB();
+        Mockito.doThrow(new DBException()).when(this.dbExceptionOnCommitDb)
+               .commitDB();
+        Mockito.doThrow(new DBException()).when(this.dbExceptionOnRevertDb)
+               .revertDB();
 
-        Mockito.doThrow(new ObjectDeletedException()).when(this.exceptionOnCommitMap).commitIdentityMap();
-        Mockito.doThrow(new ObjectDeletedException()).when(this.exceptionOnRevertMap).revertIdentityMap();
+        Mockito.doThrow(new ObjectDeletedException())
+               .when(this.exceptionOnCommitMap).commitIdentityMap();
+        Mockito.doThrow(new ObjectDeletedException())
+               .when(this.exceptionOnRevertMap).revertIdentityMap();
     }
 
     @Test
-    public void testHappyPathUnitOfWork() throws DBException, ObjectDeletedException, ObjectAlreadyExistsException, DataCompromisedException {
+    public void testHappyPathUnitOfWork()
+            throws DBException, ObjectDeletedException,
+            ObjectAlreadyExistsException, DataCompromisedException {
         String transactionId = "hello";
         this.unitOfWork.registerCommit(transactionId, workingTask1);
         this.unitOfWork.registerCommit(transactionId, workingTask2);
@@ -70,14 +80,18 @@ public class UnitOfWorkTest {
     }
 
     @Test
-    public void testRevertWhenDbCommitFails() throws DBException, ObjectDeletedException, ObjectAlreadyExistsException, DataCompromisedException {
+    public void testRevertWhenDbCommitFails()
+            throws DBException, ObjectDeletedException,
+            ObjectAlreadyExistsException, DataCompromisedException {
         String transactionId = "hello";
         this.unitOfWork.registerCommit(transactionId, workingTask1);
         this.unitOfWork.registerCommit(transactionId, workingTask2);
         this.unitOfWork.registerCommit(transactionId, dbExceptionOnCommitDb);
         this.unitOfWork.registerCommit(transactionId, workingTask3);
 
-        InOrder inOrder = inOrder(workingTask1, workingTask2, dbExceptionOnCommitDb, workingTask3);
+        InOrder inOrder =
+                inOrder(workingTask1, workingTask2, dbExceptionOnCommitDb,
+                        workingTask3);
         this.unitOfWork.pushCommit(transactionId);
 
         // Those methods should be called because the transaction id is right
@@ -104,14 +118,18 @@ public class UnitOfWorkTest {
     }
 
     @Test
-    public void testRevertWhenMapCommitFails() throws DBException, ObjectDeletedException, ObjectAlreadyExistsException, DataCompromisedException {
+    public void testRevertWhenMapCommitFails()
+            throws DBException, ObjectDeletedException,
+            ObjectAlreadyExistsException, DataCompromisedException {
         String transactionId = "hello";
         this.unitOfWork.registerCommit(transactionId, workingTask1);
         this.unitOfWork.registerCommit(transactionId, workingTask2);
         this.unitOfWork.registerCommit(transactionId, exceptionOnCommitMap);
         this.unitOfWork.registerCommit(transactionId, workingTask3);
 
-        InOrder inOrder = inOrder(workingTask1, workingTask2, exceptionOnCommitMap, workingTask3);
+        InOrder inOrder =
+                inOrder(workingTask1, workingTask2, exceptionOnCommitMap,
+                        workingTask3);
         this.unitOfWork.pushCommit(transactionId);
 
         // Those methods should be called because the transaction id is right
@@ -139,14 +157,17 @@ public class UnitOfWorkTest {
     }
 
     @Test(expected = DataCompromisedException.class)
-    public void testRevertWhenDbCommitAndRevertFails() throws DBException, ObjectDeletedException, ObjectAlreadyExistsException, DataCompromisedException {
+    public void testRevertWhenDbCommitAndRevertFails()
+            throws DBException, ObjectDeletedException,
+            ObjectAlreadyExistsException, DataCompromisedException {
         String transactionId = "hello";
         this.unitOfWork.registerCommit(transactionId, workingTask1);
         this.unitOfWork.registerCommit(transactionId, dbExceptionOnRevertDb);
         this.unitOfWork.registerCommit(transactionId, dbExceptionOnCommitDb);
         this.unitOfWork.registerCommit(transactionId, workingTask3);
 
-        InOrder inOrder = inOrder(workingTask1, dbExceptionOnRevertDb, dbExceptionOnCommitDb, workingTask3);
+        InOrder inOrder = inOrder(workingTask1, dbExceptionOnRevertDb,
+                dbExceptionOnCommitDb, workingTask3);
         this.unitOfWork.pushCommit(transactionId);
 
         // Those methods should be called because the transaction id is right
@@ -170,14 +191,17 @@ public class UnitOfWorkTest {
     }
 
     @Test(expected = DataCompromisedException.class)
-    public void testRevertWhenMapCommitAndRevertFails() throws DBException, ObjectDeletedException, ObjectAlreadyExistsException, DataCompromisedException {
+    public void testRevertWhenMapCommitAndRevertFails()
+            throws DBException, ObjectDeletedException,
+            ObjectAlreadyExistsException, DataCompromisedException {
         String transactionId = "hello";
         this.unitOfWork.registerCommit(transactionId, workingTask1);
         this.unitOfWork.registerCommit(transactionId, exceptionOnRevertMap);
         this.unitOfWork.registerCommit(transactionId, exceptionOnCommitMap);
         this.unitOfWork.registerCommit(transactionId, workingTask3);
 
-        InOrder inOrder = inOrder(workingTask1, exceptionOnRevertMap, exceptionOnCommitMap, workingTask3);
+        InOrder inOrder = inOrder(workingTask1, exceptionOnRevertMap,
+                exceptionOnCommitMap, workingTask3);
         this.unitOfWork.pushCommit(transactionId);
 
         // Those methods should be called because the transaction id is right

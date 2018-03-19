@@ -9,11 +9,12 @@ import org.springframework.context.annotation.ComponentScan;
 
 @MappedTypes({User.class})
 @MapperScan("com.briar.server.mapper")
-@ComponentScan(basePackages = {"com.briar.server.config", "com.briar.server.resources"})
+@ComponentScan(basePackages = {"com.briar.server.config",
+        "com.briar.server.resources"})
 @SpringBootApplication
 public class WebserverApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WebserverApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WebserverApplication.class, args);
+    }
 }
