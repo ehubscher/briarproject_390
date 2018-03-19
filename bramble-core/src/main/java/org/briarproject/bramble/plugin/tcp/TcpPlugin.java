@@ -3,7 +3,6 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 import org.briarproject.bramble.api.contact.ContactId;
-import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
 import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
@@ -17,6 +16,7 @@ import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.IpifyServices;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -314,8 +314,13 @@ abstract class TcpPlugin implements DuplexPlugin {
         // of an IP/PORT..
         if(userInfo != null){
             // If user was found
-            //addr = userInfo.getIpAddress();
-           // port = Integer.toString(userInfo.getPort());
+			if(userInfo.getIpAddress() != null){
+				//addr = userInfo.getIpAddress();
+			}
+			if(userInfo.getPort() != 0000){
+				// port = Integer.toString(userInfo.getPort());
+			}
+
 
         }else{
 		    // If server do not successfully get the User, we go the normal WAN TCP Way
