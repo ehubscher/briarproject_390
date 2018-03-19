@@ -1,6 +1,7 @@
 package org.briarproject.briar.android.login;
 
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import org.briarproject.bramble.api.crypto.CryptoComponent;
@@ -49,7 +50,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 
 	@Override
 	public void setAuthorName(String authorName) {
-		this.authorName = authorName + "UniqueIdTag>"+ this.setUniqueId() +"</UniqueIdTag>";
+	    this.authorName = authorName + "<UniqueIdTag>"+ this.setUniqueId() +"</UniqueIdTag>";
 		if (setupActivity == null) throw new IllegalStateException();
 		setupActivity.showPasswordFragment();
 	}
@@ -58,6 +59,13 @@ public class SetupControllerImpl extends PasswordControllerImpl
     public String setUniqueId(){
         IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
         this.uniqueId = ioUniqueIdentifier.getUniqueID();
+
+        //put in the share preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.setupActivity.getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("uniqueId", this.uniqueId);
+        editor.apply();
+
         return this.uniqueId;
     }
 

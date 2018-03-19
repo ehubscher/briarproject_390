@@ -106,7 +106,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
             //Retrieving stored avatar and uniqueId
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
             int avatarId= settings.getInt("pref_avatar",0);
-            String uniqueId = databaseConfig.getLocalUniqueId();
+            String uniqueId = settings.getString("uniqueId", "1233345");
 
             String uniqueIdTagInfo = "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>";
             String avatarTagInfo = "<AvatarIdTag>" + avatarId + "</AvatarIdTag>";

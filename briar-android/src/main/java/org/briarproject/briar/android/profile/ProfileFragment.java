@@ -65,9 +65,10 @@ public class ProfileFragment extends BaseFragment {
 	    getActivity().setTitle(R.string.title_activity_profile);
 		avatarImage = rootView.findViewById(R.id.image_avatar_profile);
 
-	    //Retrieving stored avatar
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	    //initialize a shared preference
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+
+        //Retrieving stored avatar
 		int avatarId= settings.getInt("pref_avatar",0);
 		if(avatarId != 0) {
 			avatarImage.setImageResource(mThumbIds[avatarId - 1]);
@@ -80,7 +81,10 @@ public class ProfileFragment extends BaseFragment {
 
 		//Set the text field to show the localUserID
         uniqueIdTag = rootView.findViewById(R.id.localUniqueId);
-        uniqueIdTag.setText(databaseConfig.getLocalUniqueId());
+		String uniqueId = settings.getString("uniqueId", "1233345");
+		if(!uniqueId.isEmpty()){
+            uniqueIdTag.setText(uniqueId);
+        }
 
 		//Avatar button
 	    buttonAvatar = (Button) rootView.findViewById(R.id.choose_avatar_button);

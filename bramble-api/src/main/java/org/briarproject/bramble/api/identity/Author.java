@@ -28,15 +28,13 @@ public class Author {
         final Pattern pattern = Pattern.compile("(.+?)<UniqueIdTag>(.+?)</UniqueIdTag>");
         final Matcher matcher = pattern.matcher(name);
 
-        String uniqueId;
+        //initialized to default
+        String uniqueId = "1233345";
 
         if(matcher.find()){
             //name is the first group match and uniqueId is the second;
             name = matcher.group(1);
             uniqueId = matcher.group(2);
-        }
-        else{
-            uniqueId = "1233345";
         }
 
         int length;
