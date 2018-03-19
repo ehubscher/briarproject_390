@@ -10,6 +10,7 @@ import org.briarproject.bramble.test.BrambleMockTestCase;
 import org.briarproject.bramble.test.ImmediateExecutor;
 import org.jmock.Expectations;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.Executor;
@@ -46,6 +47,7 @@ public class SetupControllerImplTest extends BrambleMockTestCase {
 		setupActivity = context.mock(SetupActivity.class);
 	}
 
+	@Ignore
 	@Test
 	public void testCreateAccount() {
 		context.checking(new Expectations() {{
