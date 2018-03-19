@@ -2537,7 +2537,7 @@ abstract class JdbcDatabase implements Database<Connection> {
             throws DbException {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE contacts SET avatarId = ? WHERE uniqueId = ?";
+            String sql = "UPDATE contacts SET avatarId = ? WHERE name = ?";
             ps = txn.prepareStatement(sql);
             ps.setInt(1, avatarId);
             ps.setString(2, uniqueId);
