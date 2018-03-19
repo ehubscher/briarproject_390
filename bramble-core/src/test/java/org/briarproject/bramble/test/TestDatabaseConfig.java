@@ -6,6 +6,8 @@ import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
+
 @NotNullByDefault
 public class TestDatabaseConfig implements DatabaseConfig {
 
@@ -47,6 +49,17 @@ public class TestDatabaseConfig implements DatabaseConfig {
 
 	@Override
 	public String getLocalAuthorName() {
+		return null;
+	}
+
+	@Override
+	public void setLocalUniqueId(String uniqueId) {
+
+	}
+
+	@Nullable
+	@Override
+	public String getLocalUniqueId() {
 		return null;
 	}
 

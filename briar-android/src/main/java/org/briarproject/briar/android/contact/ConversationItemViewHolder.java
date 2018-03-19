@@ -59,7 +59,7 @@ class ConversationItemViewHolder extends ViewHolder {
 			text.setText("\u2026");
 		}else {
 
-		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdtag><AvatarIdTag>(.+?)</AvatarIdTag>(.+?)");
+		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+)</UniqueIdtag><AvatarIdTag>(.+)</AvatarIdTag>(.+)");
 		    final Matcher matcher = pattern.matcher(StringUtils.trim(item.getBody()));
 
 		    if(matcher.find()){
@@ -73,7 +73,6 @@ class ConversationItemViewHolder extends ViewHolder {
 
                 //The third group in the pattern is the text
                 text.setText(matcher.group(3));
-
             }
 			//check if the body string is a base64 encode image
 			else if(item.getBody().startsWith("ImageTag:")){
