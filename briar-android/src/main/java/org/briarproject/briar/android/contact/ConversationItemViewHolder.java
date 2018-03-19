@@ -60,7 +60,7 @@ class ConversationItemViewHolder extends ViewHolder {
 		}else {
 
 		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdtag><AvatarIdTag>(.+?)</AvatarIdTag>(.+?)");
-		    final Matcher matcher = pattern.matcher(item.getBody());
+		    final Matcher matcher = pattern.matcher(StringUtils.trim(item.getBody()));
 
 		    if(matcher.find()){
 		        try{

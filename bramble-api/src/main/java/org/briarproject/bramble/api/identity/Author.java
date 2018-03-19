@@ -38,6 +38,7 @@ public class Author {
 		//pattern to separate the uniqueId from the tag
 		final Pattern pattern = Pattern.compile("(.+?)<UniqueIdTag>(.+?)</UniqueIdTag>");
 		final Matcher matcher = pattern.matcher(name);
+
 		if(matcher.find()){
 		    //name is the first group match and uniqueId is the second;
             this.name = matcher.group(1);

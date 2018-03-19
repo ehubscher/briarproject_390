@@ -11,6 +11,7 @@ import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.briar.android.controller.handler.ResultHandler;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
+import org.briarproject.briar.android.util.IOUniqueIdentifier;
 
 import java.util.concurrent.Executor;
 
@@ -21,7 +22,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 		implements SetupController {
 
 	@Nullable
-	private String authorName, password;
+	private String authorName, uniqueId, password;
 	@Nullable
 	private SetupActivity setupActivity;
 
@@ -49,9 +50,16 @@ public class SetupControllerImpl extends PasswordControllerImpl
 	@Override
 	public void setAuthorName(String authorName) {
 		this.authorName = authorName;
+		this.setUniqueId();
 		if (setupActivity == null) throw new IllegalStateException();
 		setupActivity.showPasswordFragment();
 	}
+
+	@Override
+    public void setUniqueId(){
+        IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
+        this.uniqueId = ioUniqueIdentifier.getUniqueID();
+    }
 
 	@Override
 	public void setPassword(String password) {
@@ -88,6 +96,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 			throw new IllegalStateException();
 		cryptoExecutor.execute(() -> {
 			databaseConfig.setLocalAuthorName(authorName);
+			databaseConfig.setLocalUniqueId(uniqueId);
 			SecretKey key = crypto.generateSecretKey();
 			databaseConfig.setEncryptionKey(key);
 			String hex = encryptDatabaseKey(key, password);

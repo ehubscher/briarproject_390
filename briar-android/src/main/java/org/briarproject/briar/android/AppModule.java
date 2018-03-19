@@ -90,6 +90,7 @@ public class AppModule {
 
 			private volatile SecretKey key;
 			private volatile String nickname;
+            private volatile String uniqueId;
 
 			@Override
 			public boolean databaseExists() {
@@ -117,6 +118,20 @@ public class AppModule {
 			@Nullable
 			public String getLocalAuthorName() {
 				return nickname;
+			}
+
+            @Override
+            public void setLocalUniqueId(String uniqueId) {
+                this.uniqueId = uniqueId;
+            }
+
+			@Override
+			@Nullable
+			public String getLocalUniqueId() {
+			    if(uniqueId.isEmpty()){
+			        return "no uniqueId set";
+                }
+				return uniqueId;
 			}
 
 			@Override

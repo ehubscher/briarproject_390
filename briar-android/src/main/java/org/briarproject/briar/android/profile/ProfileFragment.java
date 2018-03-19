@@ -13,13 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
+import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.fragment.BaseFragment;
 
 
 public class ProfileFragment extends BaseFragment {
+
+	TextView uniqueId;
+
+	DatabaseConfig databaseConfig;
 
 	ImageView avatarImage;
 	// references to our images
@@ -58,6 +64,9 @@ public class ProfileFragment extends BaseFragment {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 	    getActivity().setTitle(R.string.title_activity_profile);
 		avatarImage = rootView.findViewById(R.id.image_avatar_profile);
+		uniqueId = rootView.findViewById(R.id.localUniqueId);
+
+		uniqueId.setText(databaseConfig.getLocalUniqueId());
 
 	    //Retrieving stored avatar
 		SharedPreferences settings = PreferenceManager

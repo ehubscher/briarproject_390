@@ -9,6 +9,15 @@
     tools:context="org.briarproject.briar.android.profile.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
+    <TextView
+        android:id="@+id/localUniqueId"
+        style="@style/BriarTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="UniqueId"
+        android:textSize="@dimen/text_size_medium"/>
+
 	<ImageView
 		android:id="@+id/image_avatar_profile"
 		android:layout_width="120dp"
