@@ -53,7 +53,17 @@ public class SetupControllerImpl extends PasswordControllerImpl
 
 	@Override
 	public void setAuthorName(String authorName) {
-	    this.authorName = authorName + "<UniqueIdTag>"+ this.setUniqueId() +"</UniqueIdTag>";
+	    this.authorName = authorName;
+	    this.uniqueId = authorName;
+
+		//put in the share preferences
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.setupActivity.getApplicationContext());
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString("uniqueId", authorName);
+		editor.apply();
+
+		bootstrapCreateUserOnServer();
+
 		if (setupActivity == null) throw new IllegalStateException();
 		setupActivity.showPasswordFragment();
 	}
@@ -63,11 +73,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
         IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
         this.uniqueId = ioUniqueIdentifier.getUniqueID();
         bootstrapCreateUserOnServer();
-        //put in the share preferences
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.setupActivity.getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("uniqueId", this.uniqueId);
-        editor.apply();
+
 
         return this.uniqueId;
     }

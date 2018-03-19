@@ -313,7 +313,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		// This is where the magic happen, this small portion of code is not protected againts injection
         // of an IP/PORT..
         if(userInfo != null){
-            // If user was found
+    // If user was found
 			if(userInfo.getIpAddress() != null){
 				addr = userInfo.getIpAddress();
 			}

@@ -227,12 +227,7 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 
 		// Write the name, public key and signature
 		w.writeListStart();
-		// Small hack, Inject our uniqueID in here...
-        // Only the name and public key is sent to the other user...
-        String uniqueId = localAuthor.getUniqueId();
-        String uniqueIdTagInfo = "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>";
-        String concatName = localAuthor.getName() + uniqueIdTagInfo;
-		w.writeString(concatName);
+		w.writeString(localAuthor.getName());
 		w.writeRaw(localAuthor.getPublicKey());
 		w.writeRaw(sig);
 		w.writeListEnd();
