@@ -2,6 +2,7 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 
+import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
@@ -29,6 +30,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,6 +65,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected volatile String currentUserID;
 	protected volatile String currentIP;
 	protected volatile String currentTargetUserID;
+	private HashMap<String, SavedUser> currentContacts;
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
 	 * in order of preference. At most one of the addresses will be bound.
@@ -97,6 +100,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (maxIdleTime > Integer.MAX_VALUE / 2)
 			socketTimeout = Integer.MAX_VALUE;
 		else socketTimeout = maxIdleTime * 2;
+		currentContacts = ContactHash.getAllCurrentContacts();
 	}
 
 	@Override
@@ -218,7 +222,19 @@ abstract class TcpPlugin implements DuplexPlugin {
 				callback.getRemoteProperties();
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
-            currentTargetUserID = c.getUniqueID();
+			// Set as current target...
+			currentTargetUserID = c.getUniqueID();
+			BServerServicesImpl services = new BServerServicesImpl();
+			SavedUser currentContact = services.obtainUserInfo(c.getUniqueID());
+			// Insert in our custom hashSet
+			if(!currentContacts.containsKey(c.getUniqueID())){
+				// Contact didn't exist add it to the hashSet
+			    currentContacts.put(c.getUniqueID(), currentContact);
+			}else{
+				// Contact exist , update the hashSet
+
+			}
+
 			if (!connected.contains(c)) connectAndCallBack(c, e.getValue());
 		}
 	}
@@ -305,6 +321,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
+		//TODO REWORK THIS ALGO... TO BE INSERTED INTO PARSE ...
 		// Go Get IP/PORT for userID on our Server
 		BServerServicesImpl services = new BServerServicesImpl();
 		String dd  = currentTargetUserID;
@@ -313,7 +330,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		// This is where the magic happen, this small portion of code is not protected againts injection
         // of an IP/PORT..
         if(userInfo != null){
-    // If user was found
+        // If user was found
 			if(userInfo.getIpAddress() != null){
 				addr = userInfo.getIpAddress();
 			}
