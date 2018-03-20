@@ -6,13 +6,13 @@ package org.briarproject.bramble.plugin.tcp;
  */
 
 public class UniqueIDSingleton {
-    private static String uuniqueID;
+    private static String singletonUniqueID;
     public static void setUniqueID(String uniqueID){
-            uuniqueID = uniqueID;
+        singletonUniqueID = uniqueID;
 
 }
     public static String getUniqueID(){
-        return uuniqueID;
+        return singletonUniqueID;
     }
 
 
