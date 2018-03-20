@@ -3,6 +3,8 @@ package org.briarproject.bramble.api.identity;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -20,6 +22,7 @@ public class Author {
 	private final AuthorId id;
 	private final String name;
 	private final byte[] publicKey;
+	private final String uniqueId;
 
 	public Author(AuthorId id, String name, byte[] publicKey) {
 		int length;
@@ -31,7 +34,21 @@ public class Author {
 		if (length == 0 || length > AuthorConstants.MAX_AUTHOR_NAME_LENGTH)
 			throw new IllegalArgumentException();
 		this.id = id;
-		this.name = name;
+
+		//pattern to separate the uniqueId from the tag
+		final Pattern pattern = Pattern.compile("(.+?)<UniqueIdTag>(.+?)</UniqueIdTag>");
+		final Matcher matcher = pattern.matcher(name);
+		if(matcher.find()){
+		    //name is the first group match and uniqueId is the second;
+            this.name = matcher.group(1);
+            this.uniqueId = matcher.group(2);
+        }
+        else{
+		    //mostly for test purposes
+            this.name = name;
+            this.uniqueId = "1233345";
+        }
+
 		this.publicKey = publicKey;
 	}
 
@@ -46,7 +63,14 @@ public class Author {
 	 * Returns the author's name.
 	 */
 	public String getName() {
-		return name;
+	    return name;
+	}
+
+	/**
+	 * Returns the author's unique id.
+	 */
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
 	/**

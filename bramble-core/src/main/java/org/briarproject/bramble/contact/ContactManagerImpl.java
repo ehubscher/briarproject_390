@@ -148,6 +148,28 @@ class ContactManagerImpl implements ContactManager {
 	}
 
 	@Override
+	public void setContactStatus(String uniqueId, int statusId) throws DbException {
+        Transaction txn = db.startTransaction(false);
+        try {
+            db.setContactStatus(txn, uniqueId, statusId);
+            db.commitTransaction(txn);
+        } finally {
+            db.endTransaction(txn);
+        }
+	}
+
+	@Override
+	public void setAvatarId(String uniqueId, int avatarId) throws DbException {
+        Transaction txn = db.startTransaction(false);
+        try {
+            db.setAvatarId(txn, uniqueId, avatarId);
+            db.commitTransaction(txn);
+        } finally {
+            db.endTransaction(txn);
+        }
+	}
+
+	@Override
     public void setFavourite(ContactId contactId, boolean favourite) throws DbException {
 		boolean isReadOnly = false;
         Transaction transaction = db.startTransaction(isReadOnly);

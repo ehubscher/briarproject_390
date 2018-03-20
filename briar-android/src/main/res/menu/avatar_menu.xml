@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="org.briarproject.briar.android.profile.ProfileActivity">
+
+	<item
+		android:id="@+id/pig"
+		android:title="Pig"
+		android:icon="@drawable/pig"
+		/>
+
+	<item
+		android:id="@+id/dog"
+		android:title="Dog"
+		android:icon="@drawable/dog"
+		/>
+
+	<item
+		android:id="@+id/cat"
+		android:title="Cat"
+		android:icon="@drawable/cat"
+		/>
+
+	<item
+		android:id="@+id/bunny"
+		android:title="Bunny"
+		android:icon="@drawable/bunny"
+		/>
+
+	<item
+		android:id="@+id/penguin"
+		android:title="Penguin"
+		android:icon="@drawable/penguin"
+		/>
+
+	<item
+		android:id="@+id/panda"
+		android:title="Panda"
+		android:icon="@drawable/panda"
+		/>
+
+	<item
+		android:id="@+id/monkey"
+		android:title="Monkey"
+		android:icon="@drawable/monkey"
+		/>
+
+	<item
+		android:id="@+id/frog"
+		android:title="Frog"
+		android:icon="@drawable/frog"
+		/>
+
+	<item
+		android:id="@+id/robot"
+		android:title="Robot"
+		android:icon="@drawable/robot"
+		/>
+
+</menu>

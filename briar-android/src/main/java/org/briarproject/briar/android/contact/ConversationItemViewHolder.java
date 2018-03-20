@@ -15,11 +15,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.briarproject.bramble.api.contact.ContactManager;
+import org.briarproject.bramble.api.db.DbException;
+import org.briarproject.bramble.api.db.NoSuchContactException;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.view.SelectedMediaView;
+
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+
+import static java.util.logging.Level.WARNING;
 
 @UiThread
 @NotNullByDefault
@@ -31,6 +42,13 @@ class ConversationItemViewHolder extends ViewHolder {
 	private final TextView time;
 	private final LinearLayout mediaMessageContainer;
 	private final ImageView imageView;
+
+	// Fields that are accessed from background threads must be volatile
+	@Inject
+	volatile ContactManager contactManager;
+
+    private static final Logger LOG =
+            Logger.getLogger(ConversationActivity.class.getName());
 
 	ConversationItemViewHolder(View v) {
 		super(v);
@@ -48,6 +66,22 @@ class ConversationItemViewHolder extends ViewHolder {
 		if (item.getBody() == null) {
 			text.setText("\u2026");
 		} else {
+		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdtag><AvatarIdTag>(.+?)</AvatarIdTag>(.+?)");
+		    final Matcher matcher = pattern.matcher(item.getBody());
+
+		    if(matcher.find()) {
+		        try{
+		            //the first group in the pattern is the uniqueId and the second group is the avatarId
+                    contactManager.setAvatarId(matcher.group(1), Integer.valueOf(matcher.group(2)));
+                }
+                catch (DbException e) {
+                    if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+                }
+
+                //The third group in the pattern is the text
+                text.setText(matcher.group(3));
+			}
+			
 			if (item.getBody().contains("%shim%")) {
 				String[] shims = item.getBody().split("%shim%");
 				String encodedMedia = "";

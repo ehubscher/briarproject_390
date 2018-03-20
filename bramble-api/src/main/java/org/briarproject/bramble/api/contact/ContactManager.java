@@ -82,6 +82,18 @@ public interface ContactManager {
 	void setContactActive(Transaction txn, ContactId c, boolean active)
 			throws DbException;
 
+	/**
+	 * Marks a contact as active or inactive.
+	 */
+	void setContactStatus(String uniqueId, int statusId)
+			throws DbException;
+
+	/**
+	 * set the avatar id for the contact
+	 */
+	void setAvatarId(String uniqueId, int avatarId)
+			throws DbException;
+
     /**
      * Marks a contact as favourite or not.
      */

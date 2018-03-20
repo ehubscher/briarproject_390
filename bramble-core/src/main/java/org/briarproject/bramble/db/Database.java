@@ -143,6 +143,11 @@ interface Database<T> {
 	boolean containsContact(T txn, ContactId c) throws DbException;
 
 	/**
+	 * overload to check the existence of a contact with the uniqueId
+	 */
+	boolean containsContact(T transaction, String uniqueId) throws DbException;
+
+	/**
 	 * Returns true if the database contains the given group.
 	 * <p/>
 	 * Read-only.
@@ -606,6 +611,18 @@ interface Database<T> {
 	 * Marks the given contact as active or inactive.
 	 */
 	void setContactActive(T txn, ContactId c, boolean active)
+			throws DbException;
+
+	/**
+	 * Marks the given contact as active or inactive.
+	 */
+	void setContactStatus(T transaction, String uniqueId, int statusId)
+			throws DbException;
+
+	/**
+	 * Set the avatarId for the contact
+	 */
+	void setAvatarId(T txn, String uniqueId, int avatarId)
 			throws DbException;
 
 	/**

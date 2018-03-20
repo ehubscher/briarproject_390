@@ -97,6 +97,9 @@ abstract class JdbcDatabase implements Database<Connection> {
 					+ " verified BOOLEAN NOT NULL,"
 					+ " active BOOLEAN NOT NULL,"
 					+ " favourite BOOLEAN NOT NULL,"
+					+ " avatarId INT NOT NULL,"
+					+ " statusId INT NOT NULL,"
+                    + " uniqueId _STRING NOT NULL,"
 					+ " PRIMARY KEY (contactId),"
 					+ " FOREIGN KEY (localAuthorId)"
 					+ " REFERENCES localAuthors (authorId)"
@@ -505,8 +508,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 			// Create a contact row
 			String sql = "INSERT INTO contacts"
 					+ " (authorId, name, publicKey, localAuthorId,"
-					+ " verified, active, favourite)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ " verified, active, favourite, avatarId, statusId, uniqueId)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = txn.prepareStatement(sql);
 			ps.setBytes(1, remote.getId().getBytes());
 			ps.setString(2, remote.getName());
@@ -515,7 +518,10 @@ abstract class JdbcDatabase implements Database<Connection> {
 			ps.setBoolean(5, verified);
 			ps.setBoolean(6, active);
 			ps.setBoolean(7, false);
-			int affected = ps.executeUpdate();
+            ps.setInt(8, 0);
+            ps.setInt(9, 1);
+            ps.setString(10, remote.getUniqueId());
+            int affected = ps.executeUpdate();
 			if (affected != 1) throw new DbStateException();
 			ps.close();
 			// Get the new (highest) contact ID
@@ -827,6 +833,28 @@ abstract class JdbcDatabase implements Database<Connection> {
 	}
 
 	@Override
+	public boolean containsContact(Connection txn, String uniqueId)
+			throws DbException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT NULL FROM contacts WHERE uniqueId = ?";
+			ps = txn.prepareStatement(sql);
+			ps.setString(1, uniqueId);
+			rs = ps.executeQuery();
+			boolean found = rs.next();
+			if (rs.next()) throw new DbStateException();
+			rs.close();
+			ps.close();
+			return found;
+		} catch (SQLException e) {
+			tryToClose(rs);
+			tryToClose(ps);
+			throw new DbException(e);
+		}
+	}
+
+	@Override
 	public boolean containsGroup(Connection txn, GroupId g)
 			throws DbException {
 		PreparedStatement ps = null;
@@ -1006,7 +1034,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT authorId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite"
+					+ " localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId"
 					+ " FROM contacts"
 					+ " WHERE contactId = ?";
 			ps = txn.prepareStatement(sql);
@@ -1020,10 +1048,13 @@ abstract class JdbcDatabase implements Database<Connection> {
 			boolean verified = rs.getBoolean(5);
 			boolean active = rs.getBoolean(6);
 			boolean favourite = rs.getBoolean(7);
+            int avatarId = rs.getInt(8);
+            int statusId = rs.getInt(9);
+            String uniqueId = rs.getString(10);
 			rs.close();
 			ps.close();
 			Author author = new Author(authorId, name, publicKey);
-			return new Contact(contactId, author, localAuthorId, verified, active, favourite);
+			return new Contact(contactId, author, localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId);
 		} catch (SQLException e) {
 			tryToClose(rs);
 			tryToClose(ps);
@@ -1038,7 +1069,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT contactId, authorId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite"
+					+ " localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId"
 					+ " FROM contacts";
 			ps = transaction.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -1053,8 +1084,10 @@ abstract class JdbcDatabase implements Database<Connection> {
 				boolean verified = rs.getBoolean(6);
 				boolean active = rs.getBoolean(7);
 				boolean favourite = rs.getBoolean(8);
-				contacts.add(new Contact(contactId, author, localAuthorId,
-						verified, active, favourite));
+				int avatarId = rs.getInt(9);
+				int statusId = rs.getInt(10);
+				String uniqueId = rs.getString(11);
+				contacts.add(new Contact(contactId, author, localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId));
 			}
 			rs.close();
 			ps.close();
@@ -1096,7 +1129,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT contactId, name, publicKey,"
-					+ " localAuthorId, verified, active, favourite"
+					+ " localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId"
 					+ " FROM contacts"
 					+ " WHERE authorId = ?";
 			ps = txn.prepareStatement(sql);
@@ -1111,9 +1144,11 @@ abstract class JdbcDatabase implements Database<Connection> {
 				boolean verified = rs.getBoolean(5);
 				boolean active = rs.getBoolean(6);
                 boolean favourite = rs.getBoolean(7);
+                int avatarId = rs.getInt(8);
+                int statusId = rs.getInt(9);
+                String uniqueId = rs.getString(10);
 				Author author = new Author(remote, name, publicKey);
-				contacts.add(new Contact(c, author, localAuthorId, verified,
-						active, favourite));
+				contacts.add(new Contact(c, author, localAuthorId, verified, active, favourite, avatarId, statusId, uniqueId));
 			}
 			rs.close();
 			ps.close();
@@ -2478,6 +2513,42 @@ abstract class JdbcDatabase implements Database<Connection> {
 			throw new DbException(e);
 		}
 	}
+
+    @Override
+    public void setContactStatus(Connection transaction, String uniqueId, int statusId)
+            throws DbException {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE contacts SET statusId = ? WHERE uniqueId = ?";
+            ps = transaction.prepareStatement(sql);
+            ps.setInt(1, statusId);
+            ps.setString(2, uniqueId);
+            int affected = ps.executeUpdate();
+            if (affected < 0 || affected > 1) throw new DbStateException();
+            ps.close();
+        } catch (SQLException e) {
+            tryToClose(ps);
+            throw new DbException(e);
+        }
+    }
+
+    @Override
+    public void setAvatarId(Connection txn, String uniqueId, int avatarId)
+            throws DbException {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE contacts SET avatarId = ? WHERE uniqueId = ?";
+            ps = txn.prepareStatement(sql);
+            ps.setInt(1, avatarId);
+            ps.setString(2, uniqueId);
+            int affected = ps.executeUpdate();
+            if (affected < 0 || affected > 1) throw new DbStateException();
+            ps.close();
+        } catch (SQLException e) {
+            tryToClose(ps);
+            throw new DbException(e);
+        }
+    }
 
     @Override
     public void setFavourite(Connection transaction, ContactId contactId, boolean favourite)

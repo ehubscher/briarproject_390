@@ -41,18 +41,47 @@ public class ContactItemViewHolder<I extends ContactItem>
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
 		Author author = item.getContact().getAuthor();
-		avatar.setImageDrawable(
-				new IdenticonDrawable(author.getId().getBytes()));
 		String contactName = author.getName();
 		name.setText(contactName);
+		avatar.setImageDrawable(
+				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
+		//Set status
+		int status = item.getContact().getStatusId();
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
-				bulb.setImageResource(R.drawable.contact_connected);
+				if(status==1)
+					bulb.setImageResource(R.drawable.contact_connected);
+				else if(status==2)
+					bulb.setImageResource(R.drawable.contact_busy);
+				else
+					bulb.setImageResource(R.drawable.contact_disconnected);
+
 			} else {
 				bulb.setImageResource(R.drawable.contact_disconnected);
 			}
+		}
+
+		if(item.currentAvatar() !=0 && item.currentAvatar() < 9){
+			int imageNb = item.currentAvatar()-1;
+			// references to our images
+			Integer[] mThumbIds = {
+					R.drawable.pig,
+					R.drawable.panda,
+					R.drawable.dog,
+					R.drawable.cat,
+					R.drawable.bunny,
+					R.drawable.monkey,
+					R.drawable.frog,
+					R.drawable.penguin,
+					R.drawable.robot
+			};
+			avatar.setImageResource(mThumbIds[imageNb]);
+		}
+		else{//Use Identicon by default
+			avatar.setImageDrawable(
+				new IdenticonDrawable(author.getId().getBytes()));
 		}
 
 		//Set visibility of the the star next to each conversation with contacts

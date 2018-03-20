@@ -4,12 +4,14 @@ import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.preference.PreferenceManager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
@@ -179,7 +181,16 @@ public class TextInputView extends KeyboardAwareLinearLayout implements EmojiEve
 	}
 
 	public void setText(String text) {
-	    ui.editText.setText(text);
+        //Retrieving stored avatar
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        int avatarId= settings.getInt("pref_avatar",0);
+        String uniqueId = settings.getString("uniqueId", "1233345");
+
+        String avatarTagInfo = "<AvatarIdTag>" + avatarId + "</AvatarIdTag>";
+
+        String uniqueIdTagInfo = "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>";
+
+        ui.editText.setText(uniqueIdTagInfo + avatarTagInfo + text);
 	}
 
 	public Editable getText() {

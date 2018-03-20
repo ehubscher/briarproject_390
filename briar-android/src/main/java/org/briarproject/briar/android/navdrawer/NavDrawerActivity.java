@@ -38,6 +38,8 @@ import org.briarproject.briar.android.fragment.BaseFragment.BaseFragmentListener
 import org.briarproject.briar.android.fragment.SignOutFragment;
 import org.briarproject.briar.android.navdrawer.NavDrawerController.ExpiryWarning;
 import org.briarproject.briar.android.privategroup.list.GroupListFragment;
+import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
 import org.briarproject.briar.android.settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ public class NavDrawerActivity extends BriarActivity implements
 	public static final String INTENT_GROUPS = "intent_groups";
 	public static final String INTENT_FORUMS = "intent_forums";
 	public static final String INTENT_BLOGS = "intent_blogs";
+	public static final String INTENT_PROFILE = "intent_profile";
 
 	private static final Logger LOG =
 			Logger.getLogger(NavDrawerActivity.class.getName());
@@ -94,6 +97,8 @@ public class NavDrawerActivity extends BriarActivity implements
 					R.id.nav_btn_contacts);
 		} else if (intent.getBooleanExtra(INTENT_BLOGS, false)) {
 			startFragment(FeedFragment.newInstance(), R.id.nav_btn_blogs);
+		}else if (intent.getBooleanExtra(INTENT_PROFILE, false)) {
+			startFragment(FeedFragment.newInstance(), R.id.nav_btn_profile);
 		}
 		setIntent(null);
 	}
@@ -190,6 +195,9 @@ public class NavDrawerActivity extends BriarActivity implements
 			case R.id.nav_btn_blogs:
 				startFragment(FeedFragment.newInstance());
 				break;
+			case R.id.nav_btn_profile:
+				startFragment(ProfileFragment.newInstance());
+				break;
 			case R.id.nav_btn_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
@@ -265,7 +273,7 @@ public class NavDrawerActivity extends BriarActivity implements
 	}
 
 	private void startFragment(BaseFragment fragment,
-			boolean isAddedToBackStack) {
+							   boolean isAddedToBackStack) {
 		FragmentTransaction trans =
 				getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.fade_in,
@@ -368,7 +376,7 @@ public class NavDrawerActivity extends BriarActivity implements
 
 			@Override
 			public View getView(int position, View convertView,
-					ViewGroup parent) {
+								ViewGroup parent) {
 				View view;
 				if (convertView != null) {
 					view = convertView;
@@ -434,3 +442,4 @@ public class NavDrawerActivity extends BriarActivity implements
 		private int textId;
 	}
 }
+
