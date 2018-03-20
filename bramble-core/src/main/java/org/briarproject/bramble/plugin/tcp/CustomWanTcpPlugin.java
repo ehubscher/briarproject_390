@@ -6,9 +6,6 @@ import org.briarproject.bramble.api.plugin.Backoff;
 import org.briarproject.bramble.api.plugin.TransportId;
 import org.briarproject.bramble.api.plugin.duplex.DuplexPluginCallback;
 import org.briarproject.bramble.api.properties.TransportProperties;
-import org.briarproject.bramble.restClient.BServerServices;
-import org.briarproject.bramble.restClient.BServerServicesImpl;
-import org.h2.util.New;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -87,7 +84,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     private int chooseEphemeralPort() {
         int NewPort = 32768 + (int) (Math.random() * 32768);
         // Send the new port that has been choosen to briar server
-        udateDataOnBServer(NewPort);
+        updateDataOnBServer(NewPort);
         return NewPort;
     }
 

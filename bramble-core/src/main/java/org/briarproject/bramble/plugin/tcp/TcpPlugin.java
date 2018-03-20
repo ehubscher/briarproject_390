@@ -216,7 +216,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	@Override
 	public void poll(Collection<ContactId> connected) {
 	    // Update current user data..
-        udateDataOnBServer(currentPort);
+        updateDataOnBServer(currentPort);
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
@@ -407,10 +407,10 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	/**
 	 * This method is updating info on the current user on the current device...
-	 * @param currentPort The new port chosen in CustomWanTcpPlugin
+	 * @param port The new port chosen in CustomWanTcpPlugin
 	 */
-	public void udateDataOnBServer(int currentPort){
-	    currentPort = currentPort;
+	public void updateDataOnBServer(int port){
+	    currentPort = port;
 		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
 		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
