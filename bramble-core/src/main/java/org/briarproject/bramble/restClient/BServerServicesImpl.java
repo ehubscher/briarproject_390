@@ -28,6 +28,7 @@ public class BServerServicesImpl implements BServerServices{
     private volatile static SavedUser createdUser = null;
     private volatile static String resultFromQueryCreateUser = null;
     private volatile static String resultFromQueryUpdateUser = null;
+    private int TIME_WAITING = 1;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
     public BServerServicesImpl(){}
@@ -80,7 +81,7 @@ public class BServerServicesImpl implements BServerServices{
 
         // Wait for the call to server to be done...
         try{
-            executorService.awaitTermination(4, TimeUnit.SECONDS);
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
         }catch (InterruptedException ee){
             LOG.info(ee.getMessage());
         }
@@ -119,7 +120,7 @@ public class BServerServicesImpl implements BServerServices{
         });
         // Wait for the call to server to be done...
         try{
-            executorService.awaitTermination(2, TimeUnit.SECONDS);
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
         }catch (Exception ee){
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }
@@ -159,7 +160,7 @@ public class BServerServicesImpl implements BServerServices{
         });
         // Wait for the call to server to be done...
         try{
-            executorService.awaitTermination(4, TimeUnit.SECONDS);
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
         }catch (Exception ee){
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }

@@ -58,12 +58,14 @@ public class AndroidPluginModule {
 				androidExecutor, appContext, random, eventBus, backoffFactory);
 		DuplexPluginFactory lan = new AndroidLanTcpPluginFactory(ioExecutor,
 				backoffFactory, appContext);
-
+		DuplexPluginFactory tor = new TorPluginFactory(ioExecutor, appContext,
+				locationUtils, reporter, eventBus, torSocketFactory,
+				backoffFactory);
 		// Addition of our custom WAN Tcp plugin
 		DuplexPluginFactory customWan = new CustomWanTcpPluginFactory(ioExecutor, backoffFactory, shutdownManager);
 		// Addition the plugin to the plugin list...
 		Collection<DuplexPluginFactory> duplex =
-				Arrays.asList(customWan, bluetooth, lan);
+				Arrays.asList(bluetooth, tor, lan, customWan);
 		@NotNullByDefault
 		PluginConfig pluginConfig = new PluginConfig() {
 

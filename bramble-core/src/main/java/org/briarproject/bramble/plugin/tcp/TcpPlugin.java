@@ -65,6 +65,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected volatile String currentUserID;
 	protected volatile String currentIP;
 	protected volatile String currentTargetUserID;
+	protected volatile int currentPort;
 	private HashMap<String, SavedUser> currentContacts;
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
@@ -215,7 +216,8 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	@Override
 	public void poll(Collection<ContactId> connected) {
-
+	    // Update current user data..
+        udateDataOnBServer(currentPort);
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
@@ -232,6 +234,8 @@ abstract class TcpPlugin implements DuplexPlugin {
 			    currentContacts.put(c.getUniqueID(), currentContact);
 			}else{
 				// Contact exist , update the hashSet
+				currentContacts.remove(c.getUniqueID());
+				currentContacts.put(c.getUniqueID(), currentContact);
 
 			}
 
@@ -288,6 +292,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	@Nullable
 	InetSocketAddress parseSocketAddress(String ipPort) {
+		// Let's force all method to use Injection instead of regular parsing
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
@@ -321,11 +326,19 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
-		//TODO REWORK THIS ALGO... TO BE INSERTED INTO PARSE ...
+
+
 		// Go Get IP/PORT for userID on our Server
-		BServerServicesImpl services = new BServerServicesImpl();
-		String dd  = currentTargetUserID;
-		SavedUser userInfo = services.obtainUserInfo(currentTargetUserID);
+		SavedUser userInfo = null;
+		if(currentContacts.containsKey(currentTargetUserID)){
+			userInfo = currentContacts.get(currentTargetUserID);
+		}else{
+			BServerServicesImpl services = new BServerServicesImpl();
+			userInfo = services.obtainUserInfo(currentTargetUserID);
+			currentContacts.put(currentTargetUserID, userInfo);
+
+		}
+
         String addr = "", port = "";
 		// This is where the magic happen, this small portion of code is not protected againts injection
         // of an IP/PORT..
@@ -398,6 +411,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	 * @param currentPort The new port chosen in CustomWanTcpPlugin
 	 */
 	public void udateDataOnBServer(int currentPort){
+	    currentPort = currentPort;
 		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
 		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
