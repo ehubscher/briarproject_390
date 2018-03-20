@@ -2,7 +2,6 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 
-import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
