@@ -57,24 +57,8 @@ class ConversationItemViewHolder extends ViewHolder {
 		if (item.getBody() == null) {
 			text.setText("\u2026");
 		}else {
-
-		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdTag><AvatarIdTag>(.+?)</AvatarIdTag>(.+)");
-		    final Matcher matcher = pattern.matcher(StringUtils.trim(item.getBody()));
-
-		    if(matcher.find()){
-		        try{
-		            //the first group in the pattern is the uniqueId and the second group is the avatarId
-                    contactManager.setAvatarId(matcher.group(1), Integer.valueOf(matcher.group(2)));
-                }
-                catch (Exception e) {
-                    if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
-                }
-
-                //The third group in the pattern is the text
-                text.setText(matcher.group(3));
-            }
 			//check if the body string is a base64 encode image
-			else if(item.getBody().startsWith("ImageTag:")){
+			if(item.getBody().startsWith("ImageTag:")){
 
 			    String encodedString = item.getBody().substring(9);
 

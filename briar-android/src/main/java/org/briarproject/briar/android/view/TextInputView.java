@@ -105,15 +105,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
 
 	private void trySendMessage() {
 		if (listener != null) {
-            //Retrieving stored avatar and uniqueId
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-            int avatarId= settings.getInt("pref_avatar",0);
-            String uniqueId = settings.getString("uniqueId", "1233345");
-
-            String uniqueIdTagInfo = "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>";
-            String avatarTagInfo = "<AvatarIdTag>" + avatarId + "</AvatarIdTag>";
-
-			listener.onSendClick(uniqueIdTagInfo + avatarTagInfo + ui.editText.getText().toString());
+			listener.onSendClick(ui.editText.getText().toString());
 		}
 	}
 

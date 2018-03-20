@@ -22,22 +22,11 @@ public class Author {
 	private final AuthorId id;
 	private final String name;
 	private final byte[] publicKey;
-	private final String uniqueId;
+	//TODO make the proper utilization of unique Id when we can transfer it properly.
+	private final String uniqueId = "1233345";
 
 	public Author(AuthorId id, String name, byte[] publicKey) {//pattern to separate the uniqueId from the tag
-        final Pattern pattern = Pattern.compile("(.+?)<UniqueIdTag>(.+?)</UniqueIdTag>");
-        final Matcher matcher = pattern.matcher(name);
-
-        //initialized to default
-        //String uniqueId = "1233345";
-
-        if(matcher.find()){
-            //name is the first group match and uniqueId is the second;
-            name = matcher.group(1);
-           // uniqueId = matcher.group(2);
-        }
-
-        int length;
+		int length;
 		try {
 			length = name.getBytes("UTF-8").length;
 		} catch (UnsupportedEncodingException e) {
@@ -46,10 +35,7 @@ public class Author {
 		if (length == 0 || length > AuthorConstants.MAX_AUTHOR_NAME_LENGTH)
 			throw new IllegalArgumentException();
 		this.id = id;
-
 		this.name = name;
-        this.uniqueId = name;
-
 		this.publicKey = publicKey;
 	}
 

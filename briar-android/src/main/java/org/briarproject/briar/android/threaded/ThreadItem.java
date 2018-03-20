@@ -34,17 +34,7 @@ public abstract class ThreadItem implements MessageNode {
 			boolean isRead) {
 		this.messageId = messageId;
 		this.parentId = parentId;
-
-		//parse to remove unwanted tags from the text element
-		final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdTag><AvatarIdTag>(.+?)</AvatarIdTag>(.+)");
-		final Matcher matcher = pattern.matcher(text);
-		if(matcher.find()){
-			this.text = matcher.group(3);
-		}
-		else{
-			this.text = text;
-		}
-
+		this.text = text;
 		this.timestamp = timestamp;
 		this.author = author;
 		this.status = status;
