@@ -40,7 +40,7 @@ class ConversationItemViewHolder extends ViewHolder {
 
 	private final TextView text;
 	private final TextView time;
-	private final LinearLayout mediaMessageContainer;
+	//private final LinearLayout mediaMessageContainer;
 	private final ImageView imageView;
 
 	// Fields that are accessed from background threads must be volatile
@@ -57,7 +57,7 @@ class ConversationItemViewHolder extends ViewHolder {
 		layout = v.findViewById(R.id.layout);
 		text = v.findViewById(R.id.text);
 		time = v.findViewById(R.id.time);
-		mediaMessageContainer = v.findViewById(R.id.mediaMessageContainer); //mBackgroundTint.mTintList = NullPointerException
+		//mediaMessageContainer = v.findViewById(R.id.mediaMessageContainer); //mBackgroundTint.mTintList = NullPointerException
 		imageView = v.findViewById(R.id.imageView);
 	}
 

@@ -60,7 +60,7 @@
 				tools:text="This is a body text that shows the content of a blog post.\n\nThis one is not short, but it is also not too long."/>
 
 			<ImageView
-				android:layout_below="@id/text"
+				android:layout_below="@id/bodyView"
 				android:id="@+id/imageView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"/>
