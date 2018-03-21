@@ -413,7 +413,7 @@ public class ConversationActivity extends BriarActivity
             //noinspection ConstantConditions
 		    try{
 		        int avatarId = contactManager.getContact(contactId).getAvatarId();
-                if(avatarId !=0 && avatarId < 9){
+                if(avatarId !=99 && avatarId < 9){
                     // references to our images
                     Integer[] mThumbIds = {
                             R.drawable.pig,

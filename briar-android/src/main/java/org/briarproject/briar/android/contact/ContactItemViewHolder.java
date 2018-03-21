@@ -63,7 +63,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 			}
 		}
 
-		if(item.currentAvatar() !=0 && item.currentAvatar() < 9){
+		if(item.currentAvatar() != 99 && item.currentAvatar() < 9){
 			int imageNb = item.currentAvatar()-1;
 			// references to our images
 			Integer[] mThumbIds = {

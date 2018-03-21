@@ -518,7 +518,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			ps.setBoolean(5, verified);
 			ps.setBoolean(6, active);
 			ps.setBoolean(7, false);
-            ps.setInt(8, 0);
+            ps.setInt(8, 99);
             ps.setInt(9, 1);
             //TODO Fix here to put actual contact Id when it will be exchange
             ps.setString(10, "1233345");

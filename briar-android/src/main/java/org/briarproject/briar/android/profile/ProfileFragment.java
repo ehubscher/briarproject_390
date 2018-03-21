@@ -66,8 +66,8 @@ public class ProfileFragment extends BaseFragment {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 
         //Retrieving stored avatar
-		int avatarId= settings.getInt("pref_avatar",0);
-		if(avatarId != 0) {
+		int avatarId= settings.getInt("pref_avatar",99);
+		if(avatarId != 99) {
 			avatarImage.setImageResource(mThumbIds[avatarId - 1]);
 		}
 		else{
