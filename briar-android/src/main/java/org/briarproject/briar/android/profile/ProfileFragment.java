@@ -16,12 +16,20 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.briarproject.bramble.api.db.DatabaseConfig;
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.fragment.BaseFragment;
 
 
 public class ProfileFragment extends BaseFragment {
+
+    UniqueIDSingleton uniqueIDSingleton;
+
+    BServerServicesImpl briarServices = new BServerServicesImpl();
+    SavedUser currentPhoneHolder = briarServices.obtainUserInfo(uniqueIDSingleton.getUniqueID());
 
 	TextView uniqueIdTag;
     ImageView avatarImage;
@@ -152,10 +160,13 @@ public class ProfileFragment extends BaseFragment {
 			status_num=1;
 		}
 		buttonStatus.setCompoundDrawablesWithIntrinsicBounds(status,null,null,null);
+
 		//Store avatar number in preferences
 		storeInPreferences("current_status",status_num);
 
-		//TODO: broadcast event
+		//Set the new statusId
+		currentPhoneHolder.setStatusId(status_num);
+		boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
 	}
 
 
@@ -207,7 +218,12 @@ public class ProfileFragment extends BaseFragment {
 		}
 		avatarImage.setImageResource(mThumbIds[avatarNumber - 1]);
 		//Store avatar number in preferences
-		storeInPreferences("pref_avatar",avatarNumber);
+		storeInPreferences("pref_avatar", avatarNumber);
+
+		//Set the new avatarId
+        currentPhoneHolder.setAvatarId(avatarNumber);
+        boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+
 	}
 
 	private void storeInPreferences(String preference, int value){
