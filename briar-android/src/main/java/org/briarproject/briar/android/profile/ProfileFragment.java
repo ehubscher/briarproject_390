@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
+import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.fragment.BaseFragment;
@@ -21,7 +23,8 @@ import org.briarproject.briar.android.fragment.BaseFragment;
 
 public class ProfileFragment extends BaseFragment {
 
-	ImageView avatarImage;
+	TextView uniqueIdTag;
+    ImageView avatarImage;
 	// references to our images
 	private Integer[] mThumbIds = {
 			R.drawable.pig,
@@ -59,9 +62,10 @@ public class ProfileFragment extends BaseFragment {
 	    getActivity().setTitle(R.string.title_activity_profile);
 		avatarImage = rootView.findViewById(R.id.image_avatar_profile);
 
-	    //Retrieving stored avatar
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+	    //initialize a shared preference
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+
+        //Retrieving stored avatar
 		int avatarId= settings.getInt("pref_avatar",0);
 		if(avatarId != 0) {
 			avatarImage.setImageResource(mThumbIds[avatarId - 1]);
@@ -71,6 +75,13 @@ public class ProfileFragment extends BaseFragment {
 			//TODO: display user's identicon
 			//avatarImage.setImageResource(new IdenticonDrawable(author.getId().getBytes())));
 		}
+
+        //Set the text field to show the localUserID
+        uniqueIdTag = rootView.findViewById(R.id.localUniqueId);
+		String uniqueId = settings.getString("uniqueId", "1233345");
+		if(!uniqueId.isEmpty()){
+            uniqueIdTag.setText(uniqueId);
+        }
 
 		//Avatar button
 	    buttonAvatar = (Button) rootView.findViewById(R.id.choose_avatar_button);

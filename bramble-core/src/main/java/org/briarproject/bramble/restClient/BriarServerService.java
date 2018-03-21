@@ -9,6 +9,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -25,7 +26,7 @@ public interface BriarServerService {
      * @return A JSON body with IP address, PORT and username
      */
     @Headers("Content-Type: application/json")
-    @POST("users/{userID}")
+    @POST("hack/users/{userID}")
     Call<String> obtainUserData(@Path("userID") String userID , @Body String bodyJSON);
 
     /**
@@ -34,8 +35,18 @@ public interface BriarServerService {
      * @return a JSON body with information confirming the creation
      */
     @Headers("Content-Type: application/json")
-    @POST("users")
+    @POST("user")
     Call<String> createUser(@Body String bodyJSON);
+
+    /**
+     * Updating data stored on a user on Briar Server
+     * @param userID , current userID (also UniqueID)
+     * @param bodyJSON , ip, port, password in request body
+     * @return A JSON Body with UserName (UniqueID/UserID), ip and port
+     */
+    @Headers("Content-Type: application/json")
+    @PUT("users/{userID}")
+    Call<String> updateUserData(@Path("userID") String userID, @Body String bodyJSON);
 
 
     public static final Retrofit retrofit = new Retrofit.Builder()

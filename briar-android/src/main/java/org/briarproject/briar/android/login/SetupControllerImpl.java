@@ -1,7 +1,9 @@
 package org.briarproject.briar.android.login;
 
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.briarproject.bramble.api.crypto.CryptoComponent;
 import org.briarproject.bramble.api.crypto.CryptoExecutor;
@@ -9,8 +11,11 @@ import org.briarproject.bramble.api.crypto.PasswordStrengthEstimator;
 import org.briarproject.bramble.api.crypto.SecretKey;
 import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.android.controller.handler.ResultHandler;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
+import org.briarproject.briar.android.util.IOUniqueIdentifier;
 
 import java.util.concurrent.Executor;
 
@@ -21,7 +26,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 		implements SetupController {
 
 	@Nullable
-	private String authorName, password;
+	private String authorName, uniqueId, password;
 	@Nullable
 	private SetupActivity setupActivity;
 
@@ -48,10 +53,30 @@ public class SetupControllerImpl extends PasswordControllerImpl
 
 	@Override
 	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
+	    this.authorName = authorName;
+	    this.uniqueId = authorName;
+
+		//put in the share preferences
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.setupActivity.getApplicationContext());
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString("uniqueId", authorName);
+		editor.apply();
+
+		bootstrapCreateUserOnServer();
+
 		if (setupActivity == null) throw new IllegalStateException();
 		setupActivity.showPasswordFragment();
 	}
+
+	@Override
+    public String setUniqueId(){
+        IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
+        this.uniqueId = ioUniqueIdentifier.getUniqueID();
+        bootstrapCreateUserOnServer();
+
+
+        return this.uniqueId;
+    }
 
 	@Override
 	public void setPassword(String password) {
@@ -88,6 +113,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 			throw new IllegalStateException();
 		cryptoExecutor.execute(() -> {
 			databaseConfig.setLocalAuthorName(authorName);
+			databaseConfig.setLocalUniqueId(uniqueId);
 			SecretKey key = crypto.generateSecretKey();
 			databaseConfig.setEncryptionKey(key);
 			String hex = encryptDatabaseKey(key, password);
@@ -95,5 +121,20 @@ public class SetupControllerImpl extends PasswordControllerImpl
 			resultHandler.onResult(null);
 		});
 	}
+
+	private void bootstrapCreateUserOnServer(){
+        boolean successCreation = false;
+        try{
+            // Try to create an Account on Server by same time....
+            BServerServicesImpl services = new BServerServicesImpl();
+            SavedUser placeHolderUser = new SavedUser(this.uniqueId, "123.123.123.123", 1234);
+            successCreation = services.createNewUser(placeHolderUser);
+        }catch (Exception ee){
+            ee.printStackTrace();
+        }
+        if(!successCreation){
+            Log.d("INFO", "NO SUCCESS CREATING USER TO SERVER");
+        }
+    }
 
 }

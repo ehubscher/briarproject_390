@@ -20,7 +20,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.BriarApplication;
+import org.briarproject.briar.android.BriarService;
 import org.thoughtcrime.securesms.components.KeyboardAwareLinearLayout;
 import org.thoughtcrime.securesms.components.emoji.EmojiDrawer;
 import org.thoughtcrime.securesms.components.emoji.EmojiDrawer.EmojiEventListener;
@@ -28,6 +31,7 @@ import org.thoughtcrime.securesms.components.emoji.EmojiEditText;
 import org.thoughtcrime.securesms.components.emoji.EmojiToggle;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -41,6 +45,8 @@ public class TextInputView extends KeyboardAwareLinearLayout
 
 	protected final ViewHolder ui;
 	protected TextInputListener listener;
+    @Inject
+    protected DatabaseConfig databaseConfig;
 
 	public TextInputView(Context context) {
 		this(context, null);
@@ -141,16 +147,7 @@ public class TextInputView extends KeyboardAwareLinearLayout
 	}
 
 	public void setText(String text) {
-        //Retrieving stored avatar
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        int avatarId= settings.getInt("pref_avatar",0);
-        String uniqueId = settings.getString("uniqueId", "1233345");
-
-        String avatarTagInfo = "<AvatarIdTag>" + avatarId + "</AvatarIdTag>";
-
-        String uniqueIdTagInfo = "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>";
-
-        ui.editText.setText(uniqueIdTagInfo + avatarTagInfo + text);
+        ui.editText.setText(text);
 	}
 
 	public Editable getText() {
