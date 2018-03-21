@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
 
@@ -28,6 +30,9 @@ public class ContactItemViewHolder<I extends ContactItem>
 	@Nullable
 	protected final ImageView bulb;
 
+	BServerServicesImpl briarServices = new BServerServicesImpl();
+	SavedUser targetContactUserInfo;
+
 	public ContactItemViewHolder(View v) {
 		super(v);
 
@@ -43,11 +48,19 @@ public class ContactItemViewHolder<I extends ContactItem>
 		Author author = item.getContact().getAuthor();
 		String contactName = author.getName();
 		name.setText(contactName);
+        targetContactUserInfo = briarServices.obtainUserInfo(contactName);
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
 		//Set status
-		int status = item.getContact().getStatusId();
+        int status;
+
+        try{
+            status = targetContactUserInfo.getAvatarId();
+        }catch (Exception e){
+            status = 1;
+        }
+
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
@@ -63,8 +76,16 @@ public class ContactItemViewHolder<I extends ContactItem>
 			}
 		}
 
-		if(item.currentAvatar() != 99 && item.currentAvatar() < 9){
-			int imageNb = item.currentAvatar()-1;
+		int avatarId;
+
+		try{
+            avatarId = targetContactUserInfo.getAvatarId();
+        }catch (Exception e){
+		    avatarId = 99;
+        }
+
+		if(avatarId != 99 && avatarId < 9){
+			int imageNb = avatarId - 1;
 			// references to our images
 			Integer[] mThumbIds = {
 					R.drawable.pig,

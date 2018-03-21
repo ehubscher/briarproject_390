@@ -165,8 +165,12 @@ public class ProfileFragment extends BaseFragment {
 		storeInPreferences("current_status",status_num);
 
 		//Set the new statusId
-		currentPhoneHolder.setStatusId(status_num);
-		boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+        try{
+            currentPhoneHolder.setStatusId(status_num);
+            boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+        }catch (Exception e){
+
+        }
 	}
 
 
@@ -221,8 +225,13 @@ public class ProfileFragment extends BaseFragment {
 		storeInPreferences("pref_avatar", avatarNumber);
 
 		//Set the new avatarId
-        currentPhoneHolder.setAvatarId(avatarNumber);
-        boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+        try{
+            currentPhoneHolder.setAvatarId(avatarNumber);
+            boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+        }catch (Exception e){
+
+        }
+
 
 	}
 

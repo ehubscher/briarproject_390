@@ -51,6 +51,8 @@ import org.briarproject.bramble.api.sync.Message;
 import org.briarproject.bramble.api.sync.MessageId;
 import org.briarproject.bramble.api.sync.event.MessagesAckedEvent;
 import org.briarproject.bramble.api.sync.event.MessagesSentEvent;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -203,6 +205,9 @@ public class ConversationActivity extends BriarActivity
 	@Nullable
 	private volatile GroupId messagingGroupId;
 
+	BServerServicesImpl briarServices = new BServerServicesImpl();
+	SavedUser targetContactUserInfo;
+
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void onCreate(@Nullable Bundle state) {
@@ -330,6 +335,7 @@ public class ConversationActivity extends BriarActivity
 		eventBus.addListener(this);
 		notificationManager.blockContactNotification(contactId);
 		notificationManager.clearContactNotification(contactId);
+        targetContactUserInfo = briarServices.obtainUserInfo(contactName);
 		displayContactOnlineStatus();
 		loadContactDetailsAndMessages();
 		list.startPeriodicUpdate();
@@ -412,7 +418,7 @@ public class ConversationActivity extends BriarActivity
 		runOnUiThreadUnlessDestroyed(() -> {
             //noinspection ConstantConditions
 		    try{
-		        int avatarId = contactManager.getContact(contactId).getAvatarId();
+		        int avatarId = targetContactUserInfo.getAvatarId();
                 if(avatarId !=99 && avatarId < 9){
                     // references to our images
                     Integer[] mThumbIds = {
