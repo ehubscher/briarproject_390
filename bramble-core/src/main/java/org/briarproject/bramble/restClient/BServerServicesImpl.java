@@ -56,12 +56,16 @@ public class BServerServicesImpl implements BServerServices{
                                     JsonElement username = obj.get("userName");
                                     JsonElement ip = obj.get("ip");
                                     JsonElement port  = obj.get("port");
+                                    JsonElement statusId = obj.get("statusId");
+                                    JsonElement avatarId = obj.get("avatarId");
 
                                     String convertedUsername = username.getAsString();
                                     String convertedIP = ip.getAsString();
                                     int convertedPort = port.getAsInt();
+                                    int convertedStatusId = statusId.getAsInt();
+                                    int convertedAvatarId = statusId.getAsInt();
                                     // Store info in a SavedUser object...
-                                    createdUser = new SavedUser(convertedUsername, convertedIP, convertedPort);
+                                    createdUser = new SavedUser(convertedUsername, convertedIP, convertedPort, convertedStatusId, convertedAvatarId);
 
                                 }catch (Exception ee){
                                     LOG.info("PROBLEM WHILE EXECUTING ObtainUserInfo : " + ee.getMessage());
@@ -99,6 +103,8 @@ public class BServerServicesImpl implements BServerServices{
         parameters.put("ip", savedUser.getIpAddress());
         parameters.put("phoneGeneratedId", savedUser.getUsername());
         parameters.put("password", config.getServerPassword());
+        parameters.put("statusId", savedUser.getStatusId());
+        parameters.put("avatarId", savedUser.getAvatarId());
 
 
         ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -128,7 +134,7 @@ public class BServerServicesImpl implements BServerServices{
     }
 
     @Override
-    public boolean updateUserInfo(SavedUser savedUser) {
+    public boolean updateUserNetworkInfo(SavedUser savedUser) {
         BriarServerService serv = ServerConfig.getServerService();
         resultFromQueryUpdateUser = null;
 
@@ -144,7 +150,46 @@ public class BServerServicesImpl implements BServerServices{
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                serv.updateUserData(savedUser.getUsername() ,parameters.toString()).enqueue(new Callback<String>() {
+                serv.updateUserTcpData(savedUser.getUsername() ,parameters.toString()).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        resultFromQueryUpdateUser = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        // On failure resultFromQuery will be empty...
+                        LOG.info(" BRIAR SERVER : Failure to create user Exception: " + t.getMessage());
+                    }
+                });
+            }
+        });
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
+        }
+        return (resultFromQueryUpdateUser != null && !resultFromQueryUpdateUser.isEmpty());
+    }
+    @Override
+    public boolean updateUserSettingInfo(SavedUser savedUser) {
+        BriarServerService serv = ServerConfig.getServerService();
+        resultFromQueryUpdateUser = null;
+
+        JSONObject parameters = new JSONObject();
+        parameters.put("statusId", savedUser.getStatusId());
+        parameters.put("avatarId", savedUser.getAvatarId());
+        parameters.put("password", config.getServerPassword());
+        // prevent unexpected input
+        if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
+            return false;
+        }
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                serv.updateUserSettings(savedUser.getUsername() ,parameters.toString()).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         resultFromQueryUpdateUser = response.body();

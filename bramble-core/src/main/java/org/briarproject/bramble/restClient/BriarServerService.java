@@ -46,8 +46,17 @@ public interface BriarServerService {
      */
     @Headers("Content-Type: application/json")
     @PUT("users/{userID}")
-    Call<String> updateUserData(@Path("userID") String userID, @Body String bodyJSON);
+    Call<String> updateUserTcpData(@Path("userID") String userID, @Body String bodyJSON);
 
+    /**
+     * Updating data stored on a user on Briar Server
+     * @param userID , current userID (also UniqueID)
+     * @param bodyJSON , statusID and avatarID
+     * @return A JSON Body with UserName (UniqueID/UserID), ip and port
+     */
+    @Headers("Content-Type: application/json")
+    @PUT("users/{userID}/profile")
+    Call<String> updateUserSettings(@Path("userID") String userID, @Body String bodyJSON);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(config.getServerAddress())

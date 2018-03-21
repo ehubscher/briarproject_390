@@ -25,9 +25,16 @@ public interface BServerServices {
 
     /**
      * Update an alrready saved user
-     * @param savedUser All new info of the user
+     * @param savedUser All settings about the network
      * @return True -> Success, False -> Failure
      */
-    boolean updateUserInfo(SavedUser savedUser);
+    boolean updateUserNetworkInfo(SavedUser savedUser);
+
+    /**
+     * Update the user preferences , avatar , status
+     * @param savedUser All settings data to be updated
+     * @return True -> Success, False -> Failure
+     */
+    boolean updateUserSettingInfo(SavedUser savedUser);
 
 }
