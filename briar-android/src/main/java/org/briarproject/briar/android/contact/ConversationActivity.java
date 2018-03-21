@@ -438,9 +438,8 @@ public class ConversationActivity extends BriarActivity
                     toolbarAvatar.setImageDrawable(
                             new IdenticonDrawable(contactAuthorId.getBytes()));
                 }
-            } catch (NoSuchContactException e) {
-                finishOnUiThread();
-            } catch (DbException e) {
+            }
+            catch (Exception e) {
                 if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
             }
 			toolbarTitle.setText(contactName);
