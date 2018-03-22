@@ -67,6 +67,11 @@ public class SelectedMediaView extends FrameLayout {
         ui.selectedMedia.addView(image);
     }
 
+    public void removeDeleteButton() {
+        ViewGroup container = (ViewGroup)ui.deleteButton.getParent();
+        container.removeView(ui.deleteButton);
+    }
+
     protected class ViewHolder {
         final FrameLayout selectedMedia;
         final ImageButton deleteButton;

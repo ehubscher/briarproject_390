@@ -28,7 +28,9 @@ public class Contact {
 		this.favourite = favourite;
 		this.avatarId = avatarId;
 		this.statusId = status;
-		this.uniqueId = uniqueId;
+		this.uniqueId = author.getName();
+		// Hack for TCP method...
+		id.setUniqueID(uniqueId);
 	}
 
 	public ContactId getId() {

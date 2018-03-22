@@ -304,9 +304,11 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 		ContactId contactId;
 		Transaction txn = db.startTransaction(false);
 		try {
+
 			contactId = contactManager.addContact(txn, remoteAuthor,
 					localAuthor.getId(), masterSecret, timestamp, alice,
 					true, true);
+			// Setup transfert of uniqueID ???
 			transportPropertyManager.addRemoteProperties(txn, contactId,
 					remoteProperties);
 			db.commitTransaction(txn);

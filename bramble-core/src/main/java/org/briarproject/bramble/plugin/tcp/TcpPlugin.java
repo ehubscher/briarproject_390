@@ -1,5 +1,7 @@
 package org.briarproject.bramble.plugin.tcp;
 
+
+
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
@@ -10,6 +12,9 @@ import org.briarproject.bramble.api.plugin.duplex.DuplexPlugin;
 import org.briarproject.bramble.api.plugin.duplex.DuplexPluginCallback;
 import org.briarproject.bramble.api.plugin.duplex.DuplexTransportConnection;
 import org.briarproject.bramble.api.properties.TransportProperties;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.IpifyServices;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 
 import java.io.IOException;
@@ -24,6 +29,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,7 +61,11 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	protected volatile boolean running = false;
 	protected volatile ServerSocket socket = null;
-
+	protected volatile String currentUserID;
+	protected volatile String currentIP;
+	protected volatile String currentTargetUserID;
+	protected volatile int currentPort;
+	private HashMap<String, SavedUser> currentContacts;
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
 	 * in order of preference. At most one of the addresses will be bound.
@@ -81,7 +91,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected abstract boolean isConnectable(InetSocketAddress remote);
 
 	TcpPlugin(Executor ioExecutor, Backoff backoff,
-			DuplexPluginCallback callback, int maxLatency, int maxIdleTime) {
+			  DuplexPluginCallback callback, int maxLatency, int maxIdleTime) {
 		this.ioExecutor = ioExecutor;
 		this.backoff = backoff;
 		this.callback = callback;
@@ -90,6 +100,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 		if (maxIdleTime > Integer.MAX_VALUE / 2)
 			socketTimeout = Integer.MAX_VALUE;
 		else socketTimeout = maxIdleTime * 2;
+		currentContacts = ContactHash.getAllCurrentContacts();
 	}
 
 	@Override
@@ -204,13 +215,29 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	@Override
 	public void poll(Collection<ContactId> connected) {
-
+	    // Update current user data..
+        updateDataOnBServer(currentPort);
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
 				callback.getRemoteProperties();
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
+			// Set as current target...
+			currentTargetUserID = c.getUniqueID();
+			BServerServicesImpl services = new BServerServicesImpl();
+			SavedUser currentContact = services.obtainUserInfo(c.getUniqueID());
+			// Insert in our custom hashSet
+			if(!currentContacts.containsKey(c.getUniqueID())){
+				// Contact didn't exist add it to the hashSet
+			    currentContacts.put(c.getUniqueID(), currentContact);
+			}else{
+				// Contact exist , update the hashSet
+				currentContacts.remove(c.getUniqueID());
+				currentContacts.put(c.getUniqueID(), currentContact);
+
+			}
+
 			if (!connected.contains(c)) connectAndCallBack(c, e.getValue());
 		}
 	}
@@ -264,6 +291,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 	@Nullable
 	InetSocketAddress parseSocketAddress(String ipPort) {
+		// Let's force all method to use Injection instead of regular parsing
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
@@ -290,15 +318,44 @@ abstract class TcpPlugin implements DuplexPlugin {
 	 * This method is a custom hack of the TCP method, it will only be used by CustomWanTcpPlugin.java
 	 * It is mostly similar to parseSocketAddress , however, it will go and use information from internet
 	 * @param ipPort Port by what's briar remember , (we might not use the value)
-	 * @param UserID Custom User ID , implemented...
 	 * @return The right socket to establish connection
 	 */
 	@Nullable
-	InetSocketAddress injectSocketAddressFromServer(String ipPort, String UserID){
+	InetSocketAddress injectSocketAddressFromServer(String ipPort){
 		if (StringUtils.isNullOrEmpty(ipPort)) return null;
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
-		String addr = split[0], port = split[1];
+
+
+		// Go Get IP/PORT for userID on our Server
+		SavedUser userInfo = null;
+		if(currentContacts.containsKey(currentTargetUserID)){
+			userInfo = currentContacts.get(currentTargetUserID);
+		}else{
+			BServerServicesImpl services = new BServerServicesImpl();
+			userInfo = services.obtainUserInfo(currentTargetUserID);
+			currentContacts.put(currentTargetUserID, userInfo);
+
+		}
+
+        String addr = "", port = "";
+		// This is where the magic happen, this small portion of code is not protected againts injection
+        // of an IP/PORT..
+        if(userInfo != null){
+        // If user was found
+			if(userInfo.getIpAddress() != null){
+				addr = userInfo.getIpAddress();
+			}
+			if(userInfo.getPort() != 0000){
+				port = Integer.toString(userInfo.getPort());
+			}
+
+
+        }else{
+		    // If server do not successfully get the User, we go the normal WAN TCP Way
+            addr = split[0];
+            port = split[1];
+        }
 		// Ensure getByName() won't perform a DNS lookup
 		if (!DOTTED_QUAD.matcher(addr).matches()) return null;
 		try {
@@ -347,4 +404,22 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 		return addrs;
 	}
+
+	/**
+	 * This method is updating info on the current user on the current device...
+	 * @param port The new port chosen in CustomWanTcpPlugin
+	 */
+	public void updateDataOnBServer(int port){
+	    currentPort = port;
+		currentUserID = UniqueIDSingleton.getUniqueID();
+		currentIP = IpifyServices.getPublicIpOfDevice();
+		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
+		BServerServicesImpl services = new BServerServicesImpl();
+		// Make sure it is not default user or empty
+		if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
+			services.updateUserInfo(currentUser);
+		}
+
+	}
+
 }

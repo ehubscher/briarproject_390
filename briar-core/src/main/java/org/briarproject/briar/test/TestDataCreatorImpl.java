@@ -152,7 +152,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 
 	private Contact addRandomContact(LocalAuthor localAuthor)
 			throws DbException {
-
 		// prepare to add contact
 		LocalAuthor author = getRandomAuthor();
 		SecretKey secretKey = getSecretKey();

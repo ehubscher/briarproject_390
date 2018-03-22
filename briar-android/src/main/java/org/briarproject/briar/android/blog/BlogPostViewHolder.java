@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.briarproject.bramble.api.identity.Author;
@@ -51,7 +52,7 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 	private final ImageView reblogButton;
 	private final TextView body;
 	private final ViewGroup commentContainer;
-	private final ImageView imageView;
+	private final LinearLayout blogPostMediaContainer;
 	private final boolean fullText;
 
 	@NonNull
@@ -70,7 +71,7 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 		reblogButton = v.findViewById(R.id.commentView);
 		body = v.findViewById(R.id.bodyView);
 		commentContainer = v.findViewById(R.id.commentContainer);
-		imageView = v.findViewById(R.id.imageView);
+		blogPostMediaContainer = v.findViewById(R.id.blogPostMediaContainer);
 	}
 
 	void setVisibility(int visibility) {
@@ -94,21 +95,25 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	void bindItem(@Nullable BlogPostItem item) {
-		if (item == null) return;
+		// author and date
+		BlogPostHeader postHeader = item.getPostHeader();
+		String postBody = item.getBody();
+		
+		if (item == null) {
+			return;
+		}
 
 		setTransitionName(item.getId());
 		if (!fullText) {
 			layout.setClickable(true);
 			layout.setOnClickListener(v -> listener.onBlogPostClick(item));
 		}
-
-		// author and date
-		BlogPostHeader post = item.getPostHeader();
-		Author a = post.getAuthor();
-		author.setAuthor(a);
-		author.setAuthorStatus(post.getAuthorStatus());
-		author.setDate(post.getTimestamp());
+		
+		author.setAuthor(postHeader.getAuthor());
+		author.setAuthorStatus(postHeader.getAuthorStatus());
+		author.setDate(postHeader.getTimestamp());
 		author.setPersona(item.isRssFeed() ? AuthorView.RSS_FEED : AuthorView.NORMAL);
+
 		// TODO make author clickable more often #624
 		if (!fullText && item.getHeader().getType() == POST) {
 			author.setAuthorClickable(v -> listener.onAuthorClick(item));
@@ -116,10 +121,8 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 			author.setAuthorNotClickable();
 		}
 
-		String bodyString = item.getBody();
-
-		// Check for image
-		if (bodyString.contains("%shim%")) {
+		// Check for encoded media
+		if (postBody.contains("%shim%")) {
 			String[] shims = item.getBody().split("%shim%");
 			String encodedMedia = "";
 
@@ -132,15 +135,15 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 
 						Bitmap decodedMedia = BitmapFactory.decodeByteArray(mediaBytes, 0, mediaBytes.length);
 						mediaView.setImage(decodedMedia);
-						imageView.setImageBitmap(decodedMedia);
-						//mediaMessageContainer.addView(mediaView);
+						mediaView.removeDeleteButton();
+						blogPostMediaContainer.addView(mediaView);
 					} else {
 						body.setText(StringUtils.trim(shims[i]));
 					}
 				}
 			}
 		} else {
-			Spanned bodyText = getSpanned(bodyString);
+			Spanned bodyText = getSpanned(postBody);
 			if (fullText) {
 				body.setText(bodyText);
 				body.setTextIsSelectable(true);

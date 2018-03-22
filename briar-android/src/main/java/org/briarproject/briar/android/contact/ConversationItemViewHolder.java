@@ -40,15 +40,14 @@ class ConversationItemViewHolder extends ViewHolder {
 
 	private final TextView text;
 	private final TextView time;
-	//private final LinearLayout mediaMessageContainer;
+	//private final LinearLayout conversationMessageMediaContainer;
 	private final ImageView imageView;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
 	volatile ContactManager contactManager;
 
-    private static final Logger LOG =
-            Logger.getLogger(ConversationActivity.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConversationActivity.class.getName());
 
 	ConversationItemViewHolder(View v) {
 		super(v);
@@ -57,7 +56,7 @@ class ConversationItemViewHolder extends ViewHolder {
 		layout = v.findViewById(R.id.layout);
 		text = v.findViewById(R.id.text);
 		time = v.findViewById(R.id.time);
-		//mediaMessageContainer = v.findViewById(R.id.mediaMessageContainer); //mBackgroundTint.mTintList = NullPointerException
+		//conversationMessageMediaContainer = v.findViewById(R.id.conversationMessageMediaContainer);
 		imageView = v.findViewById(R.id.imageView);
 	}
 
@@ -66,22 +65,6 @@ class ConversationItemViewHolder extends ViewHolder {
 		if (item.getBody() == null) {
 			text.setText("\u2026");
 		} else {
-		    final Pattern pattern = Pattern.compile("<UniqueIdTag>(.+?)</UniqueIdtag><AvatarIdTag>(.+?)</AvatarIdTag>(.+?)");
-		    final Matcher matcher = pattern.matcher(item.getBody());
-
-		    if(matcher.find()) {
-		        try{
-		            //the first group in the pattern is the uniqueId and the second group is the avatarId
-                    contactManager.setAvatarId(matcher.group(1), Integer.valueOf(matcher.group(2)));
-                }
-                catch (DbException e) {
-                    if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
-                }
-
-                //The third group in the pattern is the text
-                text.setText(matcher.group(3));
-			}
-			
 			if (item.getBody().contains("%shim%")) {
 				String[] shims = item.getBody().split("%shim%");
 				String encodedMedia = "";
@@ -94,10 +77,10 @@ class ConversationItemViewHolder extends ViewHolder {
 							byte[] mediaBytes = android.util.Base64.decode(encodedMedia, android.util.Base64.DEFAULT);
 
 							Bitmap decodedMedia = BitmapFactory.decodeByteArray(mediaBytes, 0, mediaBytes.length);
-							mediaView.setImage(decodedMedia);
-
 							imageView.setImageBitmap(decodedMedia);
-							//mediaMessageContainer.addView(mediaView);
+
+							mediaView.setImage(decodedMedia);
+							//conversationMessageMediaContainer.addView(mediaView);
 						} else {
 							text.setText(StringUtils.trim(shims[i]));
 						}

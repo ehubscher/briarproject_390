@@ -33,7 +33,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     private volatile MappingResult mappingResult;
 
     CustomWanTcpPlugin(Executor ioExecutor, Backoff backoff, PortMapper portMapper,
-                 DuplexPluginCallback callback, int maxLatency, int maxIdleTime) {
+                       DuplexPluginCallback callback, int maxLatency, int maxIdleTime) {
         super(ioExecutor, backoff, callback, maxLatency, maxIdleTime);
         this.portMapper = portMapper;
     }
@@ -47,7 +47,7 @@ public class CustomWanTcpPlugin extends TcpPlugin {
     protected List<InetSocketAddress> getLocalSocketAddresses() {
         // Use the same address and port as last time if available
         TransportProperties p = callback.getLocalProperties();
-        InetSocketAddress old = injectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
+        InetSocketAddress old = injectSocketAddressFromServer(p.get(PROP_IP_PORT));
         List<InetSocketAddress> addrs = new LinkedList<>();
         for (InetAddress a : getLocalIpAddresses()) {
             if (isAcceptableAddress(a)) {
@@ -77,14 +77,21 @@ public class CustomWanTcpPlugin extends TcpPlugin {
         return ipv4 && !loop && !link && !site;
     }
 
+    /**
+     * Let's change this method so each time it is called, the saved port on our server will be update...
+     * @return Port Choosen
+     */
     private int chooseEphemeralPort() {
-        return 32768 + (int) (Math.random() * 32768);
+        int NewPort = 32768 + (int) (Math.random() * 32768);
+        // Send the new port that has been choosen to briar server
+        updateDataOnBServer(NewPort);
+        return NewPort;
     }
 
     @Override
     protected List<InetSocketAddress> getRemoteSocketAddresses(
             TransportProperties p) {
-        InetSocketAddress parsed = injectSocketAddressFromServer(p.get(PROP_IP_PORT), "UNIQUEID");
+        InetSocketAddress parsed = injectSocketAddressFromServer(p.get(PROP_IP_PORT));
 
         if (parsed == null) return Collections.emptyList();
         return Collections.singletonList(parsed);

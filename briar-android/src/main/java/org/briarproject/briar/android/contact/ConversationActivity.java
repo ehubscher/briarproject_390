@@ -742,7 +742,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			loadGroupId(text, timestamp);
 		}
 
-		createMessage(text, timestamp);
+		//createMessage(text, timestamp);
 		textInputView.clearSelectedMediaDrawer();
 		textInputView.setText("");
 	}
@@ -757,7 +757,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
 		runOnDbThread(() -> {
 			try {
 				messagingGroupId = messagingManager.getConversationId(contactId);
-				//createMessage(body, timestamp);
+				createMessage(body, timestamp);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			}

@@ -1,8 +1,6 @@
 package org.briarproject.briar.android.login;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.widget.Button;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
-import org.briarproject.briar.android.util.IOUniqueIdentifier;
 
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
@@ -75,22 +72,9 @@ public class AuthorNameFragment extends SetupFragment {
 		nextButton.setEnabled(enabled);
 	}
 
-	private void storeInPreferences(String preference, String value){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.putString(preference, value);
-		editor.apply();
-	}
-
 	@Override
 	public void onClick(View view) {
-		IOUniqueIdentifier ioUniqueIdentifier = new IOUniqueIdentifier();
-		String uniqueId = ioUniqueIdentifier.getUniqueID();
-
-		setupController.setAuthorName(authorNameInput.getText().toString() + "<UniqueIdTag>" + uniqueId + "</UniqueIdTag>");
-
-		//Store avatar number in preferences
-		storeInPreferences("uniqueId", uniqueId);
+		setupController.setAuthorName(authorNameInput.getText().toString());
 	}
 
 }

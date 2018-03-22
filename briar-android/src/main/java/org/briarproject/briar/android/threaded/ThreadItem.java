@@ -4,7 +4,11 @@ import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.identity.Author.Status;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.api.sync.MessageId;
+import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.api.client.MessageTree.MessageNode;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;

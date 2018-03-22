@@ -24,5 +24,10 @@ public interface DatabaseConfig {
 	@Nullable
 	String getLocalAuthorName();
 
+	void setLocalUniqueId(String uniqueId);
+
+	@Nullable
+	String getLocalUniqueId();
+
 	long getMaxSize();
 }

@@ -520,7 +520,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 			ps.setBoolean(7, false);
             ps.setInt(8, 0);
             ps.setInt(9, 1);
-            ps.setString(10, remote.getUniqueId());
+            //TODO Fix here to put actual contact Id when it will be exchange
+            ps.setString(10, "1233345");
             int affected = ps.executeUpdate();
 			if (affected != 1) throw new DbStateException();
 			ps.close();
@@ -2519,7 +2520,7 @@ abstract class JdbcDatabase implements Database<Connection> {
             throws DbException {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE contacts SET statusId = ? WHERE uniqueId = ?";
+            String sql = "UPDATE contacts SET statusId = ? WHERE name = ?";
             ps = transaction.prepareStatement(sql);
             ps.setInt(1, statusId);
             ps.setString(2, uniqueId);
@@ -2537,7 +2538,7 @@ abstract class JdbcDatabase implements Database<Connection> {
             throws DbException {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE contacts SET avatarId = ? WHERE uniqueId = ?";
+            String sql = "UPDATE contacts SET avatarId = ? WHERE name = ?";
             ps = txn.prepareStatement(sql);
             ps.setInt(1, avatarId);
             ps.setString(2, uniqueId);

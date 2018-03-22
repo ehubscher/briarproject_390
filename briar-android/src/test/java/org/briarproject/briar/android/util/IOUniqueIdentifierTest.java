@@ -23,12 +23,20 @@ public class IOUniqueIdentifierTest {
         int numberOfUniqueIdToCreate = 0;
         int maxIDGenerated = 10000;
         while (numberOfUniqueIdToCreate < maxIDGenerated){
-            added = allGeneratedUniqueID.add(IOUniqueIdentifier.generateUniqueID());
+            added = allGeneratedUniqueID.add(IOUniqueIdentifier.getUniqueID());
             if(!added)break;
             numberOfUniqueIdToCreate++;
         }
         Assert.assertTrue(added);
     }
 
-    // TODO : Find a way to mock the android ENVIRONMENT to test the other method of IOUniqueIdentifier
+    /**
+     * Very simple test to try the function that is generating uniqueID...
+     */
+    @Test
+    public void testSingleUniqueIDGeneration(){
+        String result = "";
+        result = IOUniqueIdentifier.getUniqueID();
+        Assert.assertTrue(!result.isEmpty() & result.length() > 19);
+    }
 }
