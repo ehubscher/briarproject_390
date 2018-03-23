@@ -18,7 +18,8 @@ public class Contact {
 	private final int statusId;
 	private final String uniqueId;
 
-	public Contact(ContactId id, Author author, AuthorId localAuthorId,
+
+    public Contact(ContactId id, Author author, AuthorId localAuthorId,
 				   boolean verified, boolean active, boolean favourite, int avatarId, int status, String uniqueId) {
 		this.id = id;
 		this.author = author;

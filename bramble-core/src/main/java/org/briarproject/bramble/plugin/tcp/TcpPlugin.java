@@ -227,14 +227,18 @@ abstract class TcpPlugin implements DuplexPlugin {
 			currentTargetUserID = c.getUniqueID();
 			BServerServicesImpl services = new BServerServicesImpl();
 			SavedUser currentContact = services.obtainUserInfo(c.getUniqueID());
-			// Insert in our custom hashSet
-			if(!currentContacts.containsKey(c.getUniqueID())){
+			// Insert in our custom hashSet, small optimization prevent sending null contact
+			if(c.getUniqueID() != null & !c.getUniqueID().isEmpty() & !currentContacts.containsKey(c.getUniqueID())){
 				// Contact didn't exist add it to the hashSet
 			    currentContacts.put(c.getUniqueID(), currentContact);
 			}else{
 				// Contact exist , update the hashSet
 				currentContacts.remove(c.getUniqueID());
-				currentContacts.put(c.getUniqueID(), currentContact);
+				//small optimization prevent sending null contact
+				if(c.getUniqueID() != null & !c.getUniqueID().isEmpty()){
+					currentContacts.put(c.getUniqueID(), currentContact);
+				}
+
 
 			}
 
@@ -413,11 +417,11 @@ abstract class TcpPlugin implements DuplexPlugin {
 	    currentPort = port;
 		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
-		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort);
+		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, 1, 99);
 		BServerServicesImpl services = new BServerServicesImpl();
 		// Make sure it is not default user or empty
 		if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
-			services.updateUserInfo(currentUser);
+			services.updateUserNetworkInfo(currentUser);
 		}
 
 	}

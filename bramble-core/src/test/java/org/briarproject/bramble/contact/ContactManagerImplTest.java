@@ -36,7 +36,8 @@ public class ContactManagerImplTest extends BrambleMockTestCase {
 			new Author(new AuthorId(getRandomId()), "remote",
 					getRandomBytes(42));
 	private final AuthorId local = new AuthorId(getRandomId());
-	private final boolean verified = false, active = true;
+	private final boolean verified = false, active = true, favourite = true;
+	private final int avatarId = 1, statusId = 1;
 	private final Contact contact =
 			new Contact(contactId, remote, local, verified, active, false, 0, 1, "1233345");
 
@@ -171,6 +172,48 @@ public class ContactManagerImplTest extends BrambleMockTestCase {
 
 		contactManager.setContactActive(txn, contactId, active);
 	}
+
+	@Test
+	public void testSetFavourite() throws Exception {
+		Transaction txn = new Transaction(null, false);
+		context.checking(new Expectations() {{
+            oneOf(db).startTransaction(false);
+            will(returnValue(txn));
+            oneOf(db).setFavourite(txn, contactId, favourite);
+            oneOf(db).commitTransaction(txn);
+            oneOf(db).endTransaction(txn);
+		}});
+
+		contactManager.setFavourite(contactId, favourite);
+	}
+
+    @Test
+    public void testSetAvatarId() throws Exception {
+        Transaction txn = new Transaction(null, false);
+        context.checking(new Expectations() {{
+            oneOf(db).startTransaction(false);
+            will(returnValue(txn));
+            oneOf(db).setAvatarId(txn, contact.getAuthor().getName(), avatarId);
+            oneOf(db).commitTransaction(txn);
+            oneOf(db).endTransaction(txn);
+        }});
+
+        contactManager.setAvatarId(contact.getAuthor().getName(), avatarId);
+    }
+
+    @Test
+    public void testSetStatusId() throws Exception {
+        Transaction txn = new Transaction(null, false);
+        context.checking(new Expectations() {{
+            oneOf(db).startTransaction(false);
+            will(returnValue(txn));
+            oneOf(db).setContactStatus(txn, contact.getAuthor().getName(), statusId);
+            oneOf(db).commitTransaction(txn);
+            oneOf(db).endTransaction(txn);
+        }});
+
+        contactManager.setContactStatus(contact.getAuthor().getName(), statusId);
+    }
 
 	@Test
 	public void testContactExists() throws Exception {
