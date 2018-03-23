@@ -30,6 +30,8 @@ import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
 import org.briarproject.bramble.api.plugin.ConnectionRegistry;
 import org.briarproject.bramble.api.plugin.event.ContactConnectedEvent;
 import org.briarproject.bramble.api.plugin.event.ContactDisconnectedEvent;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
@@ -191,6 +193,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		list.stopPeriodicUpdate();
 	}
 
+    BServerServicesImpl briarServices = new BServerServicesImpl();
+    SavedUser targetContactUserInfo;
+
 	private void loadContacts() {
 		int revision = adapter.getRevision();
 		listener.runOnDbThread(() -> {
@@ -199,6 +204,18 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				List<ContactListItem> contacts = new ArrayList<>();
 				for (Contact c : contactManager.getActiveContacts()) {
 					try {
+						//get the contact name and retrieve the avatarId and statusId
+						String name = c.getAuthor().getName();
+
+						targetContactUserInfo = briarServices.obtainUserInfo(name);
+
+						int avatarId = targetContactUserInfo.getAvatarId();
+						int statusId = targetContactUserInfo.getStatusId();
+
+						//setting the values in the local database
+						contactManager.setAvatarId(name, avatarId);
+						contactManager.setContactStatus(name, statusId);
+
 						ContactId id = c.getId();
 						GroupCount count =
 								conversationManager.getGroupCount(id);

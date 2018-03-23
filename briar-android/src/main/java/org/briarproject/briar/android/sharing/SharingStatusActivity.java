@@ -8,15 +8,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.briarproject.bramble.api.contact.Contact;
-import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.db.DatabaseExecutor;
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
 import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
 import org.briarproject.bramble.api.plugin.ConnectionRegistry;
 import org.briarproject.bramble.api.sync.GroupId;
-import org.briarproject.bramble.restClient.BServerServicesImpl;
-import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.BriarActivity;
 import org.briarproject.briar.android.contact.ContactItem;
@@ -45,12 +42,6 @@ abstract class SharingStatusActivity extends BriarActivity {
 	private GroupId groupId;
 	private BriarRecyclerView list;
 	private SharingStatusAdapter adapter;
-
-    BServerServicesImpl briarServices = new BServerServicesImpl();
-    SavedUser targetContactUserInfo;
-
-    @Inject
-    volatile ContactManager contactManager;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,18 +107,6 @@ abstract class SharingStatusActivity extends BriarActivity {
 					boolean online = connectionRegistry.isConnected(c.getId());
 					ContactItem item = new ContactItem(c, online);
 					contactItems.add(item);
-
-					//get the contact name and retrieve the avatarId and statusId
-					String name = c.getAuthor().getName();
-
-                    targetContactUserInfo = briarServices.obtainUserInfo(name);
-
-                    int avatarId = targetContactUserInfo.getAvatarId();
-                    int statusId = targetContactUserInfo.getStatusId();
-
-                    //setting the values in the local database
-                    contactManager.setAvatarId(name, avatarId);
-                    contactManager.setContactStatus(name, statusId);
 				}
 				displaySharedWith(contactItems);
 			} catch (DbException e) {
