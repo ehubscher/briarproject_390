@@ -21,7 +21,12 @@ import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.fragment.BaseFragment;
+
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.WARNING;
 
 
 public class ProfileFragment extends BaseFragment {
@@ -30,6 +35,9 @@ public class ProfileFragment extends BaseFragment {
 
     BServerServicesImpl briarServices = new BServerServicesImpl();
     SavedUser currentPhoneHolder = briarServices.obtainUserInfo(uniqueIDSingleton.getUniqueID());
+
+    private static final Logger LOG =
+            Logger.getLogger(ConversationActivity.class.getName());
 
 	TextView uniqueIdTag;
     ImageView avatarImage;
@@ -169,7 +177,7 @@ public class ProfileFragment extends BaseFragment {
             currentPhoneHolder.setStatusId(status_num);
             boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
         }catch (Exception e){
-
+			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
         }
 	}
 
@@ -229,10 +237,8 @@ public class ProfileFragment extends BaseFragment {
             currentPhoneHolder.setAvatarId(avatarNumber);
             boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
         }catch (Exception e){
-
+            if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
         }
-
-
 	}
 
 	private void storeInPreferences(String preference, int value){

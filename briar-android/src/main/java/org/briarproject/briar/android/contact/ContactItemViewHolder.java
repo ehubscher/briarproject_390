@@ -30,9 +30,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 	@Nullable
 	protected final ImageView bulb;
 
-	BServerServicesImpl briarServices = new BServerServicesImpl();
-	SavedUser targetContactUserInfo;
-
 	public ContactItemViewHolder(View v) {
 		super(v);
 
@@ -48,18 +45,11 @@ public class ContactItemViewHolder<I extends ContactItem>
 		Author author = item.getContact().getAuthor();
 		String contactName = author.getName();
 		name.setText(contactName);
-        targetContactUserInfo = briarServices.obtainUserInfo(contactName);
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
-		//Set status
-        int status;
-
-        try{
-            status = targetContactUserInfo.getAvatarId();
-        }catch (Exception e){
-            status = 1;
-        }
+		//get the statusId
+        int status = item.getContact().getStatusId();
 
 		if (bulb != null) {
 			// online/offline
@@ -76,14 +66,9 @@ public class ContactItemViewHolder<I extends ContactItem>
 			}
 		}
 
-		int avatarId;
+		int avatarId = item.getContact().getAvatarId();
 
-		try{
-            avatarId = targetContactUserInfo.getAvatarId();
-        }catch (Exception e){
-		    avatarId = 99;
-        }
-
+		//99 is the default value for the unselected avatar
 		if(avatarId != 99 && avatarId < 9){
 			int imageNb = avatarId - 1;
 			// references to our images

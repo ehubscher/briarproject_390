@@ -205,9 +205,6 @@ public class ConversationActivity extends BriarActivity
 	@Nullable
 	private volatile GroupId messagingGroupId;
 
-	BServerServicesImpl briarServices = new BServerServicesImpl();
-	SavedUser targetContactUserInfo;
-
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void onCreate(@Nullable Bundle state) {
@@ -335,7 +332,6 @@ public class ConversationActivity extends BriarActivity
 		eventBus.addListener(this);
 		notificationManager.blockContactNotification(contactId);
 		notificationManager.clearContactNotification(contactId);
-        targetContactUserInfo = briarServices.obtainUserInfo(contactName);
 		displayContactOnlineStatus();
 		loadContactDetailsAndMessages();
 		list.startPeriodicUpdate();
@@ -418,7 +414,9 @@ public class ConversationActivity extends BriarActivity
 		runOnUiThreadUnlessDestroyed(() -> {
             //noinspection ConstantConditions
 		    try{
-		        int avatarId = targetContactUserInfo.getAvatarId();
+		        int avatarId = contactManager.getContact(contactId).getAvatarId();
+
+		        //99 is the avatarId default value when unset by user
                 if(avatarId !=99 && avatarId < 9){
                     // references to our images
                     Integer[] mThumbIds = {

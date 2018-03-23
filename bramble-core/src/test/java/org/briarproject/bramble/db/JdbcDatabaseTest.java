@@ -1653,6 +1653,76 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
     }
 
 	@Test
+	public void testSetAvatarId() throws Exception {
+		boolean isResume = false;
+		Database<Connection> db = open(isResume);
+		Connection transaction = db.startTransaction();
+
+		boolean isVerified = true;
+		boolean isActive = false;
+
+		// Add a contact
+		db.addLocalAuthor(transaction, localAuthor);
+		assertEquals(contactId, db.addContact(transaction, author, localAuthorId, isVerified, isActive));
+
+		// The contact should have a avatarId of 99 (default value)
+		Contact contact = db.getContact(transaction, contactId);
+		assertEquals(99, contact.getAvatarId());
+
+		// Set the contact to have an avatar Id of 1
+		db.setAvatarId(transaction, contact.getAuthor().getName(), 1);
+
+		// The contact should now have an avatar id of 1
+		contact = db.getContact(transaction, contactId);
+        assertEquals(1, contact.getAvatarId());
+
+        // Set the contact to have an avatar Id of 8
+        db.setAvatarId(transaction, contact.getAuthor().getName(), 8);
+
+        // The contact should now have an avatar id of 8
+        contact = db.getContact(transaction, contactId);
+        assertEquals(8, contact.getAvatarId());
+
+		db.commitTransaction(transaction);
+		db.close();
+	}
+
+    @Test
+    public void testSetStatusId() throws Exception {
+        boolean isResume = false;
+        Database<Connection> db = open(isResume);
+        Connection transaction = db.startTransaction();
+
+        boolean isVerified = true;
+        boolean isActive = false;
+
+        // Add a contact
+        db.addLocalAuthor(transaction, localAuthor);
+        assertEquals(contactId, db.addContact(transaction, author, localAuthorId, isVerified, isActive));
+
+        // The contact should have a statusId of 1
+        Contact contact = db.getContact(transaction, contactId);
+        assertEquals(1, contact.getStatusId());
+
+        // Set the contact to have an statusId  of 1
+        db.setContactStatus(transaction, contact.getAuthor().getName(), 2);
+
+        // The contact should now have an statusId  of 2
+        contact = db.getContact(transaction, contactId);
+        assertEquals(2, contact.getStatusId());
+
+        // Set the contact to have an statusId of 3
+        db.setContactStatus(transaction, contact.getAuthor().getName(), 3);
+
+        // The contact should now have an statusId  of 3
+        contact = db.getContact(transaction, contactId);
+        assertEquals(3, contact.getStatusId());
+
+        db.commitTransaction(transaction);
+        db.close();
+    }
+
+	@Test
 	public void testSetMessageState() throws Exception {
 
 		Database<Connection> db = open(false);
