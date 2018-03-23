@@ -36,7 +36,7 @@ public class BServerServicesImplTest {
 	@Test
 	public void createNewUserTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort());
+		SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort(), 1, 99);
 		Assert.assertTrue(services.createNewUser(userToCreate));
 
 	}
@@ -47,10 +47,10 @@ public class BServerServicesImplTest {
 	 */
 	@Ignore
 	@Test
-	public void createAndObtainDataForUser(){
+	public void createAndObtainDataForUserTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		String username = generateFakeUserName();
-		SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort());
+		SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort(), 1,99);
 		if(!services.createNewUser(userToCreate)){
 			Assert.fail();
 		}
@@ -60,13 +60,24 @@ public class BServerServicesImplTest {
 	}
 	@Ignore
 	@Test
-	public void updateUserInfo(){
+	public void updateUserSettingsTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		String defaultUser = "1233345";
 		String ipp = generateFakeIp();
 		int fakePort = generateFakePort();
-		SavedUser user = new SavedUser(defaultUser, ipp, fakePort);
-		boolean e = services.updateUserInfo(user);
+		SavedUser user = new SavedUser(defaultUser, ipp, fakePort, 2,33);
+		boolean e = services.updateUserSettingInfo(user);
+		Assert.assertTrue(e);
+	}
+	@Ignore
+	@Test
+	public void updateUserTcpTest(){
+		BServerServicesImpl services = new BServerServicesImpl();
+		String defaultUser = "1233345";
+		String ipp = generateFakeIp();
+		int fakePort = generateFakePort();
+		SavedUser user = new SavedUser(defaultUser, ipp, fakePort, 2, 22);
+		boolean e = services.updateUserNetworkInfo(user);
 		Assert.assertTrue(e);
 	}
 
