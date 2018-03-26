@@ -1,7 +1,14 @@
 package org.briarproject.briar.android;
 
+import com.google.common.base.Verify;
+
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
+import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Winterhart on 3/25/2018.
@@ -15,6 +22,19 @@ public class BServerServicesWithMockTest {
      */
     @Test
     public void mockObtainUserInfoTest(){
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String username = "Robert";
+        String ip = "123.123.123.123";
+        int port = 2222;
+        int avatar = 11;
+        int status = 2;
+        SavedUser user = new SavedUser(username, ip, port, status, avatar);
+        // mocking what server would returned
+        when(mockingServer.obtainUserInfo("Robert")).thenReturn(user);
+        SavedUser mockUser = mockingServer.obtainUserInfo(username);
+        Assert.assertTrue(mockUser.equals(user) && mockUser.getUsername().equals(user.getUsername()) );
+
+
 
     }
 
@@ -24,7 +44,23 @@ public class BServerServicesWithMockTest {
     @Test
     public void mockUpdateUserTcpTest(){
 
-        // TODO: Implements test updateTCP using Mocking framework
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String username = "Robert";
+        String ip = "123.123.123.123";
+        int port = 2222;
+        int avatar = 11;
+        int status = 2;
+        SavedUser user = new SavedUser(username, ip, port, status, avatar);
+        // mocking what server would returned
+        when(mockingServer.obtainUserInfo("Robert")).thenReturn(user);
+
+        SavedUser userUpdated = mockingServer.obtainUserInfo("Robert");
+        userUpdated.setIpAddress("123.122.122.122");
+        userUpdated.setPort(2233);
+
+        // mocking what server would returned
+        when(mockingServer.updateUserNetworkInfo(userUpdated)).thenReturn(true);
+        Assert.assertTrue(mockingServer.updateUserNetworkInfo(userUpdated));
     }
 
     /**
@@ -32,8 +68,23 @@ public class BServerServicesWithMockTest {
      */
     @Test
     public void mockUpdateUserSettingsTest(){
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String username = "Robert";
+        String ip = "123.123.123.123";
+        int port = 2222;
+        int avatar = 11;
+        int status = 2;
+        SavedUser user = new SavedUser(username, ip, port, status, avatar);
+        // mocking what server would returned
+        when(mockingServer.obtainUserInfo("Robert")).thenReturn(user);
 
-        // TODO: Implements test updateTCP using Mocking framework
+        SavedUser userUpdated = mockingServer.obtainUserInfo("Robert");
+        userUpdated.setAvatarId(22);
+        userUpdated.setStatusId(3);
+
+        // mocking what server would returned
+        when(mockingServer.updateUserSettingInfo(userUpdated)).thenReturn(true);
+        Assert.assertTrue(mockingServer.updateUserSettingInfo(userUpdated));
     }
 
     /**
@@ -42,7 +93,17 @@ public class BServerServicesWithMockTest {
     @Test
     public void mockCreateNewUserTest(){
 
-        //TODO: Implements create a user, with mocking the server
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String username = "Robert";
+        String ip = "123.123.123.123";
+        int port = 2222;
+        int avatar = 11;
+        int status = 2;
+        SavedUser user = new SavedUser(username, ip, port, status, avatar);
+        // mocking what server would returned
+        when(mockingServer.createNewUser(user)).thenReturn(true);
+
+        Assert.assertTrue(mockingServer.createNewUser(user));
 
     }
 }
