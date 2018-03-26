@@ -20,8 +20,6 @@ public class PinnedMessagesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.setTitle("Pinned Messages");
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
