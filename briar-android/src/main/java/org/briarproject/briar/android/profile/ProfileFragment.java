@@ -16,12 +16,28 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.briarproject.bramble.api.db.DatabaseConfig;
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.fragment.BaseFragment;
+
+import java.util.logging.Logger;
+
+import static java.util.logging.Level.WARNING;
 
 
 public class ProfileFragment extends BaseFragment {
+
+    UniqueIDSingleton uniqueIDSingleton;
+
+    BServerServicesImpl briarServices = new BServerServicesImpl();
+    SavedUser currentPhoneHolder = briarServices.obtainUserInfo(uniqueIDSingleton.getUniqueID());
+
+    private static final Logger LOG =
+            Logger.getLogger(ConversationActivity.class.getName());
 
 	TextView uniqueIdTag;
     ImageView avatarImage;
@@ -66,8 +82,8 @@ public class ProfileFragment extends BaseFragment {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
 
         //Retrieving stored avatar
-		int avatarId= settings.getInt("pref_avatar",0);
-		if(avatarId != 0) {
+		int avatarId= settings.getInt("pref_avatar",99);
+		if(avatarId != 99) {
 			avatarImage.setImageResource(mThumbIds[avatarId - 1]);
 		}
 		else{
@@ -152,10 +168,17 @@ public class ProfileFragment extends BaseFragment {
 			status_num=1;
 		}
 		buttonStatus.setCompoundDrawablesWithIntrinsicBounds(status,null,null,null);
+
 		//Store avatar number in preferences
 		storeInPreferences("current_status",status_num);
 
-		//TODO: broadcast event
+		//Set the new statusId
+        try{
+            currentPhoneHolder.setStatusId(status_num);
+            boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+        }catch (Exception e){
+			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+        }
 	}
 
 
@@ -207,7 +230,15 @@ public class ProfileFragment extends BaseFragment {
 		}
 		avatarImage.setImageResource(mThumbIds[avatarNumber - 1]);
 		//Store avatar number in preferences
-		storeInPreferences("pref_avatar",avatarNumber);
+		storeInPreferences("pref_avatar", avatarNumber);
+
+		//Set the new avatarId
+        try{
+            currentPhoneHolder.setAvatarId(avatarNumber);
+            boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+        }catch (Exception e){
+            if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+        }
 	}
 
 	private void storeInPreferences(String preference, int value){

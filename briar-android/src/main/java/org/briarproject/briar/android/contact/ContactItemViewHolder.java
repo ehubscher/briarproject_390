@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
 
@@ -46,8 +48,9 @@ public class ContactItemViewHolder<I extends ContactItem>
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
-		//Set status
-		int status = item.getContact().getStatusId();
+		//get the statusId
+        int status = item.getContact().getStatusId();
+
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
@@ -63,8 +66,11 @@ public class ContactItemViewHolder<I extends ContactItem>
 			}
 		}
 
-		if(item.currentAvatar() !=0 && item.currentAvatar() < 9){
-			int imageNb = item.currentAvatar()-1;
+		int avatarId = item.getContact().getAvatarId();
+
+		//99 is the default value for the unselected avatar
+		if(avatarId != 99 && avatarId < 9){
+			int imageNb = avatarId - 1;
 			// references to our images
 			Integer[] mThumbIds = {
 					R.drawable.pig,

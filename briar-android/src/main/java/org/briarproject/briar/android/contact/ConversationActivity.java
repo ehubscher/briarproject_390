@@ -52,6 +52,8 @@ import org.briarproject.bramble.api.sync.Message;
 import org.briarproject.bramble.api.sync.MessageId;
 import org.briarproject.bramble.api.sync.event.MessagesAckedEvent;
 import org.briarproject.bramble.api.sync.event.MessagesSentEvent;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -373,7 +375,9 @@ public class ConversationActivity extends BriarActivity implements EventListener
             //noinspection ConstantConditions
 		    try{
 		        int avatarId = contactManager.getContact(contactId).getAvatarId();
-                if(avatarId !=0 && avatarId < 9){
+
+		        //99 is the avatarId default value when unset by user
+                if(avatarId !=99 && avatarId < 9){
                     // references to our images
                     Integer[] mThumbIds = {
                             R.drawable.pig,
@@ -392,9 +396,8 @@ public class ConversationActivity extends BriarActivity implements EventListener
                     toolbarAvatar.setImageDrawable(
                             new IdenticonDrawable(contactAuthorId.getBytes()));
                 }
-            } catch (NoSuchContactException e) {
-                finishOnUiThread();
-            } catch (DbException e) {
+            }
+            catch (Exception e) {
                 if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
             }
 			toolbarTitle.setText(contactName);
