@@ -13,6 +13,8 @@ import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +64,7 @@ import org.briarproject.briar.android.blog.BlogActivity;
 import org.briarproject.briar.android.contact.ConversationAdapter.ConversationListener;
 import org.briarproject.briar.android.forum.ForumActivity;
 import org.briarproject.briar.android.introduction.IntroductionActivity;
+import org.briarproject.briar.android.pinnedmessages.PinnedMessagesActivity;
 import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
@@ -120,6 +124,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PINNED_MESSAGES;
 import static org.briarproject.briar.android.settings.SettingsFragment.SETTINGS_NAMESPACE;
 import static org.briarproject.briar.android.util.UiUtils.getAvatarTransitionName;
 import static org.briarproject.briar.android.util.UiUtils.getBulbTransitionName;
@@ -364,11 +369,15 @@ public class ConversationActivity extends BriarActivity
 			case android.R.id.home:
 				onBackPressed();
 				return true;
+			case R.id.action_view_pinned:
+				Intent intentPinned = new Intent(this, PinnedMessagesActivity.class);
+				startActivityForResult(intentPinned, REQUEST_PINNED_MESSAGES);
+				return true;
 			case R.id.action_introduction:
 				if (contactId == null) return false;
-				Intent intent = new Intent(this, IntroductionActivity.class);
-				intent.putExtra(CONTACT_ID, contactId.getInt());
-				startActivityForResult(intent, REQUEST_INTRODUCTION);
+				Intent intentIntro = new Intent(this, IntroductionActivity.class);
+				intentIntro.putExtra(CONTACT_ID, contactId.getInt());
+				startActivityForResult(intentIntro, REQUEST_INTRODUCTION);
 				return true;
 			case R.id.action_social_remove_person:
 				askToRemoveContact();

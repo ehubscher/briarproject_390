@@ -25,6 +25,7 @@ public class IntroductionActivity extends BriarActivity
 
 		setContentView(R.layout.activity_fragment_container);
 
+
 		if (savedInstanceState == null) {
 			showInitialFragment(ContactChooserFragment.newInstance(contactId));
 		}

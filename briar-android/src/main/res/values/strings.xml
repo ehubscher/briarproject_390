@@ -115,10 +115,11 @@
 	<string name="date_no_private_messages">No messages.</string>
 	<string name="no_private_messages">This is the conversation view.\n\nThere seems to be a lack of conversation.\n\nJust tap the input field at the bottom to start a conversation.</string>
 	<string name="message_hint">Type message</string>
-	<string name="delete_contact">Delete contact</string>
+	<string name="delete_contact">Delete Contact</string>
 	<string name="dialog_title_delete_contact">Confirm Contact Deletion</string>
 	<string name="dialog_message_delete_contact">Are you sure that you want to remove this contact and all messages exchanged with this contact?</string>
 	<string name="contact_deleted_toast">Contact deleted</string>
+	<string name="view_pinned_button">View Pinned Messages</string>
 
 	<!-- Adding Contacts -->
 	<string name="add_contact_title">Add a Contact</string>
@@ -419,5 +420,6 @@
 
 	<!-- Profile -->
 	<string name="title_activity_profile">Profile</string>
+    <string name="title_activity_pinned_messages">PinnedMessagesActivity</string>
 
 </resources>
