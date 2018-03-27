@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -129,15 +130,11 @@ import static uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.S
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
-public class ConversationActivity extends BriarActivity
-		implements EventListener, ConversationListener, TextInputListener {
-
+public class ConversationActivity extends BriarActivity implements EventListener, ConversationListener, TextInputListener {
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 
-	private static final Logger LOG =
-			Logger.getLogger(ConversationActivity.class.getName());
-	private static final String SHOW_ONBOARDING_INTRODUCTION =
-			"showOnboardingIntroduction";
+	private static final Logger LOG = Logger.getLogger(ConversationActivity.class.getName());
+	private static final String SHOW_ONBOARDING_INTRODUCTION = "showOnboardingIntroduction";
 
 	@Inject
 	AndroidNotificationManager notificationManager;
@@ -157,25 +154,22 @@ public class ConversationActivity extends BriarActivity
 	private BriarRecyclerView list;
 
     //Declared variables for the Image selector
-	private ImageButton imageButton;
 	final Context context = this;
-    public static final int PICK_IMAGE = 1;
     private TextInputView textInputView;
 
     //Declared variables for the Favourite star
 	private ImageButton favourite_star;
 
-	private final ListenableFutureTask<String> contactNameTask =
-			new ListenableFutureTask<>(new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					Contact c = contactManager.getContact(contactId);
-					contactName = c.getAuthor().getName();
-					return c.getAuthor().getName();
-				}
-			});
-	private final AtomicBoolean contactNameTaskStarted =
-			new AtomicBoolean(false);
+	private final ListenableFutureTask<String> contactNameTask = new ListenableFutureTask<>(new Callable<String>() {
+		@Override
+		public String call() throws Exception {
+			Contact c = contactManager.getContact(contactId);
+			contactName = c.getAuthor().getName();
+			return c.getAuthor().getName();
+		}
+	});
+
+	private final AtomicBoolean contactNameTaskStarted = new AtomicBoolean(false);
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -238,22 +232,6 @@ public class ConversationActivity extends BriarActivity
 		textInputView = findViewById(R.id.text_input_container);
 		textInputView.setListener(this);
 
-        //the add_image button
-        imageButton = findViewById(R.id.open_image_browser);
-
-        //the listener
-        imageButton.setOnClickListener(new View.OnClickListener() {
-
-        	//On click the image selector will pop open
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-            }
-        });
-
         //The favourite_star button
 		favourite_star = findViewById(R.id.favourite_star);
 
@@ -301,28 +279,10 @@ public class ConversationActivity extends BriarActivity
 			snackbar.show();
 		}
 
-		//to recognize when the user comes back from the image selector with an image
-		if(request == PICK_IMAGE && result == RESULT_OK && data.getData() != null){
-
-            Uri uri;
-            Bitmap bitmap;
-
-		    try{
-		        uri = data.getData();
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-
-                //Enocodes the bitmap image into base64 string
-                ByteArrayOutputStream boas = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, boas);
-                byte[] imageBytes = boas.toByteArray();
-                String imageString = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
-
-                //Send the picture to the input text box to be sent
-                textInputView.sendImage(imageString);
-
-            }catch(IOException e){
-		        e.printStackTrace();
-            }
+		//to recognize when the user comes back from the image selector
+		if(request == textInputView.ATTACH_IMAGES) {
+			Uri selectedMediaUri = data.getData();
+			textInputView.addMedia(selectedMediaUri);
 		}
 	}
 
@@ -773,12 +733,20 @@ public class ConversationActivity extends BriarActivity
 
 	@Override
 	public void onSendClick(String text) {
-		if (text.equals("")) return;
+		if (text.equals("")) {
+			return;
+		}
+
 		text = StringUtils.truncateUtf8(text, MAX_PRIVATE_MESSAGE_BODY_LENGTH);
 		long timestamp = System.currentTimeMillis();
 		timestamp = Math.max(timestamp, getMinTimestampForNewMessage());
-		if (messagingGroupId == null) loadGroupId(text, timestamp);
-		else createMessage(text, timestamp);
+
+		if (messagingGroupId == null) {
+			loadGroupId(text, timestamp);
+		}
+
+		//createMessage(text, timestamp);
+		textInputView.clearSelectedMediaDrawer();
 		textInputView.setText("");
 	}
 
@@ -791,8 +759,7 @@ public class ConversationActivity extends BriarActivity
 	private void loadGroupId(String body, long timestamp) {
 		runOnDbThread(() -> {
 			try {
-				messagingGroupId =
-						messagingManager.getConversationId(contactId);
+				messagingGroupId = messagingManager.getConversationId(contactId);
 				createMessage(body, timestamp);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
@@ -805,8 +772,7 @@ public class ConversationActivity extends BriarActivity
 		cryptoExecutor.execute(() -> {
 			try {
 				//noinspection ConstantConditions init in loadGroupId()
-				storeMessage(privateMessageFactory.createPrivateMessage(
-						messagingGroupId, timestamp, body), body);
+				storeMessage(privateMessageFactory.createPrivateMessage(messagingGroupId, timestamp, body), body);
 			} catch (FormatException e) {throw new RuntimeException(e);
 			}
 		});
@@ -818,12 +784,22 @@ public class ConversationActivity extends BriarActivity
 				long now = System.currentTimeMillis();
 				messagingManager.addLocalMessage(m);
 				long duration = System.currentTimeMillis() - now;
-				if (LOG.isLoggable(INFO))
+
+				if (LOG.isLoggable(INFO)) {
 					LOG.info("Storing message took " + duration + " ms");
+				}
+
 				Message message = m.getMessage();
 				PrivateMessageHeader h = new PrivateMessageHeader(
-						message.getId(), message.getGroupId(),
-						message.getTimestamp(), true, false, false, false);
+						message.getId(),
+						message.getGroupId(),
+						message.getTimestamp(),
+						true,
+						false,
+						false,
+						false
+				);
+
 				ConversationItem item = ConversationItem.from(h);
 				item.setBody(body);
 				bodyCache.put(message.getId(), body);

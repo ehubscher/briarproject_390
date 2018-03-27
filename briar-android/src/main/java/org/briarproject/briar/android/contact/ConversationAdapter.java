@@ -32,10 +32,9 @@ class ConversationAdapter
 	}
 
 	@Override
-	public ConversationItemViewHolder onCreateViewHolder(ViewGroup viewGroup,
-			@LayoutRes int type) {
-		View v = LayoutInflater.from(viewGroup.getContext()).inflate(
-				type, viewGroup, false);
+	public ConversationItemViewHolder onCreateViewHolder(ViewGroup viewGroup, @LayoutRes int type) {
+		View v = LayoutInflater.from(viewGroup.getContext()).inflate(type, viewGroup, false);
+
 		switch (type) {
 			case R.layout.list_item_conversation_msg_in:
 				return new ConversationItemViewHolder(v);

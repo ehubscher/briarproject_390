@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -39,6 +40,7 @@ import javax.inject.Inject;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static java.util.logging.Level.WARNING;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
 import static org.briarproject.briar.api.blog.BlogConstants.MAX_BLOG_POST_BODY_LENGTH;
 
 public class WriteBlogPostActivity extends BriarActivity
@@ -78,14 +80,10 @@ public class WriteBlogPostActivity extends BriarActivity
 		input.setSendButtonEnabled(false);
 		input.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-			}
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
 			@Override
 			public void afterTextChanged(Editable s) {
@@ -182,6 +180,18 @@ public class WriteBlogPostActivity extends BriarActivity
 	protected void onActivityResult(int request, int result, Intent data) {
 		super.onActivityResult(request, result, data);
 
+		//to recognize when the user comes back from the image selector
+		if(request == input.ATTACH_IMAGES) {
+			Uri selectedMediaUri = data.getData();
+			input.addMedia(selectedMediaUri);
+		}
+	}
+
+	/*
+	@Override
+	protected void onActivityResult(int request, int result, Intent data) {
+		super.onActivityResult(request, result, data);
+
 		//Check if a valid image is selected
 		boolean isImageSelected = (request == PICK_IMAGE && result == RESULT_OK && data.getData() != null);
 
@@ -206,5 +216,5 @@ public class WriteBlogPostActivity extends BriarActivity
 			}
 		}
 	}
-
+	*/
 }

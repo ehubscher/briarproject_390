@@ -29,19 +29,24 @@ class MessageFactoryImpl implements MessageFactory {
 	}
 
 	@Override
-	public Message createMessage(GroupId g, long timestamp, byte[] body) {
-		if (body.length > MAX_MESSAGE_BODY_LENGTH)
+	public Message createMessage(GroupId groupId, long timestamp, byte[] body) {
+		if (body.length > MAX_MESSAGE_BODY_LENGTH) {
 			throw new IllegalArgumentException();
+		}
+
+		byte[] groupIdBytes = groupId.getBytes();
 		byte[] timeBytes = new byte[ByteUtils.INT_64_BYTES];
-		ByteUtils.writeUint64(timestamp, timeBytes, 0);
-		byte[] hash = crypto.hash(LABEL, new byte[] {PROTOCOL_VERSION},
-				g.getBytes(), timeBytes, body);
-		MessageId id = new MessageId(hash);
+		byte[] hash = crypto.hash(LABEL, new byte[] {PROTOCOL_VERSION}, groupIdBytes, timeBytes, body);
 		byte[] raw = new byte[MESSAGE_HEADER_LENGTH + body.length];
-		System.arraycopy(g.getBytes(), 0, raw, 0, UniqueId.LENGTH);
+
+		ByteUtils.writeUint64(timestamp, timeBytes, 0);
+		MessageId id = new MessageId(hash);
+
+		System.arraycopy(groupIdBytes, 0, raw, 0, UniqueId.LENGTH);
 		ByteUtils.writeUint64(timestamp, raw, UniqueId.LENGTH);
 		System.arraycopy(body, 0, raw, MESSAGE_HEADER_LENGTH, body.length);
-		return new Message(id, g, timestamp, raw);
+
+		return new Message(id, groupId, timestamp, raw);
 	}
 
 	@Override
