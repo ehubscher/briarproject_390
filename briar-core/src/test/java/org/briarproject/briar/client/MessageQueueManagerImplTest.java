@@ -136,7 +136,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		// The message is too short to be a valid queue message
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH - 1];
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 
 		context.checking(new Expectations() {{
 			oneOf(validationManager).registerMessageValidator(with(clientId),
@@ -181,7 +181,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH];
 		for (int i = 0; i < 8; i++)
 			raw[MESSAGE_HEADER_LENGTH + i] = (byte) 0xFF;
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 
 		context.checking(new Expectations() {{
 			oneOf(validationManager).registerMessageValidator(with(clientId),
@@ -227,7 +227,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		// The message is valid, with a queue position of zero
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH];
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 
 		context.checking(new Expectations() {{
 			oneOf(validationManager).registerMessageValidator(with(clientId),
@@ -275,7 +275,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		// The message has queue position 0
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH];
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 
 		context.checking(new Expectations() {{
 			oneOf(validationManager).registerIncomingMessageHook(with(clientId),
@@ -327,7 +327,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH];
 		ByteUtils.writeUint64(1L, raw, MESSAGE_HEADER_LENGTH);
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 		BdfList pending = BdfList.of(BdfList.of(1L, messageId));
 
 		context.checking(new Expectations() {{
@@ -381,7 +381,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		// The message has queue position 0
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH];
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 		Metadata messageMetadata = new Metadata();
 
 		context.checking(new Expectations() {{
@@ -438,7 +438,7 @@ public class MessageQueueManagerImplTest extends BriarTestCase {
 		// The message has queue position 0
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		byte[] raw = new byte[QUEUE_MESSAGE_HEADER_LENGTH];
-		Message message = new Message(messageId, groupId, timestamp, raw);
+		Message message = new Message(messageId, groupId, timestamp, raw, false);
 		Metadata messageMetadata = new Metadata();
 		// Queue position 1 is pending
 		MessageId messageId1 = new MessageId(TestUtils.getRandomId());

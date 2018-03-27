@@ -62,11 +62,11 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 	private final long timestamp = System.currentTimeMillis();
 	private final byte[] raw = new byte[123];
 	private final Message message = new Message(messageId, groupId, timestamp,
-			raw);
+			raw, false);
 	private final Message message1 = new Message(messageId1, groupId, timestamp,
-			raw);
+			raw, false);
 	private final Message message2 = new Message(messageId2, groupId, timestamp,
-			raw);
+			raw, false);
 
 	private final Metadata metadata = new Metadata();
 	private final MessageContext validResult = new MessageContext(metadata);
@@ -822,9 +822,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 		MessageId messageId3 = new MessageId(TestUtils.getRandomId());
 		MessageId messageId4 = new MessageId(TestUtils.getRandomId());
 		Message message3 = new Message(messageId3, groupId, timestamp,
-				raw);
+				raw, false);
 		Message message4 = new Message(messageId4, groupId, timestamp,
-				raw);
+				raw, false);
 		Map<MessageId, State> twoDependents = new LinkedHashMap<>();
 		twoDependents.put(messageId1, PENDING);
 		twoDependents.put(messageId2, PENDING);

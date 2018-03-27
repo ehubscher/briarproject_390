@@ -99,7 +99,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 		messageId = new MessageId(TestUtils.getRandomId());
 		size = 1234;
 		raw = TestUtils.getRandomBytes(size);
-		message = new Message(messageId, groupId, timestamp, raw);
+		message = new Message(messageId, groupId, timestamp, raw, false);
 		transportId = new TransportId("id");
 		contactId = new ContactId(1);
 	}
@@ -384,7 +384,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 
 		// Add some messages to ack
 		MessageId messageId1 = new MessageId(TestUtils.getRandomId());
-		Message message1 = new Message(messageId1, groupId, timestamp, raw);
+		Message message1 = new Message(messageId1, groupId, timestamp, raw, false);
 		db.addMessage(txn, message, DELIVERED, true);
 		db.addStatus(txn, contactId, messageId, false, true);
 		db.raiseAckFlag(txn, contactId, messageId);
@@ -446,7 +446,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 	public void testGetFreeSpace() throws Exception {
 		byte[] largeBody = new byte[MAX_MESSAGE_LENGTH];
 		for (int i = 0; i < largeBody.length; i++) largeBody[i] = (byte) i;
-		Message message = new Message(messageId, groupId, timestamp, largeBody);
+		Message message = new Message(messageId, groupId, timestamp, largeBody, false);
 		Database<Connection> db = open(false);
 
 		// Sanity check: there should be enough space on disk for this test
@@ -1057,7 +1057,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 	@Test
 	public void testMetadataQueries() throws Exception {
 		MessageId messageId1 = new MessageId(TestUtils.getRandomId());
-		Message message1 = new Message(messageId1, groupId, timestamp, raw);
+		Message message1 = new Message(messageId1, groupId, timestamp, raw, false);
 
 		Database<Connection> db = open(false);
 		Connection txn = db.startTransaction();
@@ -1161,7 +1161,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 	@Test
 	public void testMetadataQueriesOnlyForDeliveredMessages() throws Exception {
 		MessageId messageId1 = new MessageId(TestUtils.getRandomId());
-		Message message1 = new Message(messageId1, groupId, timestamp, raw);
+		Message message1 = new Message(messageId1, groupId, timestamp, raw, false);
 
 		Database<Connection> db = open(false);
 		Connection txn = db.startTransaction();
@@ -1235,8 +1235,8 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 		MessageId messageId2 = new MessageId(TestUtils.getRandomId());
 		MessageId messageId3 = new MessageId(TestUtils.getRandomId());
 		MessageId messageId4 = new MessageId(TestUtils.getRandomId());
-		Message message1 = new Message(messageId1, groupId, timestamp, raw);
-		Message message2 = new Message(messageId2, groupId, timestamp, raw);
+		Message message1 = new Message(messageId1, groupId, timestamp, raw, false);
+		Message message2 = new Message(messageId2, groupId, timestamp, raw, false);
 
 		Database<Connection> db = open(false);
 		Connection txn = db.startTransaction();
@@ -1322,7 +1322,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 
 		// Add a message to the second group
 		MessageId messageId1 = new MessageId(TestUtils.getRandomId());
-		Message message1 = new Message(messageId1, groupId1, timestamp, raw);
+		Message message1 = new Message(messageId1, groupId1, timestamp, raw, false);
 		db.addMessage(txn, message1, DELIVERED, true);
 
 		// Create an ID for a missing message
@@ -1330,7 +1330,7 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 
 		// Add another message to the first group
 		MessageId messageId3 = new MessageId(TestUtils.getRandomId());
-		Message message3 = new Message(messageId3, groupId, timestamp, raw);
+		Message message3 = new Message(messageId3, groupId, timestamp, raw, false);
 		db.addMessage(txn, message3, DELIVERED, true);
 
 		// Add dependencies between the messages
@@ -1368,10 +1368,10 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 		MessageId mId2 = new MessageId(TestUtils.getRandomId());
 		MessageId mId3 = new MessageId(TestUtils.getRandomId());
 		MessageId mId4 = new MessageId(TestUtils.getRandomId());
-		Message m1 = new Message(mId1, groupId, timestamp, raw);
-		Message m2 = new Message(mId2, groupId, timestamp, raw);
-		Message m3 = new Message(mId3, groupId, timestamp, raw);
-		Message m4 = new Message(mId4, groupId, timestamp, raw);
+		Message m1 = new Message(mId1, groupId, timestamp, raw, false);
+		Message m2 = new Message(mId2, groupId, timestamp, raw, false);
+		Message m3 = new Message(mId3, groupId, timestamp, raw, false);
+		Message m4 = new Message(mId4, groupId, timestamp, raw, false);
 
 		Database<Connection> db = open(false);
 		Connection txn = db.startTransaction();
@@ -1405,10 +1405,10 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 		MessageId mId2 = new MessageId(TestUtils.getRandomId());
 		MessageId mId3 = new MessageId(TestUtils.getRandomId());
 		MessageId mId4 = new MessageId(TestUtils.getRandomId());
-		Message m1 = new Message(mId1, groupId, timestamp, raw);
-		Message m2 = new Message(mId2, groupId, timestamp, raw);
-		Message m3 = new Message(mId3, groupId, timestamp, raw);
-		Message m4 = new Message(mId4, groupId, timestamp, raw);
+		Message m1 = new Message(mId1, groupId, timestamp, raw, false);
+		Message m2 = new Message(mId2, groupId, timestamp, raw, false);
+		Message m3 = new Message(mId3, groupId, timestamp, raw, false);
+		Message m4 = new Message(mId4, groupId, timestamp, raw, false);
 
 		Database<Connection> db = open(false);
 		Connection txn = db.startTransaction();

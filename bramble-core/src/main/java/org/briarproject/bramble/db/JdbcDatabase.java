@@ -144,6 +144,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 					+ " shared BOOLEAN NOT NULL,"
 					+ " length INT NOT NULL,"
 					+ " raw BLOB," // Null if message has been deleted
+					+ " pinned BOOLEAN NOT NULL,"
 					+ " PRIMARY KEY (messageId),"
 					+ " FOREIGN KEY (groupId)"
 					+ " REFERENCES groups (groupId)"
@@ -613,8 +614,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 		PreparedStatement ps = null;
 		try {
 			String sql = "INSERT INTO messages (messageId, groupId, timestamp,"
-					+ " state, shared, length, raw)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ " state, shared, length, raw, pinned)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = txn.prepareStatement(sql);
 			ps.setBytes(1, m.getId().getBytes());
 			ps.setBytes(2, m.getGroupId().getBytes());
@@ -624,6 +625,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			byte[] raw = m.getRaw();
 			ps.setInt(6, raw.length);
 			ps.setBytes(7, raw);
+			ps.setBoolean(8, m.isPinned());
 			int affected = ps.executeUpdate();
 			if (affected != 1) throw new DbStateException();
 			ps.close();
