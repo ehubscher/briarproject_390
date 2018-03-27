@@ -1883,27 +1883,50 @@ abstract class JdbcDatabase implements Database<Connection> {
 
 	@Override
 	@Nullable
-	public byte[] getRawMessage(Connection txn, MessageId m)
+	public byte[] getRawMessage(Connection connection, MessageId messageId)
 			throws DbException {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			String sql = "SELECT raw FROM messages WHERE messageId = ?";
-			ps = txn.prepareStatement(sql);
-			ps.setBytes(1, m.getBytes());
-			rs = ps.executeQuery();
-			if (!rs.next()) throw new DbStateException();
-			byte[] raw = rs.getBytes(1);
-			if (rs.next()) throw new DbStateException();
-			rs.close();
-			ps.close();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setBytes(1, messageId.getBytes());
+			resultSet = preparedStatement.executeQuery();
+			if (!resultSet.next()) throw new DbStateException();
+			byte[] raw = resultSet.getBytes(1);
+			if (resultSet.next()) throw new DbStateException();
+			resultSet.close();
+			preparedStatement.close();
 			return raw;
 		} catch (SQLException e) {
-			tryToClose(rs);
-			tryToClose(ps);
+			tryToClose(resultSet);
+			tryToClose(preparedStatement);
 			throw new DbException(e);
 		}
 	}
+
+    @Nullable
+    public boolean isMessagePinned(Connection txn, MessageId m)
+            throws DbException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT pinned FROM messages WHERE messageId = ?";
+            ps = txn.prepareStatement(sql);
+            ps.setBytes(1, m.getBytes());
+            rs = ps.executeQuery();
+            if (!rs.next()) throw new DbStateException();
+            Boolean pinned = rs.getBoolean(1);
+            if (rs.next()) throw new DbStateException();
+            rs.close();
+            ps.close();
+            return pinned;
+        } catch (SQLException e) {
+            tryToClose(rs);
+            tryToClose(ps);
+            throw new DbException(e);
+        }
+    }
 
 	@Override
 	public Collection<MessageId> getRequestedMessagesToSend(Connection txn,

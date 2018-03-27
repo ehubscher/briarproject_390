@@ -53,4 +53,14 @@ class MessageFactoryImpl implements MessageFactory {
 		long timestamp = ByteUtils.readUint64(raw, UniqueId.LENGTH);
 		return new Message(m, new GroupId(groupId), timestamp, raw, false);
 	}
+
+	@Override
+	public Message createMessage(MessageId m, byte[] raw, Boolean pinned) {
+		if (raw.length < MESSAGE_HEADER_LENGTH)
+			throw new IllegalArgumentException();
+		byte[] groupId = new byte[UniqueId.LENGTH];
+		System.arraycopy(raw, 0, groupId, 0, UniqueId.LENGTH);
+		long timestamp = ByteUtils.readUint64(raw, UniqueId.LENGTH);
+		return new Message(m, new GroupId(groupId), timestamp, raw, pinned);
+	}
 }

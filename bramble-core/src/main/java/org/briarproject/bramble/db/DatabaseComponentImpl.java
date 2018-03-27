@@ -494,6 +494,16 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 		return db.getRawMessage(txn, m);
 	}
 
+	@Nullable
+	@Override
+	public Boolean isMessagePinned(Transaction transaction, MessageId messageId)
+			throws DbException {
+		T newTransaction = unbox(transaction);
+		if (!db.containsMessage(newTransaction, messageId))
+			throw new NoSuchMessageException();
+		return db.isMessagePinned(newTransaction, messageId);
+	}
+
 	@Override
 	public Map<MessageId, Metadata> getMessageMetadata(Transaction transaction,
 			GroupId g) throws DbException {

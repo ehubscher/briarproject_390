@@ -464,6 +464,12 @@ interface Database<T> {
 	byte[] getRawMessage(T txn, MessageId m) throws DbException;
 
 	/**
+	 * Returns if the message with the given ID is pinned
+	 */
+	@Nullable
+	boolean isMessagePinned(T txn, MessageId m) throws DbException;
+
+	/**
 	 * Returns the IDs of some messages that are eligible to be sent to the
 	 * given contact and have been requested by the contact, up to the given
 	 * total length.
