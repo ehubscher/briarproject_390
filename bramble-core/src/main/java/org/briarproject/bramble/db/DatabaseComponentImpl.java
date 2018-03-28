@@ -496,13 +496,24 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 
 	@Nullable
 	@Override
-	public Boolean isMessagePinned(Transaction transaction, MessageId messageId)
+	public boolean isMessagePinned(Transaction transaction, MessageId messageId)
 			throws DbException {
 		T newTransaction = unbox(transaction);
 		if (!db.containsMessage(newTransaction, messageId))
 			throw new NoSuchMessageException();
 		return db.isMessagePinned(newTransaction, messageId);
 	}
+
+    @Override
+    public void setMessagePinned(Transaction transaction, boolean pinned, MessageId messageId) throws DbException {
+        if (transaction.isReadOnly()){
+            throw new IllegalArgumentException();
+        }
+        T newTransaction = unbox(transaction);
+        if (!db.containsMessage(newTransaction, messageId))
+            throw new NoSuchMessageException();
+        db.setMessagePinned(newTransaction, pinned, messageId);
+    }
 
 	@Override
 	public Map<MessageId, Metadata> getMessageMetadata(Transaction transaction,

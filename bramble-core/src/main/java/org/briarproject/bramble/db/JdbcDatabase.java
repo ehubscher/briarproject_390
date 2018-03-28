@@ -1928,6 +1928,23 @@ abstract class JdbcDatabase implements Database<Connection> {
         }
     }
 
+    @Override
+    public void setMessagePinned(Connection connection, boolean pinned, MessageId messageId) throws DbException {
+        PreparedStatement preparedStatement = null;
+        try {
+            String sql = "UPDATE messages SET pinned = ? WHERE messageId = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1, pinned);
+            preparedStatement.setBytes(2, messageId.getBytes());
+            int affected = preparedStatement.executeUpdate();
+            if (affected < 0 || affected > 1) throw new DbStateException();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            tryToClose(preparedStatement);
+            throw new DbException(e);
+        }
+    }
+
 	@Override
 	public Collection<MessageId> getRequestedMessagesToSend(Connection txn,
 			ContactId c, int maxLength) throws DbException {

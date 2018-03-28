@@ -128,8 +128,8 @@ class ValidationManagerImpl implements ValidationManager, Service,
 			try {
 				MessageId id = unvalidated.poll();
 				byte[] raw = db.getRawMessage(txn, id);
-				boolean pinned = db.isMessagePinned(txn, id);
 				if (raw == null) throw new DbException();
+                boolean pinned = db.isMessagePinned(txn, id);
 				m = messageFactory.createMessage(id, raw, pinned);
 				g = db.getGroup(txn, m.getGroupId());
 				db.commitTransaction(txn);
@@ -198,8 +198,8 @@ class ValidationManagerImpl implements ValidationManager, Service,
 						invalidate = getDependentsToInvalidate(txn, id);
 					} else if (allDelivered) {
 						byte[] raw = db.getRawMessage(txn, id);
-						boolean pinned = db.isMessagePinned(txn, id);
 						if (raw == null) throw new DbException();
+                        boolean pinned = db.isMessagePinned(txn, id);
 						Message m = messageFactory.createMessage(id, raw, pinned);
 						Group g = db.getGroup(txn, m.getGroupId());
 						ClientId c = g.getClientId();

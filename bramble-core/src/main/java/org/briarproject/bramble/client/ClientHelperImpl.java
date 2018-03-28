@@ -114,7 +114,7 @@ class ClientHelperImpl implements ClientHelper {
 	@Override
 	public Message getMessage(Transaction txn, MessageId m) throws DbException {
 		byte[] raw = db.getRawMessage(txn, m);
-		Boolean pinned = db.isMessagePinned(txn, m);
+		boolean pinned = db.isMessagePinned(txn, m);
 		if (raw == null) return null;
 		return messageFactory.createMessage(m, raw, pinned);
 	}

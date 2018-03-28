@@ -470,6 +470,11 @@ interface Database<T> {
 	boolean isMessagePinned(T txn, MessageId m) throws DbException;
 
 	/**
+     * Set the message has pinned or not
+     */
+    void setMessagePinned(T transaction, boolean pinned, MessageId messageId) throws DbException;
+
+	/**
 	 * Returns the IDs of some messages that are eligible to be sent to the
 	 * given contact and have been requested by the contact, up to the given
 	 * total length.
