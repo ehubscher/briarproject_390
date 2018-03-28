@@ -61,6 +61,7 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 	private final Group group = new Group(groupId, clientId, descriptor);
 	private final long timestamp = System.currentTimeMillis();
 	private final byte[] raw = new byte[123];
+	private final boolean pinned = false;
 	private final Message message = new Message(messageId, groupId, timestamp,
 			raw, false);
 	private final Message message1 = new Message(messageId1, groupId, timestamp,
@@ -147,7 +148,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			will(returnValue(txn1));
 			oneOf(db).getRawMessage(txn1, messageId);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId, raw);
+            oneOf(db).isMessagePinned(txn1, messageId);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId, raw, pinned);
 			will(returnValue(message));
 			oneOf(db).getGroup(txn1, groupId);
 			will(returnValue(group));
@@ -174,7 +177,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			will(returnValue(txn3));
 			oneOf(db).getRawMessage(txn3, messageId1);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId1, raw);
+            oneOf(db).isMessagePinned(txn3, messageId1);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId1, raw, pinned);
 			will(returnValue(message1));
 			oneOf(db).getGroup(txn3, groupId);
 			will(returnValue(group));
@@ -248,7 +253,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			// Get the message and its metadata to deliver
 			oneOf(db).getRawMessage(txn2, messageId);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId, raw);
+            oneOf(db).isMessagePinned(txn2, messageId);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId, raw, pinned);
 			will(returnValue(message));
 			oneOf(db).getGroup(txn2, groupId);
 			will(returnValue(group));
@@ -273,7 +280,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			// Get the dependent and its metadata to deliver
 			oneOf(db).getRawMessage(txn3, messageId2);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId2, raw);
+            oneOf(db).isMessagePinned(txn3, messageId2);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId2, raw, pinned);
 			will(returnValue(message2));
 			oneOf(db).getGroup(txn3, groupId);
 			will(returnValue(group));
@@ -432,7 +441,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			will(returnValue(txn2));
 			oneOf(db).getRawMessage(txn2, messageId1);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId1, raw);
+            oneOf(db).isMessagePinned(txn2, messageId1);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId1, raw, pinned);
 			will(returnValue(message1));
 			oneOf(db).getGroup(txn2, groupId);
 			will(returnValue(group));
@@ -496,7 +507,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			will(returnValue(txn1));
 			oneOf(db).getRawMessage(txn1, messageId);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId, raw);
+            oneOf(db).isMessagePinned(txn1, messageId);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId, raw, pinned);
 			will(returnValue(message));
 			// Load the group - *gasp* it's gone!
 			oneOf(db).getGroup(txn1, groupId);
@@ -508,7 +521,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			will(returnValue(txn2));
 			oneOf(db).getRawMessage(txn2, messageId1);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId1, raw);
+            oneOf(db).isMessagePinned(txn2, messageId1);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId1, raw, pinned);
 			will(returnValue(message1));
 			oneOf(db).getGroup(txn2, groupId);
 			will(returnValue(group));
@@ -873,7 +888,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			// Get message 1 and its metadata
 			oneOf(db).getRawMessage(txn2, messageId1);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId1, raw);
+            oneOf(db).isMessagePinned(txn2, messageId1);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId1, raw, pinned);
 			will(returnValue(message1));
 			oneOf(db).getGroup(txn2, groupId);
 			will(returnValue(group));
@@ -898,7 +915,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			// Get message 2 and its metadata
 			oneOf(db).getRawMessage(txn3, messageId2);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId2, raw);
+            oneOf(db).isMessagePinned(txn3, messageId2);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId2, raw, pinned);
 			will(returnValue(message2));
 			oneOf(db).getGroup(txn3, groupId);
 			will(returnValue(group));
@@ -923,7 +942,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			// Get message 3 and its metadata
 			oneOf(db).getRawMessage(txn4, messageId3);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId3, raw);
+            oneOf(db).isMessagePinned(txn4, messageId3);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId3, raw , pinned);
 			will(returnValue(message3));
 			oneOf(db).getGroup(txn4, groupId);
 			will(returnValue(group));
@@ -954,7 +975,9 @@ public class ValidationManagerImplTest extends BrambleMockTestCase {
 			// Get message 4 and its metadata
 			oneOf(db).getRawMessage(txn6, messageId4);
 			will(returnValue(raw));
-			oneOf(messageFactory).createMessage(messageId4, raw);
+            oneOf(db).isMessagePinned(txn6, messageId4);
+            will(returnValue(pinned));
+			oneOf(messageFactory).createMessage(messageId4, raw, pinned);
 			will(returnValue(message4));
 			oneOf(db).getGroup(txn6, groupId);
 			will(returnValue(group));
