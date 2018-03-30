@@ -31,7 +31,7 @@ jobs:
           sonar-scanner
       - stage: test
         script:
-          ./gradlew test --rerun-tasks --continue
+          ./gradlew test --debug --rerun-tasks --continue
 cache:
   directories:
     - '$HOME/.m2/repository'
