@@ -17,22 +17,21 @@ addons:
 before_install:
   - yes | sdkmanager "platforms;android-27"
 stages:
-  - static_analysis
   - compile
+  - static_analysis
   - test
 
 jobs:
     include:
-    - stage: sonar
-      script:
-      sonar-scanner
       - stage: compile
         script:
           ./gradlew clean assemble
+      - stage: sonar
+        script:
+          sonar-scanner
       - stage: test
         script:
           ./gradlew test --rerun-tasks --continue
-
 cache:
   directories:
     - '$HOME/.m2/repository'
