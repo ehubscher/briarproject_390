@@ -18,7 +18,7 @@ before_install:
   - yes | sdkmanager "platforms;android-27"
 stages:
   - compile
-  - static_analysis
+  - sonar
   - test
 
 jobs:
