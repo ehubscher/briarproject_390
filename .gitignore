@@ -27,3 +27,4 @@ projectFilesBackup/
 
 # Visual Studio Code
 .vscode/
+/bin/

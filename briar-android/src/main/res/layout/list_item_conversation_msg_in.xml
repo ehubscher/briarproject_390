@@ -19,6 +19,12 @@
 		android:textSize="@dimen/text_size_medium"
 		tools:text="Short message"/>
 
+	<android.support.design.widget.VisibilityAwareImageButton
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="right|top"
+		android:src="@drawable/ic_bookmark_black_24dp"/>
+	
     <ImageView
         android:layout_below="@id/text"
         android:id="@+id/imageView"
