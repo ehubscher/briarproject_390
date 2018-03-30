@@ -9,6 +9,7 @@ import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ class ConversationItemViewHolder extends ViewHolder {
 	private final TextView text;
 	private final TextView time;
 	private final ImageView imageView;
+	private final ImageButton pinned;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -50,6 +52,7 @@ class ConversationItemViewHolder extends ViewHolder {
 		text = v.findViewById(R.id.text);
 		time = v.findViewById(R.id.time);
 		imageView = v.findViewById(R.id.imageView);
+		pinned = v.findViewById(R.id.pin_message_bookmark);
 	}
 
 	@CallSuper
@@ -73,6 +76,18 @@ class ConversationItemViewHolder extends ViewHolder {
 			else{
 				text.setText(StringUtils.trim(item.getBody()));
 			}
+		}
+
+		if(item.getClass() == ConversationMessageInItem.class) {
+			//Set image button listener
+			pinned.setOnClickListener(new View.OnClickListener() {
+				//bookmark icon is changed to filled
+				@Override
+				public void onClick(View v) {
+					pinned.setActivated(true);
+					pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
+				}
+			});
 		}
 
 		long timestamp = item.getTime();

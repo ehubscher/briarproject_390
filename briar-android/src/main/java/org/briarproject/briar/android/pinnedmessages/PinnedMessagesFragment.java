@@ -12,9 +12,9 @@ import org.briarproject.briar.R;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PinnedMessagesActivityFragment extends Fragment {
+public class PinnedMessagesFragment extends Fragment {
 
-    public PinnedMessagesActivityFragment() {
+    public PinnedMessagesFragment() {
     }
 
     @Override

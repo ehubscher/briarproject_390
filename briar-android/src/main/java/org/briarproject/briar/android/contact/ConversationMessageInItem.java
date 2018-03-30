@@ -13,7 +13,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 class ConversationMessageInItem extends ConversationItem {
 
 	ConversationMessageInItem(PrivateMessageHeader h) {
-		super(h.getId(), h.getGroupId(), null, h.getTimestamp(), h.isRead());
+		super(h.getId(), h.getGroupId(), null, h.getTimestamp(), h.isRead(), false);
 	}
 
 	@Override

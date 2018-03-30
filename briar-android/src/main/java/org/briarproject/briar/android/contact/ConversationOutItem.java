@@ -15,7 +15,7 @@ abstract class ConversationOutItem extends ConversationItem {
 
 	ConversationOutItem(MessageId id, GroupId groupId, @Nullable String text,
 			long time, boolean sent, boolean seen) {
-		super(id, groupId, text, time, true);
+		super(id, groupId, text, time, true, false);
 
 		this.sent = sent;
 		this.seen = seen;
