@@ -19,12 +19,15 @@
 		android:textSize="@dimen/text_size_medium"
 		tools:text="Short message"/>
 
-	<android.support.design.widget.VisibilityAwareImageButton
+	<ImageButton
+		android:id="@+id/pin_message_bookmark"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="right|top"
-		android:src="@drawable/ic_bookmark_black_24dp"/>
-	
+		android:src="@drawable/ic_bookmark_border_black_24dp"
+		android:background="?android:attr/selectableItemBackground"
+		/>
+
     <ImageView
         android:layout_below="@id/text"
         android:id="@+id/imageView"
