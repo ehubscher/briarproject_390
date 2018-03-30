@@ -23,15 +23,16 @@ stages:
 
 jobs:
     include:
+    - stage: sonar
+      script:
+      sonar-scanner
       - stage: compile
         script:
           ./gradlew clean assemble
       - stage: test
         script:
           ./gradlew test --rerun-tasks --continue
-      - stage: sonar
-        script:
-          sonar-scanner
+
 cache:
   directories:
     - '$HOME/.m2/repository'
