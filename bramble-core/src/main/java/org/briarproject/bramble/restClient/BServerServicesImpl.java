@@ -28,6 +28,7 @@ public class BServerServicesImpl implements BServerServices{
     private volatile static SavedUser createdUser = null;
     private volatile static String resultFromQueryCreateUser = null;
     private volatile static String resultFromQueryUpdateUser = null;
+    private volatile static Boolean resultFromQueryExists = false;
     private int TIME_WAITING = 1;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
@@ -210,5 +211,28 @@ public class BServerServicesImpl implements BServerServices{
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }
         return (resultFromQueryUpdateUser != null && !resultFromQueryUpdateUser.isEmpty());
+    }
+
+    @Override
+    public boolean DoesUsernameExistsInDB(String username) {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                if(username.equals("Bob")){
+                    //TODO: Implements the query that is getting to db and checking if user exists
+                    resultFromQueryExists = true;
+                }else{
+                    resultFromQueryExists = false;
+                }
+            }
+        });
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
+        }
+        return resultFromQueryExists;
     }
 }

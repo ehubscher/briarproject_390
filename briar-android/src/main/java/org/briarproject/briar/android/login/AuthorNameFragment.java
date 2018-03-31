@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -24,6 +25,7 @@ public class AuthorNameFragment extends SetupFragment {
 	private TextInputLayout authorNameWrapper;
 	private TextInputEditText authorNameInput;
 	private Button nextButton;
+	private BServerServicesImpl services = new BServerServicesImpl();;
 
 	public static AuthorNameFragment newInstance() {
 		return new AuthorNameFragment();
@@ -41,7 +43,6 @@ public class AuthorNameFragment extends SetupFragment {
 
 		authorNameInput.addTextChangedListener(this);
 		nextButton.setOnClickListener(this);
-
 		return v;
 	}
 
@@ -74,7 +75,13 @@ public class AuthorNameFragment extends SetupFragment {
 
 	@Override
 	public void onClick(View view) {
-		setupController.setAuthorName(authorNameInput.getText().toString());
+	    // Prevent user from taking already taken username
+        boolean alreadyTaken = services.DoesUsernameExistsInDB(authorNameInput.getText().toString());
+        setError(authorNameWrapper, getString(R.string.name_already_taken), alreadyTaken);
+        authorNameInput
+                .setImeOptions(alreadyTaken? IME_ACTION_NEXT : IME_ACTION_NONE);
+        authorNameInput.setOnEditorActionListener(alreadyTaken ? this : null);
+		if(!alreadyTaken)setupController.setAuthorName(authorNameInput.getText().toString());
 	}
 
 }

@@ -18,6 +18,8 @@ import retrofit2.http.Path;
  */
 
 public interface BriarServerService {
+
+
     ServerConfig config = ServerConfig.getServerConfig();
     /**
      * This method is made to get info from a user
@@ -57,6 +59,10 @@ public interface BriarServerService {
     @Headers("Content-Type: application/json")
     @PUT("users/{userID}/profile")
     Call<String> updateUserSettings(@Path("userID") String userID, @Body String bodyJSON);
+
+    @Headers("Content-Type: application/json")
+    @PUT("DoesItExists/{userID}")
+    Call<String> DoesItExist(@Path("userID") String userID);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(config.getServerAddress())

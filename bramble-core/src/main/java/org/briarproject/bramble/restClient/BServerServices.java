@@ -37,4 +37,11 @@ public interface BServerServices {
      */
     boolean updateUserSettingInfo(SavedUser savedUser);
 
+    /**
+     * Does the username exists in db
+     * @param username username we want to know
+     * @return True -> It exists, False -> Doesn't exists
+     */
+    boolean DoesUsernameExistsInDB(String username);
+
 }
