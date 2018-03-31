@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS `briar_server`.`users` (
   `password` VARCHAR(64) NOT NULL,
   `ip` VARCHAR(20) NULL DEFAULT NULL,
   `port` INT(5) UNSIGNED NOT NULL,
+  `status_id` INT(1) UNSIGNED NOT NULL,
+  `avatar_id` INT(2) UNSIGNED NOT NULL,
   `is_active` TINYINT(1) NOT NULL,
   `created` TIMESTAMP NULL DEFAULT NULL,
   `modified` TIMESTAMP NULL DEFAULT NULL,
