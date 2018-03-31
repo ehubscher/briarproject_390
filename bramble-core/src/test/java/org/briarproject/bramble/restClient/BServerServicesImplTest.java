@@ -81,6 +81,18 @@ public class BServerServicesImplTest {
 		Assert.assertTrue(e);
 	}
 
+	/**
+	 * Test the function DoesUsernameExistsInDB with default user Bob
+	 */
+	@Ignore
+	@Test
+	public void DoesUserExistsTest(){
+		BServerServicesImpl services = new BServerServicesImpl();
+		String defaultCreatedUser  = "Bob";
+		boolean result  = services.DoesUsernameExistsInDB(defaultCreatedUser);
+		Assert.assertTrue(result);
+	}
+
 	private String generateFakeUserName(){
 		String fakeUserName = "";
 		String allPossibleChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

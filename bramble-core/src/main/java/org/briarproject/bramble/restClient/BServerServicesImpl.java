@@ -215,13 +215,28 @@ public class BServerServicesImpl implements BServerServices{
 
     @Override
     public boolean DoesUsernameExistsInDB(String username) {
+        BriarServerService serv = ServerConfig.getServerService();
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 if(username.equals("Bob")){
-                    //TODO: Implements the query that is getting to db and checking if user exists
-                    resultFromQueryExists = true;
+                    serv.DoesItExists(username).enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if(response.body().toString().equals("true")){
+                                resultFromQueryExists = true;
+                            }else{
+                                resultFromQueryExists = false;
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            resultFromQueryExists =  false;
+                            LOG.info("BRIAR SERVER : IS DISABLE, RETURN FALSE DEFAULT");
+                        }
+                    });
                 }else{
                     resultFromQueryExists = false;
                 }

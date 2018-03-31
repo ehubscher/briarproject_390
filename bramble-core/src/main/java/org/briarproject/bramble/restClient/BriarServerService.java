@@ -7,6 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -61,8 +62,8 @@ public interface BriarServerService {
     Call<String> updateUserSettings(@Path("userID") String userID, @Body String bodyJSON);
 
     @Headers("Content-Type: application/json")
-    @PUT("DoesItExists/{userID}")
-    Call<String> DoesItExist(@Path("userID") String userID);
+    @GET("users/{userID}")
+    Call<String> DoesItExists(@Path("userID") String userID);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(config.getServerAddress())
