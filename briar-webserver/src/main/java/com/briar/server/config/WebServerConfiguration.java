@@ -1,5 +1,6 @@
 package com.briar.server.config;
 
+import com.briar.server.resources.ContactResource;
 import com.briar.server.resources.UsersResource;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
@@ -19,6 +20,7 @@ public class WebServerConfiguration extends ResourceConfig {
     }
 
     public void jerseyConfiguration() {
+        register(ContactResource.class);
         register(UsersResource.class);
     }
 
@@ -26,7 +28,7 @@ public class WebServerConfiguration extends ResourceConfig {
         register(ApiListingResource.class);
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1");
-        beanConfig.setSchemes(new String[]{"http", "https"});
+        beanConfig.setSchemes(new String[] { "http", "https" });
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/");
         beanConfig.setTitle("Briar WebServer API");
