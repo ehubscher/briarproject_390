@@ -39,16 +39,14 @@ abstract class ConversationItem {
 	private final GroupId groupId;
 	private final long time;
 	private boolean read;
-	private boolean pinned;
 
 	ConversationItem(MessageId id, GroupId groupId, @Nullable String body,
-					 long time, boolean read, boolean pinned) {
+					 long time, boolean read) {
 		this.id = id;
 		this.groupId = groupId;
 		this.body = body;
 		this.time = time;
 		this.read = read;
-		this.pinned = pinned;
 	}
 
 	MessageId getId() {
@@ -63,6 +61,8 @@ abstract class ConversationItem {
 		this.body = body;
 	}
 
+	public void setPinned(boolean pinned){};
+
 	@Nullable
 	public String getBody() {
 		return body;
@@ -75,8 +75,6 @@ abstract class ConversationItem {
 	public boolean isRead() {
 		return read;
 	}
-
-	public boolean isPinned() { return pinned; }
 
 	abstract public boolean isIncoming();
 

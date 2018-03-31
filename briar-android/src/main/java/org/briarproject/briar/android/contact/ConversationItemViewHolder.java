@@ -84,8 +84,17 @@ class ConversationItemViewHolder extends ViewHolder {
 				//bookmark icon is changed to filled
 				@Override
 				public void onClick(View v) {
-					pinned.setActivated(true);
-					pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
+					//Remove from pinned messages if button is activated
+					if(pinned.isActivated()){
+						pinned.setActivated(false);
+						pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+						item.setPinned(false);
+					}//Add to pinned messages is button is deactivated
+					else{
+						pinned.setActivated(true);
+						pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
+						item.setPinned(true);
+					}
 				}
 			});
 		}
