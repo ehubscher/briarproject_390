@@ -295,6 +295,12 @@ public interface DatabaseComponent {
 	@Nullable
 	boolean isMessagePinned(Transaction transaction, MessageId messageId) throws DbException;
 
+	/**
+	 * Returns a list of messageId for the groupId that are marked has pinned
+	 */
+	@Nullable
+	Collection<MessageId> getPinnedMessages(Transaction transaction, GroupId groupId) throws DbException;
+
     /**
      * Set the message pinned status
      */

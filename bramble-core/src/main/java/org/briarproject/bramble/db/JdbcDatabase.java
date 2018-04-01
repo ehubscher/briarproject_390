@@ -1905,6 +1905,28 @@ abstract class JdbcDatabase implements Database<Connection> {
 		}
 	}
 
+	@Override
+	@Nullable
+	public Collection<MessageId> getPinnedMessages(Connection connection, GroupId groupId) throws DbException {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			String sql = "SELECT messageId FROM messages WHERE GroupID = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setBytes(1, groupId.getBytes());
+			resultSet = preparedStatement.executeQuery();
+            List<MessageId> ids = new ArrayList<>();
+            while (resultSet.next()) ids.add(new MessageId(resultSet.getBytes(1)));
+            resultSet.close();
+            resultSet.close();
+            return ids;
+		} catch (SQLException e) {
+			tryToClose(resultSet);
+			tryToClose(preparedStatement);
+			throw new DbException(e);
+		}
+	}
+
     @Nullable
     public boolean isMessagePinned(Connection txn, MessageId m)
             throws DbException {

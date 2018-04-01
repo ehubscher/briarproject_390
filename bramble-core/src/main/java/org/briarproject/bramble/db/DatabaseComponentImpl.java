@@ -504,6 +504,13 @@ class DatabaseComponentImpl<T> implements DatabaseComponent {
 		return db.isMessagePinned(newTransaction, messageId);
 	}
 
+    @Nullable
+    @Override
+	public Collection<MessageId> getPinnedMessages(Transaction transaction, GroupId groupId) throws DbException{
+        T newTransaction = unbox(transaction);
+        return db.getPinnedMessages(newTransaction, groupId);
+    }
+
     @Override
     public void setMessagePinned(Transaction transaction, boolean pinned, MessageId messageId) throws DbException {
         if (transaction.isReadOnly()){

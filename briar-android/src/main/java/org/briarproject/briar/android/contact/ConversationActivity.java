@@ -504,8 +504,7 @@ public class ConversationActivity extends BriarActivity
 			if (revision == adapter.getRevision()) {
 				adapter.incrementRevision();
 				textInputView.setSendButtonEnabled(true);
-				List<ConversationItem> items = createItems(headers,
-						introductions, invitations);
+				List<ConversationItem> items = createItems(headers, introductions, invitations);
 				if (items.isEmpty()) list.showData();
 				else adapter.addAll(items);
 				// Scroll to the bottom
