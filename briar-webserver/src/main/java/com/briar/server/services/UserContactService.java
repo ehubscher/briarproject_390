@@ -11,14 +11,12 @@ import com.briar.server.model.domainmodelclasses.User;
 import com.briar.server.model.domainmodelclasses.UserContact;
 import com.briar.server.model.domainmodelclasses.UserContacts;
 import com.briar.server.model.request.AddContactRequest;
-import com.briar.server.model.returnedtobriarclasses.BriarUser;
 import com.briar.server.patterns.identitymap.UserContactsIdentityMap;
 import com.briar.server.patterns.unitofwork.UnitOfWork;
 import com.briar.server.services.tasks.DeleteUserContact;
 import com.briar.server.services.tasks.InsertNewUserContact;
 import com.briar.server.services.tasks.ModifyUserContact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserContactService extends AbstractService<UserContact> {
@@ -173,7 +171,6 @@ public class UserContactService extends AbstractService<UserContact> {
     // Takes a list of UserContact and add them one at a time to the UserContacts of the relevant parties
 
     // devrait fonctionner mais List<UserContact> != UserContacts
-    // TODO: 26/03/2018 Replace with addUsersToIndentityMap()
     private void handleUserContactsFromList(List<UserContact> userContactList) {
         for (UserContact contact : userContactList) {
             UserContactHandler handler = new UserContactHandler(contact, this.userContactMap);
@@ -182,99 +179,6 @@ public class UserContactService extends AbstractService<UserContact> {
             } catch (ObjectDeletedException e) {
                 // Silently fail (we want the loop to keep going)
             }
-        }
-    }
-
-    //This method takes the identity map of the current user and converts each user to a BriarUser
-    public List<BriarUser> getUpdatedContactList(String userName) throws ObjectDeletedException, UserContactDoesntExistsException {
-        //Call method to update identity map from database
-        updateUserIdentityMapWithDB(userName);
-
-        //Retrieve Identity Map of current user
-        UserContacts userContacts = this.userContactMap.getUserContacts(userName, Constants.Lock.reading);
-
-        //List containers to hold the usernames of all contacts and Briar Users
-        ArrayList<String> userContactList = userContacts.getAllContacts();
-        List<BriarUser> outgoingList = new ArrayList<>();
-
-        //Loop through each contact name, get their user information and convert them to briar users
-        for(String contactName : userContactList){
-            User user = this.userService.readUser(contactName);
-            outgoingList.add(this.userService.convertUserToBriarUser(user));
-        }
-        this.userContactMap.stopReading(userName);
-
-        return outgoingList;
-    }
-
-    //This method takes a username, compares the Identity Map of the username with the contacts list from the database.
-    //Updates the Identity Map if there are missing contacts when comparing. Handles when there is no Identity Map for a user.
-    public void updateUserIdentityMapWithDB(String userName) throws ObjectDeletedException, UserContactDoesntExistsException{
-        //Retrieve user
-        User user = this.userService.readUser(userName);
-
-        //Retrieve userList from database
-        List<UserContact> userList = this.userContactMapper.findContacts(user.getId());
-
-        // Does the list of contacts exists in the map
-        boolean userContactsExistsInMap = this.userContactMap.doesUserContactsExists(userName);
-
-        //Checks if the user has an Identity Map. Retrieves it if does, creates one if it doesn't.
-        UserContacts userContacts;
-        if (userContactsExistsInMap){
-            userContacts = this.userContactMap.getUserContacts(userName, Constants.Lock.writing);
-        }
-        else{
-            //Create identity map for contacts with username
-            userContacts = new UserContacts();
-            this.userContactMap.addUserContacts(userName, userContacts);
-            this.userContactMap.getUserContacts(userName, Constants.Lock.writing);
-        }
-
-        //Compares each contact from the database with each contact in the Identity Map
-        for(UserContact contact : userList) {
-            /////////////////////////////////////////////////////////////////////////////////////////////
-            //Update current user's identity map with up-to-date contacts from database
-            /////////////////////////////////////////////////////////////////////////////////////////////
-            String otherUserName = contact.getOtherUser(userName);
-
-            addDBContactToIdentityMap(otherUserName, userContacts, contact);
-            /////////////////////////////////////////////////////////////////////////////////////////////
-            //Updating current user contacts identity map with current user info to facilitate bilateral connection
-            /////////////////////////////////////////////////////////////////////////////////////////////
-        }
-        this.userContactMap.stopWriting(userName);
-
-        for(UserContact contact: userList){
-            String otherUserName = contact.getOtherUser(userName);
-            boolean otherUserContactsExistsInMap = this.userContactMap.doesUserContactsExists(otherUserName);
-
-            //When other user has existing Identity Map, add current user to facilitate connection
-            if(otherUserContactsExistsInMap){
-                UserContacts otherContacts = this.userContactMap.getUserContacts(otherUserName, Constants.Lock.writing);
-
-                addDBContactToIdentityMap(userName, userContacts, contact);
-            }
-            //When the other user doesn't have an Identity Map, create one and add the current user
-            else{
-                UserContacts newUserContacts = new UserContacts();
-                newUserContacts.addContact(userName, contact);
-                this.userContactMap.addUserContacts(otherUserName, newUserContacts);
-            }
-            this.userContactMap.stopWriting(otherUserName);
-        }
-    }
-
-    //This method adds/updates the Identity Map of the current user with contacts from the database
-    private void addDBContactToIdentityMap(String userName, UserContacts userContacts, UserContact contact) throws UserContactDoesntExistsException{
-        boolean doesUserNameExistInUserContacts = userContacts.contactExists(userName);
-        if(!doesUserNameExistInUserContacts){
-            userContacts.addContact(userName, contact);
-        }
-        else{
-            UserContact actualContact = userContacts.getUserContact(userName);
-            //Update actual contact with database info
-            actualContact.copy(contact);
         }
     }
 }
