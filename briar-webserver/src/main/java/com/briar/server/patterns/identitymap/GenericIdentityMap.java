@@ -7,9 +7,7 @@ import lombok.NonNull;
 import java.util.HashMap;
 
 
-
-
-public class  GenericIdentityMap<Keytype, Payload> {
+public class GenericIdentityMap<Keytype, Payload> {
 
     private HashMap<Keytype, ObjectWrapper<Payload>> identityMap;
 
@@ -26,7 +24,9 @@ public class  GenericIdentityMap<Keytype, Payload> {
         this.identityMap.put(key, wrapper);
     }
 
-    public Payload getPayload(@NonNull Keytype key, @NonNull Constants.Lock lock) throws ObjectDeletedException {
+    public Payload getPayload(@NonNull Keytype key,
+                              @NonNull Constants.Lock lock)
+            throws ObjectDeletedException {
         if (!doesPayloadExists(key)) {
             throw new ObjectDeletedException();
         }
@@ -35,7 +35,7 @@ public class  GenericIdentityMap<Keytype, Payload> {
         if (wrapper.isPayloadToBeDeleted()) {
             throw new ObjectDeletedException();
         }
-        switch(lock) {
+        switch (lock) {
             case reading:
                 return wrapper.startReadWriteDeleteAction(lock);
             case writing:
@@ -57,7 +57,8 @@ public class  GenericIdentityMap<Keytype, Payload> {
         wrapper.stopWriting();
     }
 
-    private Payload startDeleting(Keytype key, ObjectWrapper<Payload> wrapper, Constants.Lock lock) {
+    private Payload startDeleting(Keytype key, ObjectWrapper<Payload> wrapper,
+                                  Constants.Lock lock) {
         Payload payload = wrapper.startReadWriteDeleteAction(lock);
         this.identityMap.remove(key);
         return payload;
