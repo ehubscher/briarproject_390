@@ -116,7 +116,7 @@ public class BServerServicesImplTest {
      */
 	@Ignore
     @Test
-    public void connectWithContacttest(){
+    public void connectWithContactTest(){
         BServerServicesImpl services = new BServerServicesImpl();
         String defaultCreateUser = "Bob";
         UniqueIDSingleton.setUniqueID(defaultCreateUser);
