@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.restClient.ServerObj.ServerConfig;
 import org.json.JSONObject;
@@ -34,16 +36,16 @@ public class BServerServicesImpl implements BServerServices{
             Logger.getLogger(BServerServicesImpl.class.getName());
     public BServerServicesImpl(){}
     @Override
-    public SavedUser obtainUserInfo(String userID) {
+    public SavedUser obtainUserInfo(String targetUserID) {
 
         BriarServerService service = ServerConfig.getServerService();
         JSONObject parameters =  new JSONObject();
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", PwdSingletonServer.getPassword());
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                service.obtainUserData(userID, parameters.toString()).enqueue(new Callback<String>() {
+                service.obtainUserData(UniqueIDSingleton.getUniqueID(), parameters.toString(), targetUserID).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         createdUser = null;

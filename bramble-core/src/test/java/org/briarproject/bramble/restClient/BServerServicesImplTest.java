@@ -1,6 +1,8 @@
 package org.briarproject.bramble.restClient;
 
 
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -24,7 +26,10 @@ public class BServerServicesImplTest {
 	@Test
 	public void obtainUserInfoTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		SavedUser returnedUser = services.obtainUserInfo("1233345");
+		// Default User
+        PwdSingletonServer.setPassword("qwertyPlease");
+        UniqueIDSingleton.setUniqueID("Bob");
+		SavedUser returnedUser = services.obtainUserInfo("ABADAR");
 		Assert.assertTrue(returnedUser != null);
 	}
 

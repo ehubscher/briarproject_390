@@ -29,8 +29,8 @@ public interface BriarServerService {
      * @return A JSON body with IP address, PORT and username
      */
     @Headers("Content-Type: application/json")
-    @POST("hack/users/{userID}")
-    Call<String> obtainUserData(@Path("userID") String userID , @Body String bodyJSON);
+    @POST("/users/{currentUser}/contacts/{targetUser}")
+    Call<String> obtainUserData(@Path("currentUser") String userID , @Body String bodyJSON, @Path("targetUser") String targetUser);
 
     /**
      * This method is creating a new user

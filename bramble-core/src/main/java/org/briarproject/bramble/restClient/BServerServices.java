@@ -11,10 +11,10 @@ public interface BServerServices {
 
     /**
      * This methis method is getting user info based on unique ID given
-     * @param userID A unique String ID made of 20 random char.
+     * @param targetUser A unique String ID made of 20 random char.
      * @return The object class SavedUser
      */
-    SavedUser obtainUserInfo(String userID);
+    SavedUser obtainUserInfo(String targetUser);
 
     /**
      * Creating a new user in Briar Server
