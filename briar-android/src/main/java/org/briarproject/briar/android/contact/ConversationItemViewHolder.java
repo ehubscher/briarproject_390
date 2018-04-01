@@ -20,6 +20,7 @@ import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.util.UiUtils;
+import org.briarproject.briar.api.messaging.MessagingManager;
 
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -42,6 +43,8 @@ class ConversationItemViewHolder extends ViewHolder {
 	// Fields that are accessed from background threads must be volatile
 	@Inject
 	volatile ContactManager contactManager;
+	@Inject
+	volatile MessagingManager messagingManager;
 
     private static final Logger LOG = Logger.getLogger(ConversationActivity.class.getName());
 

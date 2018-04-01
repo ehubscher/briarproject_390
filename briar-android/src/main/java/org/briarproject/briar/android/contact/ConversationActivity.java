@@ -509,10 +509,29 @@ public class ConversationActivity extends BriarActivity
 				else adapter.addAll(items);
 				// Scroll to the bottom
 				list.scrollToPosition(adapter.getItemCount() - 1);
+
+				for (ConversationItem i: items) {
+					if(i.getClass() == ConversationMessageInItem.class) {
+						if (i.isPinned()) {
+							try {
+								messagingManager.setPinned(i.getId(), true);
+							} catch (DbException e) {
+								e.printStackTrace();
+							}
+						} else {
+							try {
+								messagingManager.setPinned(i.getId(), false);
+							} catch (DbException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
 			} else {
 				LOG.info("Concurrent update, reloading");
 				loadMessages();
 			}
+
 		});
 	}
 
