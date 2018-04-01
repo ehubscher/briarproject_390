@@ -144,7 +144,7 @@ public class BServerServicesImpl implements BServerServices{
         JSONObject parameters = new JSONObject();
         parameters.put("port", savedUser.getPort());
         parameters.put("ip", savedUser.getIpAddress());
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", PwdSingletonServer.getPassword());
         // prevent unexpected input
         if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
             return false;
@@ -183,7 +183,7 @@ public class BServerServicesImpl implements BServerServices{
         JSONObject parameters = new JSONObject();
         parameters.put("statusId", savedUser.getStatusId());
         parameters.put("avatarId", savedUser.getAvatarId());
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", PwdSingletonServer.getPassword());
         // prevent unexpected input
         if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
             return false;

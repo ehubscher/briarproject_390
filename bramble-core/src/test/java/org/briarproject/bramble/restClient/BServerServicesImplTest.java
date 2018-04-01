@@ -27,7 +27,7 @@ public class BServerServicesImplTest {
 	public void obtainUserInfoTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		// Default User
-        PwdSingletonServer.setPassword("qwertyPlease");
+        PwdSingletonServer.setPassword("AnotherPassword");
         UniqueIDSingleton.setUniqueID("Bob");
 		SavedUser returnedUser = services.obtainUserInfo("ABADAR");
 		Assert.assertTrue(returnedUser != null);
@@ -69,7 +69,8 @@ public class BServerServicesImplTest {
 	@Test
 	public void updateUserSettingsTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		String defaultUser = "1233345";
+		String defaultUser = "Bob";
+		PwdSingletonServer.setPassword("AnotherPassword");
 		String ipp = generateFakeIp();
 		int fakePort = generateFakePort();
 		SavedUser user = new SavedUser(defaultUser, ipp, fakePort, 2,33);
@@ -80,7 +81,8 @@ public class BServerServicesImplTest {
 	@Test
 	public void updateUserTcpTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		String defaultUser = "1233345";
+		String defaultUser = "Bob";
+		PwdSingletonServer.setPassword("AnotherPassword");
 		String ipp = generateFakeIp();
 		int fakePort = generateFakePort();
 		SavedUser user = new SavedUser(defaultUser, ipp, fakePort, 2, 22);
