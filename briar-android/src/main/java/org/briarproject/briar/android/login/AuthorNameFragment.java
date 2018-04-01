@@ -97,18 +97,23 @@ public class AuthorNameFragment extends SetupFragment {
 
         }
 	}
-    class CallServerAsync extends AsyncTask<Void,Integer,String>{
 
-	    boolean resultA;
+    /**
+     * This class is implementing an Async task as recommended for Android
+     * It is made to make sure to separate server call from main UI Thread
+     */
+	class CallServerAsync extends AsyncTask<Void,Integer,String>{
+
+	    boolean resultFromDoesItExists;
         @Override
         protected String doInBackground(Void... voids) {
                 boolean obj = services.doesUsernameExistsInDB(authorNameInput.getText().toString());
-                resultA = obj;
+                resultFromDoesItExists = obj;
                 return null;
         }
 
         protected void onPostExecute(String result) {
-            NickNameTaken = resultA;
+            NickNameTaken = resultFromDoesItExists;
             if(!NickNameTaken){
                 nextButton.setEnabled(true);
             }else{
