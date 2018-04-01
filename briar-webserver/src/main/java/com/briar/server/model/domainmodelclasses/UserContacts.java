@@ -52,10 +52,7 @@ public class UserContacts {
         return userList;
     }
 
-    public ArrayList<String> getAllContacts(String userName) throws UserContactDoesntExistsException {
-        if (!this.contacts.containsKey(userName)) {
-            throw new UserContactDoesntExistsException();
-        }
+    public ArrayList<String> getAllContacts() {
         ArrayList<String> userList = new ArrayList<String>();
         this.contacts.forEach((userAsKey, userContactAsValue) -> {
             userList.add(userAsKey);

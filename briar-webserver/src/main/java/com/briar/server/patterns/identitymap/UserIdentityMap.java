@@ -9,23 +9,19 @@ public class UserIdentityMap {
 
     /////////////////////////////////////SETUP VARIABLES AND SINGLETON ////////////////////////////////
 
-    private static volatile UserIdentityMap instance;
-    private static Object mutex = new Object();
     private GenericIdentityMap<String, User> userMap;
 
-    private UserIdentityMap() {
-        this.userMap = new GenericIdentityMap();
-    }
+    private static volatile UserIdentityMap instance;
+    private static Object mutex = new Object();
 
     public static UserIdentityMap getInstance() {
         UserIdentityMap result = instance;
         if (result == null) {
             synchronized (mutex) {
                 result = instance;
-                if (result == null) {
+                if (result == null)
                     instance = new UserIdentityMap();
-                }
-                result = instance;
+                    result = instance;
             }
         }
         return result;
@@ -33,6 +29,10 @@ public class UserIdentityMap {
 
     public static UserIdentityMap getTestInstance() {
         return new UserIdentityMap();
+    }
+
+    private UserIdentityMap() {
+        this.userMap = new GenericIdentityMap();
     }
 
     //////////////////////////FORWARDING CALLS WITH APPROPRIATE LEVEL OF ABSTRACTION/////////////////////
@@ -45,8 +45,7 @@ public class UserIdentityMap {
         this.userMap.addPayload(userName, user);
     }
 
-    public User getUser(@NonNull String userName, @NonNull Constants.Lock lock)
-            throws ObjectDeletedException {
+    public User getUser(@NonNull String userName, @NonNull Constants.Lock lock) throws ObjectDeletedException {
         User user = this.userMap.getPayload(userName, lock);
         if (lock == Constants.Lock.reading) {
             user = user.clone();
