@@ -27,6 +27,10 @@ public class UserContactsIdentityMap {
         return result;
     }
 
+    public static UserContactsIdentityMap getTestInstance() {
+        return new UserContactsIdentityMap();
+    }
+
     private UserContactsIdentityMap() {
         this.userContactsMap = new GenericIdentityMap();
     }

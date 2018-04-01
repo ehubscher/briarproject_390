@@ -1,16 +1,13 @@
 package com.briar.server.services.tasks;
 
-import com.briar.server.exception.DBException;
-import com.briar.server.exception.ObjectAlreadyExistsException;
-import com.briar.server.exception.ObjectDeletedException;
+import com.briar.server.exception.*;
 import com.briar.server.handler.UserHandler;
 import com.briar.server.mapper.UserMapper;
 import com.briar.server.model.domainmodelclasses.User;
 
 public class InsertNewUser extends AbstractUserTask {
 
-    public InsertNewUser(User userToAdd, UserHandler handler,
-                         UserMapper mapper) {
+    public InsertNewUser(User userToAdd, UserHandler handler, UserMapper mapper) {
         super(userToAdd, handler, mapper);
     }
 
@@ -24,8 +21,7 @@ public class InsertNewUser extends AbstractUserTask {
     }
 
     @Override
-    public void commitIdentityMap()
-            throws ObjectDeletedException, ObjectAlreadyExistsException {
+    public void commitIdentityMap() throws ObjectDeletedException, ObjectAlreadyExistsException, UserContactDoesntExistsException {
         handler.add();
     }
 
@@ -39,8 +35,7 @@ public class InsertNewUser extends AbstractUserTask {
     }
 
     @Override
-    public void revertIdentityMap()
-            throws ObjectDeletedException, ObjectAlreadyExistsException {
+    public void revertIdentityMap() throws ObjectDeletedException, ObjectAlreadyExistsException, UserContactDoesntExistsException {
         handler.remove();
     }
 }
