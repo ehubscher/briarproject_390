@@ -65,6 +65,10 @@ public class BServerServicesImplTest {
 		// Check if the returned user has the data previously passed
 		Assert.assertTrue(returnedUser.getUsername().equals(username));
 	}
+
+    /**
+     * Test to update Avartar and Status on Server with default user Bob
+     */
 	@Ignore
 	@Test
 	public void updateUserSettingsTest(){
@@ -77,6 +81,10 @@ public class BServerServicesImplTest {
 		boolean e = services.updateUserSettingInfo(user);
 		Assert.assertTrue(e);
 	}
+
+    /**
+     * Test to update TCP Connection details with default user Bob
+     */
 	@Ignore
 	@Test
 	public void updateUserTcpTest(){
@@ -95,12 +103,28 @@ public class BServerServicesImplTest {
 	 */
 	@Ignore
 	@Test
-	public void DoesUserExistsTest(){
+	public void doesUserExistsTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		String defaultCreatedUser  = "Bob";
-		boolean result  = services.DoesUsernameExistsInDB(defaultCreatedUser);
+		boolean result  = services.doesUsernameExistsInDB(defaultCreatedUser);
 		Assert.assertTrue(result);
 	}
+
+    /**
+     * Test the functino connectWithContact trying to connect Bob with ABADAR
+     * the two defaults contact
+     */
+	@Ignore
+    @Test
+    public void connectWithContacttest(){
+        BServerServicesImpl services = new BServerServicesImpl();
+        String defaultCreateUser = "Bob";
+        UniqueIDSingleton.setUniqueID(defaultCreateUser);
+        PwdSingletonServer.setPassword("AnotherPassword");
+        boolean result = services.connectWithContact("ABADAR");
+        Assert.assertTrue(result);
+
+    }
 
 	private String generateFakeUserName(){
 		String fakeUserName = "";

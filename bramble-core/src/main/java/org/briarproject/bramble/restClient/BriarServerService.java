@@ -61,9 +61,25 @@ public interface BriarServerService {
     @PUT("users/{userID}/profile")
     Call<String> updateUserSettings(@Path("userID") String userID, @Body String bodyJSON);
 
+    /**
+     * This method is checking if user exists on server
+     * @param userID target user we want to know if exists
+     * @return A JSON Body true if exists false otherwise
+     */
     @Headers("Content-Type: application/json")
     @GET("users/{userID}")
-    Call<String> DoesItExists(@Path("userID") String userID);
+    Call<String> doesUserExists(@Path("userID") String userID);
+
+    /**
+     * This method is creating a connection between current user and target contact id,
+     * the targetContact is passed in body
+     * @param userID
+     * @param bodyJSON
+     * @return
+     */
+    @Headers("Content-Type: application/json")
+    @POST("users/{userID}/contact")
+    Call<String> createConnection(@Path("userID") String userID, @Body String bodyJSON);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(config.getServerAddress())

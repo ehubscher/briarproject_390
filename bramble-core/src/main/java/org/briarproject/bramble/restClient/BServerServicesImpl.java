@@ -27,10 +27,11 @@ public class BServerServicesImpl implements BServerServices{
 
     ServerConfig config = ServerConfig.getServerConfig();
     // These variable are used to exchange data between the threads...
-    private volatile static SavedUser createdUser = null;
-    private volatile static String resultFromQueryCreateUser = null;
-    private volatile static String resultFromQueryUpdateUser = null;
-    private volatile static Boolean resultFromQueryExists = false;
+    private volatile SavedUser createdUser = null;
+    private volatile String resultFromQueryCreateUser = null;
+    private volatile String resultFromQueryUpdateUser = null;
+    private volatile boolean resultFromQueryExists = false;
+    private volatile boolean resultFromConnection = false;
     private int TIME_WAITING = 1;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
@@ -216,13 +217,14 @@ public class BServerServicesImpl implements BServerServices{
     }
 
     @Override
-    public boolean DoesUsernameExistsInDB(String username) {
+    public boolean doesUsernameExistsInDB(String username) {
         BriarServerService serv = ServerConfig.getServerService();
+        resultFromQueryExists = false;
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                    serv.DoesItExists(username).enqueue(new Callback<String>() {
+                    serv.doesUserExists(username).enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
                             if(response.body().toString().equals("true")){
@@ -247,6 +249,42 @@ public class BServerServicesImpl implements BServerServices{
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }
         return resultFromQueryExists;
+    }
+
+    @Override
+    public boolean connectWithContact(String targetContact) {
+        BriarServerService serv = ServerConfig.getServerService();
+        resultFromConnection = false;
+
+        JSONObject parameters = new JSONObject();
+        parameters.put("password", PwdSingletonServer.getPassword());
+        parameters.put("targetPhoneGeneratedId", targetContact);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                serv.createConnection(UniqueIDSingleton.getUniqueID(), parameters.toString()).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.body() != null){
+                            resultFromConnection = true;
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        LOG.info(" BRIAR SERVER : Failure to create Connection  " + t.getMessage());
+                    }
+                });
+            }
+        });
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
+        }
+        return resultFromConnection;
     }
 
 }

@@ -42,6 +42,13 @@ public interface BServerServices {
      * @param username username we want to know
      * @return True -> It exists, False -> Doesn't exists
      */
-    boolean DoesUsernameExistsInDB(String username);
+    boolean doesUsernameExistsInDB(String username);
+
+    /**
+     * Create a connection between current user and target contact online
+     * @param targetContact name of the contact to connect with
+     * @return True -> Success , False -> Fail
+     */
+    boolean connectWithContact(String targetContact);
 
 }

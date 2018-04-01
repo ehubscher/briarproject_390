@@ -1,9 +1,7 @@
 package org.briarproject.briar.android.login;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
@@ -104,7 +102,7 @@ public class AuthorNameFragment extends SetupFragment {
 	    boolean resultA;
         @Override
         protected String doInBackground(Void... voids) {
-                boolean obj = services.DoesUsernameExistsInDB(authorNameInput.getText().toString());
+                boolean obj = services.doesUsernameExistsInDB(authorNameInput.getText().toString());
                 resultA = obj;
                 return null;
         }
