@@ -220,7 +220,6 @@ public class BServerServicesImpl implements BServerServices{
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                if(username.equals("Bob")){
                     serv.DoesItExists(username).enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
@@ -237,9 +236,6 @@ public class BServerServicesImpl implements BServerServices{
                             LOG.info("BRIAR SERVER : IS DISABLE, RETURN FALSE DEFAULT");
                         }
                     });
-                }else{
-                    resultFromQueryExists = false;
-                }
             }
         });
         // Wait for the call to server to be done...
@@ -250,4 +246,5 @@ public class BServerServicesImpl implements BServerServices{
         }
         return resultFromQueryExists;
     }
+
 }

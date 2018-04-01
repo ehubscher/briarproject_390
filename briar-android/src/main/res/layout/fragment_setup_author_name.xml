@@ -41,19 +41,33 @@
 		</android.support.design.widget.TextInputLayout>
 
 		<Button
+			android:id="@+id/confirmation"
+			style="@style/BriarButton.Default"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:enabled="true"
+			android:text="@string/confirmation"
+			android:visibility="visible"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/nickname_entry_wrapper"
+			tools:enabled="true" />
+
+		<Button
 			android:id="@+id/next"
 			style="@style/BriarButton.Default"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_activity_horizontal"
+			android:layout_marginTop="8dp"
 			android:enabled="false"
 			android:text="@string/setup_next"
+			android:visibility="visible"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/nickname_entry_wrapper"
-			app:layout_constraintVertical_bias="1.0"
-			tools:enabled="true"/>
+			app:layout_constraintTop_toBottomOf="@+id/confirmation"
+			tools:enabled="true" />
 
 	</android.support.constraint.ConstraintLayout>
 
