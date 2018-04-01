@@ -28,7 +28,7 @@ jobs:
           ./gradlew clean assemble
       - stage: sonar
         script:
-          sonar-scanner
+          ./gradlew sonarqube --rerun-tasks --continue
       - stage: test
         script:
           ./gradlew test --info --rerun-tasks --continue
