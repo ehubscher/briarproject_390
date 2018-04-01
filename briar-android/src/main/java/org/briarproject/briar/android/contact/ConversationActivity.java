@@ -511,6 +511,7 @@ public class ConversationActivity extends BriarActivity
 				list.scrollToPosition(adapter.getItemCount() - 1);
 
 				for (ConversationItem i: items) {
+
 					if(i.getClass() == ConversationMessageInItem.class) {
 						if (i.isPinned()) {
 							try {

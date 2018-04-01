@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -100,11 +101,31 @@ class ConversationItemViewHolder extends ViewHolder {
 						pinned.setActivated(false);
 						pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
 						item.setPinned(false);
+
+						new Handler().post(new Runnable() {
+							public void run() {
+								try {
+									messagingManager.setPinned(item.getId(), false);
+								} catch (DbException e) {
+									e.printStackTrace();
+								}
+							}
+						});
+
 					}//Add to pinned messages is button is deactivated
 					else{
 						pinned.setActivated(true);
 						pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
 						item.setPinned(true);
+						new Handler().post(new Runnable() {
+							public void run() {
+								try {
+									messagingManager.setPinned(item.getId(), true);
+								} catch (DbException e) {
+									e.printStackTrace();
+								}
+							}
+						});
 					}
 				}
 			});
