@@ -12,11 +12,11 @@ import org.briarproject.bramble.api.crypto.SecretKey;
 import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.android.controller.handler.ResultHandler;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
 import org.briarproject.briar.android.util.IOUniqueIdentifier;
-import org.briarproject.briar.android.util.PassSingleton;
 
 import java.util.concurrent.Executor;
 
@@ -118,7 +118,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 			SecretKey key = crypto.generateSecretKey();
 			databaseConfig.setEncryptionKey(key);
 			String hex = encryptDatabaseKey(key, password);
-			PassSingleton.setPassword(password);
+			PwdSingletonServer.setPassword(password);
 			storeEncryptedDatabaseKey(hex);
 			resultHandler.onResult(null);
 		});
@@ -130,7 +130,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
             // Try to create an Account on Server by same time....
             BServerServicesImpl services = new BServerServicesImpl();
             SavedUser placeHolderUser = new SavedUser(this.uniqueId, "123.123.123.123", 1234, 1, 99);
-            successCreation = services.createNewUser(placeHolderUser, PassSingleton.getPassword());
+            successCreation = services.createNewUser(placeHolderUser, PwdSingletonServer.getPassword());
         }catch (Exception ee){
             ee.printStackTrace();
         }

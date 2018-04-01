@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BaseActivity;
 import org.briarproject.briar.android.controller.BriarController;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
-import org.briarproject.briar.android.util.PassSingleton;
 import org.briarproject.briar.android.util.UiUtils;
 
 import javax.inject.Inject;
@@ -139,7 +139,7 @@ public class PasswordActivity extends BaseActivity {
 					public void onResultUi(@NonNull Boolean result) {
 						if (result) {
 							setResult(RESULT_OK);
-                            PassSingleton.setPassword(password.getText().toString());
+                            PwdSingletonServer.setPassword(password.getText().toString());
 							supportFinishAfterTransition();
 							// don't show closing animation,
 							// but one for opening NavDrawerActivity
