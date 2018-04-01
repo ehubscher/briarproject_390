@@ -16,6 +16,7 @@ import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.android.controller.handler.ResultHandler;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
 import org.briarproject.briar.android.util.IOUniqueIdentifier;
+import org.briarproject.briar.android.util.PassSingleton;
 
 import java.util.concurrent.Executor;
 
@@ -117,6 +118,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 			SecretKey key = crypto.generateSecretKey();
 			databaseConfig.setEncryptionKey(key);
 			String hex = encryptDatabaseKey(key, password);
+			PassSingleton.setPassword(password);
 			storeEncryptedDatabaseKey(hex);
 			resultHandler.onResult(null);
 		});
