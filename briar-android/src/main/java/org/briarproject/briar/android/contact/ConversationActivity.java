@@ -226,6 +226,7 @@ public class ConversationActivity extends BriarActivity
 		setTransitionName(toolbarStatus, getBulbTransitionName(contactId));
 
 		adapter = new ConversationAdapter(this, this);
+		adapter.setMessagingManager(this.messagingManager);
 		list = findViewById(R.id.conversationView);
 		list.setLayoutManager(new LinearLayoutManager(this));
 		list.setAdapter(adapter);

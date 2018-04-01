@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.util.BriarAdapter;
+import org.briarproject.briar.api.messaging.MessagingManager;
 
 import javax.annotation.Nullable;
 
@@ -19,9 +20,15 @@ class ConversationAdapter
 
 	private ConversationListener listener;
 
+	private MessagingManager messagingManager;
+
 	ConversationAdapter(Context ctx, ConversationListener conversationListener) {
 		super(ctx, ConversationItem.class);
 		listener = conversationListener;
+	}
+
+	public void setMessagingManager(MessagingManager messagingManager) {
+		this.messagingManager = messagingManager;
 	}
 
 	@LayoutRes
@@ -38,7 +45,9 @@ class ConversationAdapter
 				type, viewGroup, false);
 		switch (type) {
 			case R.layout.list_item_conversation_msg_in:
-				return new ConversationItemViewHolder(v);
+				ConversationItemViewHolder viewHolder = new ConversationItemViewHolder(v);
+				viewHolder.setMessagingManager(this.messagingManager);
+				return viewHolder;
 			case R.layout.list_item_conversation_msg_out:
 				return new ConversationMessageOutViewHolder(v);
 			case R.layout.list_item_conversation_notice_in:

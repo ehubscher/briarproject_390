@@ -2,8 +2,6 @@ package org.briarproject.briar.android.contact;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 
 import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.db.DbException;
-import org.briarproject.bramble.api.db.NoSuchContactException;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
@@ -24,12 +21,8 @@ import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.api.messaging.MessagingManager;
 
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import static java.util.logging.Level.WARNING;
 
 @UiThread
 @NotNullByDefault
@@ -44,6 +37,7 @@ class ConversationItemViewHolder extends ViewHolder {
 	// Fields that are accessed from background threads must be volatile
 	@Inject
 	volatile ContactManager contactManager;
+
 	@Inject
 	volatile MessagingManager messagingManager;
 
@@ -56,6 +50,10 @@ class ConversationItemViewHolder extends ViewHolder {
 		time = v.findViewById(R.id.time);
 		imageView = v.findViewById(R.id.imageView);
 		pinned = v.findViewById(R.id.pin_message_bookmark);
+	}
+
+	public void setMessagingManager(MessagingManager messagingManager) {
+		this.messagingManager = messagingManager;
 	}
 
 	@CallSuper
