@@ -32,14 +32,13 @@ public class ContactResource {
     }
 
     /**
-     * POST
-     * Route: /users/{userId}/contact
-     * Payload:
+     * Method used to start a contact with some other user. Expects as a payload:
      * {
-     *     "password": "qwerty",
-     *     "targetPhoneGeneratedId": "HelloBob"
+     *     password: "qwerty",
+     *     targetPhoneGeneratedId: "whatever"
      * }
-     * return value: 200 OK
+     * @param userId
+     * @return
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -47,7 +46,6 @@ public class ContactResource {
     public Response generateContact(@PathParam("userId") String userId, AddContactRequest contactRequest) {
 
         Response response;
-        contactRequest.setPassword((Integer.toString(contactRequest.getPassword().hashCode())));
 
         boolean isRequestValid = this.userContactService.validateContactRequest(contactRequest);
         if (!isRequestValid) {
@@ -151,6 +149,16 @@ public class ContactResource {
 
 
     }
+
+
+
+//
+//    @POST
+//    @Path("/{contactId}")
+//    public Response createContact(@PathParam("contactId") String targetContact, @PathParam("userId") String targetUser) {
+//        return Response.status(Response.Status.CREATED).entity(this.userMapper.findAll()).build();
+//
+//    }
 
     private class UnilateralUserContact {
         private String userName;
