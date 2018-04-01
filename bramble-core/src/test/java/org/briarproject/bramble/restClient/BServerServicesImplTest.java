@@ -36,8 +36,9 @@ public class BServerServicesImplTest {
 	@Test
 	public void createNewUserTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
+		String defaultPassword = "qwerty";
 		SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort(), 1, 99);
-		Assert.assertTrue(services.createNewUser(userToCreate));
+		Assert.assertTrue(services.createNewUser(userToCreate, defaultPassword));
 
 	}
 
@@ -50,8 +51,9 @@ public class BServerServicesImplTest {
 	public void createAndObtainDataForUserTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		String username = generateFakeUserName();
+		String defaultPassword = "qwerty";
 		SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort(), 1,99);
-		if(!services.createNewUser(userToCreate)){
+		if(!services.createNewUser(userToCreate, defaultPassword)){
 			Assert.fail();
 		}
 		SavedUser returnedUser = services.obtainUserInfo(username);

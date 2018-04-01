@@ -13,6 +13,8 @@ public class LocalAuthor extends Author {
 
 	private final byte[] privateKey;
 	private final long created;
+	// Try to insert our field here
+    private String password;
 
 	public LocalAuthor(AuthorId id, String name, byte[] publicKey,
 			byte[] privateKey, long created) {
@@ -35,4 +37,13 @@ public class LocalAuthor extends Author {
 	public long getTimeCreated() {
 		return created;
 	}
+
+
+	public void setPassword(String pwd){
+	    password = pwd;
+    }
+
+    public String getPassword(){
+	    return password;
+    }
 }

@@ -95,7 +95,7 @@ public class BServerServicesImpl implements BServerServices{
     }
 
     @Override
-    public boolean createNewUser(SavedUser savedUser) {
+    public boolean createNewUser(SavedUser savedUser, String password) {
         BriarServerService serv = ServerConfig.getServerService();
         resultFromQueryCreateUser = null;
 
@@ -103,7 +103,7 @@ public class BServerServicesImpl implements BServerServices{
         parameters.put("port", savedUser.getPort());
         parameters.put("ip", savedUser.getIpAddress());
         parameters.put("phoneGeneratedId", savedUser.getUsername());
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", password);
         parameters.put("statusId", savedUser.getStatusId());
         parameters.put("avatarId", savedUser.getAvatarId());
 

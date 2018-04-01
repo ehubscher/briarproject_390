@@ -130,7 +130,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
             // Try to create an Account on Server by same time....
             BServerServicesImpl services = new BServerServicesImpl();
             SavedUser placeHolderUser = new SavedUser(this.uniqueId, "123.123.123.123", 1234, 1, 99);
-            successCreation = services.createNewUser(placeHolderUser);
+            successCreation = services.createNewUser(placeHolderUser, PassSingleton.getPassword());
         }catch (Exception ee){
             ee.printStackTrace();
         }

@@ -21,7 +21,7 @@ public interface BServerServices {
      * @param savedUser Info needed to create a new user
      * @return True -> Success, False -> Failure
      */
-    boolean createNewUser(SavedUser savedUser);
+    boolean createNewUser(SavedUser savedUser, String password);
 
     /**
      * Update an alrready saved user
