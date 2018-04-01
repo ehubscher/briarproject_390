@@ -32,7 +32,6 @@ import static java.util.logging.Level.WARNING;
 @UiThread
 @NotNullByDefault
 class ConversationItemViewHolder extends ViewHolder {
-
 	protected final ViewGroup layout;
 
 	private final TextView text;
@@ -77,11 +76,20 @@ class ConversationItemViewHolder extends ViewHolder {
 				text.setText(StringUtils.trim(item.getBody()));
 			}
 		}
-
+		
 		if(item.getClass() == ConversationMessageInItem.class) {
+			//set the right icon
+			if(item.isPinned()){
+				pinned.setActivated(true);
+				pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
+			}
+			else{
+				pinned.setActivated(false);
+				pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+			}
+
 			//Set image button listener
 			pinned.setOnClickListener(new View.OnClickListener() {
-				//bookmark icon is changed to filled
 				@Override
 				public void onClick(View v) {
 					//Remove from pinned messages if button is activated
@@ -98,7 +106,6 @@ class ConversationItemViewHolder extends ViewHolder {
 				}
 			});
 		}
-
 		long timestamp = item.getTime();
 		time.setText(UiUtils.formatDate(time.getContext(), timestamp));
 	}

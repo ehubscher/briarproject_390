@@ -63,6 +63,8 @@ abstract class ConversationItem {
 
 	public void setPinned(boolean pinned){};
 
+	public boolean isPinned(){return false;};
+
 	@Nullable
 	public String getBody() {
 		return body;

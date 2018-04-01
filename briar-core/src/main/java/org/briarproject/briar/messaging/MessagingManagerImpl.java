@@ -208,4 +208,15 @@ class MessagingManagerImpl extends ConversationClientImpl
 		}
 	}
 
+	@Override
+	public void setPinned(MessageId id, boolean state) throws DbException{
+		Transaction txn = db.startTransaction(false);
+		try {
+			db.setMessagePinned(txn,state,id);
+			db.commitTransaction(txn);
+		}finally {
+			db.endTransaction(txn);
+		}
+	}
+
 }

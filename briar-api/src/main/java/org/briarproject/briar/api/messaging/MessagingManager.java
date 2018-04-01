@@ -49,4 +49,9 @@ public interface MessagingManager extends ConversationClient {
 	 */
 	String getMessageBody(MessageId m) throws DbException;
 
+	/**
+	 * Change if message is pinned or not
+	 */
+	void setPinned(MessageId id, boolean state) throws DbException;
+
 }
