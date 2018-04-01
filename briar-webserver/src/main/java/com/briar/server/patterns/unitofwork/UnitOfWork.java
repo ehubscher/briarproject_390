@@ -14,21 +14,27 @@ import static java.lang.Thread.yield;
 
 public class UnitOfWork {
 
+    private static volatile UnitOfWork instance;
+    private static Object mutex = new Object();
     private HashMap<String, ArrayList<ITask>> toPush;
     private HashMap<String, Stack<ITask>> toRevert;
     private HashMap<String, CommitLocks> commitLocksCollection;
 
-    private static volatile UnitOfWork instance;
-    private static Object mutex = new Object();
+    private UnitOfWork() {
+        this.toPush = new HashMap<String, ArrayList<ITask>>();
+        this.toRevert = new HashMap<String, Stack<ITask>>();
+        this.commitLocksCollection = new HashMap<String, CommitLocks>();
+    }
 
     public static UnitOfWork getInstance() {
         UnitOfWork result = instance;
         if (result == null) {
             synchronized (mutex) {
                 result = instance;
-                if (result == null)
+                if (result == null) {
                     instance = new UnitOfWork();
-                    result = instance;
+                }
+                result = instance;
             }
         }
         return result;
@@ -38,12 +44,6 @@ public class UnitOfWork {
         return new UnitOfWork();
     }
 
-    private UnitOfWork() {
-        this.toPush = new HashMap<String, ArrayList<ITask>>();
-        this.toRevert = new HashMap<String, Stack<ITask>>();
-        this.commitLocksCollection = new HashMap<String, CommitLocks>();
-    }
-
     public void registerCommit(String transactionId, ITask toBeCommitted) {
         startReading(transactionId);
         ArrayList<ITask> commitList = getCommitList(transactionId);
@@ -51,7 +51,8 @@ public class UnitOfWork {
         stopReading(transactionId);
     }
 
-    public synchronized void pushCommit(String transactionId) throws DataCompromisedException {
+    public synchronized void pushCommit(String transactionId)
+            throws DataCompromisedException {
         startWriting(transactionId);
         ArrayList<ITask> commitList = getCommitList(transactionId);
         Stack<ITask> revertList = getRollbackList(transactionId);
@@ -63,15 +64,19 @@ public class UnitOfWork {
                 commit.commitIdentityMap();
             }
         } catch (DBException e) {
-            revertCommit(transactionId, Constants.LastCommitActionSuccessful.identityMap);
+            revertCommit(transactionId,
+                    Constants.LastCommitActionSuccessful.identityMap);
         } catch (Exception e) {
-            revertCommit(transactionId, Constants.LastCommitActionSuccessful.database);
+            revertCommit(transactionId,
+                    Constants.LastCommitActionSuccessful.database);
         } finally {
             stopWriting(transactionId);
         }
     }
 
-    private synchronized void revertCommit(String transactionId, Constants.LastCommitActionSuccessful commitStatus) throws DataCompromisedException {
+    private synchronized void revertCommit(String transactionId,
+                                           Constants.LastCommitActionSuccessful commitStatus)
+            throws DataCompromisedException {
         Stack<ITask> revertList = getRollbackList(transactionId);
         try {
 
@@ -82,12 +87,12 @@ public class UnitOfWork {
             }
 
             // All other exceptions
-            while(!revertList.isEmpty()){
+            while (!revertList.isEmpty()) {
                 ITask commit = revertList.pop();
                 commit.revertDB();
                 commit.revertIdentityMap();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new DataCompromisedException();
         }
     }
@@ -114,14 +119,17 @@ public class UnitOfWork {
         return rollbackStack;
     }
 
-    private void startReadWriteAction(String transactionId, Constants.Lock lock) {
-        boolean isFirstTransaction = !this.commitLocksCollection.containsKey(transactionId);
+    private void startReadWriteAction(String transactionId,
+                                      Constants.Lock lock) {
+        boolean isFirstTransaction =
+                !this.commitLocksCollection.containsKey(transactionId);
         if (isFirstTransaction) {
             CommitLocks commitLocks = new CommitLocks();
             commitLocks.startReadWriteAction(lock);
             this.commitLocksCollection.put(transactionId, commitLocks);
         } else {
-            CommitLocks commitLocks = this.commitLocksCollection.get(transactionId);
+            CommitLocks commitLocks =
+                    this.commitLocksCollection.get(transactionId);
             commitLocks.startReadWriteAction(lock);
         }
     }
@@ -155,7 +163,8 @@ public class UnitOfWork {
             this.isPushingRightNow = false;
         }
 
-        public synchronized void startReadWriteAction(@NonNull Constants.Lock lock) {
+        public synchronized void startReadWriteAction(
+                @NonNull Constants.Lock lock) {
             if (lock == Constants.Lock.reading) {
                 startReading();
             } else if (lock == Constants.Lock.writing) {
@@ -171,7 +180,8 @@ public class UnitOfWork {
         }
 
         private synchronized void startWriting() {
-            while (this.nbUserAddingToCommitList != 0 || this.isPushingRightNow) {
+            while (this.nbUserAddingToCommitList != 0 ||
+                    this.isPushingRightNow) {
                 yield();
             }
             this.isPushingRightNow = true;
