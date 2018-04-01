@@ -6,77 +6,76 @@ import static java.lang.Thread.yield;
 
 public class ObjectWrapper<Payload> {
 
-    private Payload payload;
-    private int nbObjectReading;
-    private boolean isThreadWriting;
-    private boolean isToBeDeleted;
+        private Payload payload;
+        private int nbObjectReading;
+        private boolean isThreadWriting;
+        private boolean isToBeDeleted;
 
-    public ObjectWrapper(Payload payload) {
-        this.payload = payload;
-        this.nbObjectReading = 0;
-        this.isThreadWriting = false;
-        this.isToBeDeleted = false;
-    }
-
-    private Payload getPayload() {
-        return this.payload;
-    }
-
-    public void setPayload(Payload payload) {
-        this.payload = payload;
-    }
-
-    public boolean isPayloadToBeDeleted() {
-        return this.isToBeDeleted;
-    }
-
-    private Payload startPayloadDeleting() {
-        this.isToBeDeleted = true;
-        return getPayload();
-    }
-
-    public synchronized Payload startReadWriteDeleteAction(
-            Constants.Lock lock) {
-        if (isPayloadToBeDeleted()) {
-            return null;
+        public ObjectWrapper(Payload payload) {
+            this.payload = payload;
+            this.nbObjectReading = 0;
+            this.isThreadWriting = false;
+            this.isToBeDeleted = false;
         }
-        switch (lock) {
-            case reading:
-                return startReading();
 
-            case writing:
-                return startWriting();
-            case deleting:
-                return startPayloadDeleting();
-            default:
+        private Payload getPayload() {
+            return this.payload;
+        }
+
+        public void setPayload(Payload payload) {
+            this.payload = payload;
+        }
+
+        public boolean isPayloadToBeDeleted() {
+            return this.isToBeDeleted;
+        }
+
+        private Payload startPayloadDeleting() {
+            this.isToBeDeleted = true;
+            return getPayload();
+        }
+
+        public synchronized Payload startReadWriteDeleteAction(Constants.Lock lock) {
+            if(isPayloadToBeDeleted()) {
                 return null;
-        }
-    }
+            }
+            switch(lock) {
+                case reading:
+                    return startReading();
 
-    private synchronized Payload startReading() {
-        while (this.isThreadWriting) {
-            yield();
+                case writing:
+                    return startWriting();
+                case deleting:
+                    return startPayloadDeleting();
+                default:
+                    return null;
+            }
         }
-        ++this.nbObjectReading;
-        return getPayload();
-    }
 
-    private synchronized Payload startWriting() {
-        while (this.nbObjectReading != 0 || this.isThreadWriting) {
-            yield();
+        private synchronized Payload startReading() {
+            while(this.isThreadWriting) {
+                yield();
+            }
+            ++this.nbObjectReading;
+            return getPayload();
         }
-        this.isThreadWriting = true;
-        return getPayload();
-    }
 
-    public synchronized void stopReading() {
-        if (this.nbObjectReading > 0) {
-            --this.nbObjectReading;
+        private synchronized Payload startWriting() {
+            while(this.nbObjectReading != 0 || this.isThreadWriting) {
+                yield();
+            }
+            this.isThreadWriting = true;
+            return getPayload();
         }
-    }
 
-    public synchronized void stopWriting() {
-        this.isThreadWriting = false;
-    }
+        public synchronized void stopReading() {
+            if (this.nbObjectReading > 0) {
+                --this.nbObjectReading;
+            }
+        }
+
+        public synchronized void stopWriting() {
+            this.isThreadWriting = false;
+        }
 
 }
