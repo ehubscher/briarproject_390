@@ -370,11 +370,13 @@ public class ConversationActivity extends BriarActivity
                     String[] messages = new String[listOfMessageId.size()];
                     int i = 0;
                     for (MessageId messageId: listOfMessageId) {
-                        messages[i++] = (messagingManager.getMessageBody(messageId));
+                        messages[i] = messagingManager.getMessageBody(messageId);
+                        i++;
                     }
                     intentPinned.putExtra(PINNED_MESSAGES, messages);
                 }catch (DbException e){
-                    //continue or display failed message here
+                    String[] messages = {"Nothing"};
+                    intentPinned.putExtra(PINNED_MESSAGES, messages);
                 }
 				startActivityForResult(intentPinned, REQUEST_PINNED_MESSAGES);
 				return true;

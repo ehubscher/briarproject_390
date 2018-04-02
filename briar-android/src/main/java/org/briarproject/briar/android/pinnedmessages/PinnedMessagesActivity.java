@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 public class PinnedMessagesActivity extends AppCompatActivity {
 
-    public static final String PINNED_MESSAGES = "briar.CONTACT_ID";
+    public static final String PINNED_MESSAGES = "briar.PINNED_MESSAGES";
 
     @Inject
     volatile MessagingManager messagingManager;
