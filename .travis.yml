@@ -12,8 +12,9 @@ addons:
     organization: sonarqubesoen390briar-github
     token:
       secure: ${SONAR_TOKEN}
-      branches:
-        - dev
+    branches:
+      - master
+      - dev
 before_install:
   - yes | sdkmanager "platforms;android-27"
 stages:
