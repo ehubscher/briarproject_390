@@ -526,21 +526,16 @@ public class ConversationActivity extends BriarActivity
 				list.scrollToPosition(adapter.getItemCount() - 1);
 
 				for (ConversationItem i: items) {
-
 					if(i.getClass() == ConversationMessageInItem.class) {
-						if (i.isPinned()) {
-							try {
-								messagingManager.setPinned(i.getId(), true);
-							} catch (DbException e) {
-								e.printStackTrace();
-							}
-						} else {
-							try {
-								messagingManager.setPinned(i.getId(), false);
-							} catch (DbException e) {
-								e.printStackTrace();
-							}
-						}
+                        try {
+                            if (messagingManager.isMessagePinned(i.getId())) {
+                                messagingManager.setPinned(i.getId(), true);
+                            } else {
+                                messagingManager.setPinned(i.getId(), false);
+                            }
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
 					}
 				}
 			} else {

@@ -80,15 +80,20 @@ class ConversationItemViewHolder extends ViewHolder {
 		}
 		
 		if(item.getClass() == ConversationMessageInItem.class) {
-			//set the right icon
-			if(item.isPinned()){
-				pinned.setActivated(true);
-				pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
-			}
-			else{
-				pinned.setActivated(false);
-				pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
-			}
+			try{
+                //set the right icon
+                if(messagingManager.isMessagePinned(item.getId())){
+                    pinned.setActivated(true);
+                    pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
+                }
+                else{
+                    pinned.setActivated(false);
+                    pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+                }
+			} catch (DbException e){
+                pinned.setActivated(false);
+                pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+            }
 
 			//Set image button listener
 			pinned.setOnClickListener(new View.OnClickListener() {
@@ -96,10 +101,6 @@ class ConversationItemViewHolder extends ViewHolder {
 				public void onClick(View v) {
 					//Remove from pinned messages if button is activated
 					if(pinned.isActivated()){
-						pinned.setActivated(false);
-						pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
-						item.setPinned(false);
-
 						new Handler().post(new Runnable() {
 							public void run() {
 								try {
@@ -109,12 +110,11 @@ class ConversationItemViewHolder extends ViewHolder {
 								}
 							}
 						});
-
-					}//Add to pinned messages is button is deactivated
+                        pinned.setActivated(false);
+                        pinned.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+					}
+					//Add to pinned messages is button is deactivated
 					else{
-						pinned.setActivated(true);
-						pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
-						item.setPinned(true);
 						new Handler().post(new Runnable() {
 							public void run() {
 								try {
@@ -124,6 +124,8 @@ class ConversationItemViewHolder extends ViewHolder {
 								}
 							}
 						});
+                        pinned.setActivated(true);
+                        pinned.setImageResource(R.drawable.ic_bookmark_black_24dp);
 					}
 				}
 			});

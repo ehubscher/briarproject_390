@@ -61,10 +61,6 @@ abstract class ConversationItem {
 		this.body = body;
 	}
 
-	public void setPinned(boolean pinned){};
-
-	public boolean isPinned(){return false;};
-
 	@Nullable
 	public String getBody() {
 		return body;
