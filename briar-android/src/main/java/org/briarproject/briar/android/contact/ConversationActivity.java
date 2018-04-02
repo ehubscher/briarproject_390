@@ -129,6 +129,7 @@ public class ConversationActivity extends BriarActivity
 		implements EventListener, ConversationListener, TextInputListener {
 
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
+    public static final String PINNED_MESSAGES = "briar.PINNED_MESSAGES";
 
 	private static final Logger LOG =
 			Logger.getLogger(ConversationActivity.class.getName());
@@ -362,7 +363,19 @@ public class ConversationActivity extends BriarActivity
 				onBackPressed();
 				return true;
 			case R.id.action_view_pinned:
-				Intent intentPinned = new Intent(this, PinnedMessagesActivity.class);
+                Intent intentPinned = new Intent(this, PinnedMessagesActivity.class);
+                try{
+                    Collection<MessageId> listOfMessageId = messagingManager.getPinnedMessages(contactId);
+                    //Loop the list to get the body of each pinned messages
+                    String[] messages = new String[listOfMessageId.size()];
+                    int i = 0;
+                    for (MessageId messageId: listOfMessageId) {
+                        messages[i++] = (messagingManager.getMessageBody(messageId));
+                    }
+                    intentPinned.putExtra(PINNED_MESSAGES, messages);
+                }catch (DbException e){
+                    //continue or display failed message here
+                }
 				startActivityForResult(intentPinned, REQUEST_PINNED_MESSAGES);
 				return true;
 			case R.id.action_introduction:
