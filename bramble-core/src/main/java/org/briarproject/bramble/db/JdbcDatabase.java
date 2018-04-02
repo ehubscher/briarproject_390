@@ -1911,7 +1911,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			String sql = "SELECT messageId FROM messages WHERE GroupID = ?";
+			String sql = "SELECT messageId FROM messages WHERE GroupID = ? AND pinned = TRUE";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setBytes(1, groupId.getBytes());
 			resultSet = preparedStatement.executeQuery();
