@@ -9,9 +9,9 @@ android:
   - android-sdk-license-.+
 addons:
   sonarcloud:
-    organization: sonarqubesoen390briar-github
+    organization: "sonarqubesoen390briar-github"
     token:
-      secure: ${SONAR_TOKEN}
+      secure: "186bfbb22bba3fdf57590a6c601f427fba76946d"
     branches:
       - dev
 before_install:
@@ -28,7 +28,7 @@ jobs:
           ./gradlew clean assemble
       - stage: sonar
         script:
-          ./gradlew sonarqube --rerun-tasks --continue
+          sonar-scanner
       - stage: test
         script:
           ./gradlew test --info --rerun-tasks --continue
