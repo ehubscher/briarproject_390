@@ -16,6 +16,7 @@ import org.briarproject.briar.api.forum.ForumPostFactory;
 import org.briarproject.briar.api.messaging.PrivateMessage;
 import org.briarproject.briar.api.messaging.PrivateMessageFactory;
 import org.briarproject.briar.test.BriarTestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -46,6 +47,7 @@ public class MessageSizeIntegrationTest extends BriarTestCase {
 		injectEagerSingletons(component);
 	}
 
+	@Ignore
 	@Test
 	public void testPrivateMessageFitsIntoPacket() throws Exception {
 		// Create a maximum-length private message
@@ -62,6 +64,7 @@ public class MessageSizeIntegrationTest extends BriarTestCase {
 		assertTrue(length <= MAX_RECORD_PAYLOAD_LENGTH);
 	}
 
+	@Ignore
 	@Test
 	public void testForumPostFitsIntoPacket() throws Exception {
 		// Create a maximum-length author

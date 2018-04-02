@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="75dp"
+    android:layout_height="100dp">
+
+    <FrameLayout
+        android:id="@+id/selectedMedia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+    <ImageButton
+        android:id="@+id/selectedMediaDeleteButton"
+        android:layout_width="26dp"
+        android:layout_height="29dp"
+        app:srcCompat="@drawable/action_delete_black"/>
+</FrameLayout>

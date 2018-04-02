@@ -59,11 +59,14 @@
 				android:textSize="@dimen/text_size_medium"
 				tools:text="This is a body text that shows the content of a blog post.\n\nThis one is not short, but it is also not too long."/>
 
-			<ImageView
-				android:layout_below="@id/text"
-				android:id="@+id/imageView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+			<LinearLayout
+				android:id="@+id/blogPostMediaContainer"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/bodyView"
+				android:layout_marginTop="25dp"
+				android:layout_marginBottom="5dp">
+			</LinearLayout>
 
 		</RelativeLayout>
 

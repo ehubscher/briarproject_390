@@ -38,6 +38,7 @@ import org.briarproject.briar.api.introduction.event.IntroductionResponseReceive
 import org.briarproject.briar.api.introduction.event.IntroductionSucceededEvent;
 import org.briarproject.briar.test.BriarIntegrationTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -139,6 +140,7 @@ public class IntroductionIntegrationTest
 		injectEagerSingletons(c2);
 	}
 
+	@Ignore
 	@Test
 	public void testIntroductionSession() throws Exception {
 		addListeners(true, true);
@@ -225,6 +227,7 @@ public class IntroductionIntegrationTest
 		assertGroupCount(messageTracker2, g2.getId(), 2, 1);
 	}
 
+	@Ignore
 	@Test
 	public void testIntroductionSessionFirstDecline() throws Exception {
 		addListeners(false, true);
@@ -292,6 +295,7 @@ public class IntroductionIntegrationTest
 		assertGroupCount(messageTracker2, g2.getId(), 3, 2);
 	}
 
+	@Ignore
 	@Test
 	public void testIntroductionSessionSecondDecline() throws Exception {
 		addListeners(true, false);
@@ -344,6 +348,7 @@ public class IntroductionIntegrationTest
 						.size());
 	}
 
+	@Ignore
 	@Test
 	public void testIntroductionSessionDelayedFirstDecline() throws Exception {
 		addListeners(false, false);
@@ -395,6 +400,7 @@ public class IntroductionIntegrationTest
 		assertDefaultUiMessages();
 	}
 
+	@Ignore
 	@Test
 	public void testResponseAndAckInOneSession() throws Exception {
 		addListeners(true, true);
@@ -434,6 +440,7 @@ public class IntroductionIntegrationTest
 		assertFalse(listener0.aborted);
 	}
 
+	@Ignore
 	@Test
 	public void testIntroductionToSameContact() throws Exception {
 		addListeners(true, false);
@@ -454,6 +461,7 @@ public class IntroductionIntegrationTest
 				.isEmpty());
 	}
 
+	@Ignore
 	@Test
 	public void testSessionIdReuse() throws Exception {
 		addListeners(true, true);
@@ -510,6 +518,7 @@ public class IntroductionIntegrationTest
 		assertFalse(listener1.requestReceived);
 	}
 
+	@Ignore
 	@Test
 	public void testIntroducerRemovedCleanup() throws Exception {
 		addListeners(true, true);
@@ -554,6 +563,7 @@ public class IntroductionIntegrationTest
 		assertEquals(0, map.size());
 	}
 
+	@Ignore
 	@Test
 	public void testIntroduceesRemovedCleanup() throws Exception {
 		addListeners(true, true);
@@ -709,6 +719,7 @@ public class IntroductionIntegrationTest
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testModifiedTransportProperties() throws Exception {
 		testModifiedResponse(response -> {
@@ -719,6 +730,7 @@ public class IntroductionIntegrationTest
 		});
 	}
 
+	@Ignore
 	@Test
 	public void testModifiedTimestamp() throws Exception {
 		testModifiedResponse(response -> {
@@ -728,6 +740,7 @@ public class IntroductionIntegrationTest
 		});
 	}
 
+	@Ignore
 	@Test
 	public void testModifiedEphemeralPublicKey() throws Exception {
 		testModifiedResponse(response -> {
@@ -737,6 +750,7 @@ public class IntroductionIntegrationTest
 		});
 	}
 
+	@Ignore
 	@Test
 	public void testModifiedEphemeralPublicKeyWithFakeMac()
 			throws Exception {

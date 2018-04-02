@@ -7,14 +7,27 @@
 	android:layout_height="match_parent"
 	tools:context=".android.blog.WriteBlogPostActivity">
 
-	<org.briarproject.briar.android.view.LargeTextInputView
-		android:id="@+id/bodyInput"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:gravity="bottom"
-		app:buttonText="@string/blogs_publish_blog_post"
-		app:hint="@string/blogs_write_blog_post_body_hint"
-		app:fillHeight="true"/>
+        <org.briarproject.briar.android.view.TextInputView
+			android:id="@+id/bodyInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+			android:gravity="bottom"
+			app:buttonText="@string/blogs_publish_blog_post"
+			app:hint="@string/blogs_write_blog_post_body_hint"
+			app:fillHeight="true">
+
+        </org.briarproject.briar.android.view.TextInputView>
+
+        <!--
+        <org.briarproject.briar.android.view.LargeTextInputView
+            android:id="@+id/bodyInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            app:buttonText="@string/blogs_publish_blog_post"
+            app:hint="@string/blogs_write_blog_post_body_hint"
+            app:fillHeight="true"/>
+            -->
 
 	<ProgressBar
 		android:id="@+id/progressBar"

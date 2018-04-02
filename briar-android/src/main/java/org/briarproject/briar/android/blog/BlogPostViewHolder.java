@@ -17,12 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.sync.MessageId;
+import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.view.AuthorView;
+import org.briarproject.briar.android.view.SelectedMediaView;
 import org.briarproject.briar.api.blog.BlogCommentHeader;
 import org.briarproject.briar.api.blog.BlogPostHeader;
 
@@ -49,7 +52,7 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 	private final ImageView reblogButton;
 	private final TextView body;
 	private final ViewGroup commentContainer;
-	private final ImageView imageView;
+	private final LinearLayout blogPostMediaContainer;
 	private final boolean fullText;
 
 	@NonNull
@@ -68,7 +71,7 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 		reblogButton = v.findViewById(R.id.commentView);
 		body = v.findViewById(R.id.bodyView);
 		commentContainer = v.findViewById(R.id.commentContainer);
-		imageView = v.findViewById(R.id.imageView);
+		blogPostMediaContainer = v.findViewById(R.id.blogPostMediaContainer);
 	}
 
 	void setVisibility(int visibility) {
@@ -92,22 +95,25 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 	}
 
 	void bindItem(@Nullable BlogPostItem item) {
-		if (item == null) return;
+		// author and date
+		BlogPostHeader postHeader = item.getPostHeader();
+		String postBody = item.getBody();
+		
+		if (item == null) {
+			return;
+		}
 
 		setTransitionName(item.getId());
 		if (!fullText) {
 			layout.setClickable(true);
 			layout.setOnClickListener(v -> listener.onBlogPostClick(item));
 		}
+		
+		author.setAuthor(postHeader.getAuthor());
+		author.setAuthorStatus(postHeader.getAuthorStatus());
+		author.setDate(postHeader.getTimestamp());
+		author.setPersona(item.isRssFeed() ? AuthorView.RSS_FEED : AuthorView.NORMAL);
 
-		// author and date
-		BlogPostHeader post = item.getPostHeader();
-		Author a = post.getAuthor();
-		author.setAuthor(a);
-		author.setAuthorStatus(post.getAuthorStatus());
-		author.setDate(post.getTimestamp());
-		author.setPersona(
-				item.isRssFeed() ? AuthorView.RSS_FEED : AuthorView.NORMAL);
 		// TODO make author clickable more often #624
 		if (!fullText && item.getHeader().getType() == POST) {
 			author.setAuthorClickable(v -> listener.onAuthorClick(item));
@@ -115,30 +121,41 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 			author.setAuthorNotClickable();
 		}
 
-		String bodyString = item.getBody();
+		// Check for encoded media
+		if (postBody.contains("%shim%")) {
+			String[] shims = item.getBody().split("%shim%");
+			String encodedMedia = "";
 
-		// Check for image
-		if (bodyString.startsWith("ImageTag:")){
+			if (shims.length > 0) {
+				for (int i = 0; i < shims.length; i++) {
+					if (shims[i].startsWith("ImageTag:")) {
+						SelectedMediaView mediaView = new SelectedMediaView(this.ctx);
+						encodedMedia = shims[i].substring(9);
+						byte[] mediaBytes = android.util.Base64.decode(encodedMedia, android.util.Base64.DEFAULT);
 
-			String encodedString = bodyString.substring(9);
-
-			byte[] imageBytes = android.util.Base64.decode(encodedString, android.util.Base64.DEFAULT);
-			Bitmap decodeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-			body.setText("Image:");
-			imageView.setImageBitmap(decodeImage);
-		}
-		else
-		{
-			Spanned bodyText = getSpanned(bodyString);
+						Bitmap decodedMedia = BitmapFactory.decodeByteArray(mediaBytes, 0, mediaBytes.length);
+						mediaView.setImage(decodedMedia);
+						mediaView.removeDeleteButton();
+						blogPostMediaContainer.addView(mediaView);
+					} else {
+						body.setText(StringUtils.trim(shims[i]));
+					}
+				}
+			}
+		} else {
+			Spanned bodyText = getSpanned(postBody);
 			if (fullText) {
 				body.setText(bodyText);
 				body.setTextIsSelectable(true);
+
 				makeLinksClickable(body);
 			} else {
 				body.setTextIsSelectable(false);
-				if (bodyText.length() > TEASER_LENGTH)
+
+				if (bodyText.length() > TEASER_LENGTH) {
 					bodyText = getTeaser(ctx, bodyText);
+				}
+
 				body.setText(bodyText);
 			}
 		}
@@ -150,11 +167,13 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 			i.putExtra(POST_ID, item.getId().getBytes());
 
 			if (Build.VERSION.SDK_INT >= 23) {
-				ActivityOptionsCompat options =
-						makeSceneTransitionAnimation((Activity) ctx, layout,
-								getTransitionName(item.getId()));
-				ActivityCompat.startActivity(ctx, i,
-						options.toBundle());
+				ActivityOptionsCompat options = makeSceneTransitionAnimation(
+					(Activity) ctx,
+					layout,
+					getTransitionName(item.getId())
+				);
+
+				ActivityCompat.startActivity(ctx, i, options.toBundle());
 			} else {
 				// work-around for android bug #224270
 				ctx.startActivity(i);
@@ -175,21 +194,19 @@ class BlogPostViewHolder extends RecyclerView.ViewHolder {
 		reblogger.setAuthor(item.getAuthor());
 		reblogger.setAuthorStatus(item.getAuthorStatus());
 		reblogger.setDate(item.getTimestamp());
+
 		if (!fullText) {
 			reblogger.setAuthorClickable(v -> listener.onAuthorClick(item));
 		}
+
 		reblogger.setVisibility(VISIBLE);
 		reblogger.setPersona(AuthorView.REBLOGGER);
 
-		author.setPersona(item.getHeader().getRootPost().isRssFeed() ?
-				AuthorView.RSS_FEED_REBLOGGED :
-				AuthorView.COMMENTER);
+		author.setPersona(item.getHeader().getRootPost().isRssFeed() ? AuthorView.RSS_FEED_REBLOGGED : AuthorView.COMMENTER);
 
 		// comments
 		for (BlogCommentHeader c : item.getComments()) {
-			View v = LayoutInflater.from(ctx)
-					.inflate(R.layout.list_item_blog_comment,
-							commentContainer, false);
+			View v = LayoutInflater.from(ctx).inflate(R.layout.list_item_blog_comment, commentContainer, false);
 
 			AuthorView author = v.findViewById(R.id.authorView);
 			TextView body = v.findViewById(R.id.bodyView);
