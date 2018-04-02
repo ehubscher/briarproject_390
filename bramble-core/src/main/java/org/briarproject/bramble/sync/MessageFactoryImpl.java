@@ -45,7 +45,7 @@ class MessageFactoryImpl implements MessageFactory {
 		System.arraycopy(groupIdBytes, 0, raw, 0, UniqueId.LENGTH);
 		ByteUtils.writeUint64(timestamp, raw, UniqueId.LENGTH);
 		System.arraycopy(body, 0, raw, MESSAGE_HEADER_LENGTH, body.length);
-		return new Message(id, g, timestamp, raw, false);
+		return new Message(id, groupId, timestamp, raw, false);
 	}
 
 	@Override
