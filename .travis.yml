@@ -12,8 +12,6 @@ addons:
     organization: "sonarqubesoen390briar-github"
     token:
       secure: "186bfbb22bba3fdf57590a6c601f427fba76946d"
-    branches:
-      - TravisFix
 before_install:
   - yes | sdkmanager "platforms;android-27"
 stages:
