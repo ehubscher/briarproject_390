@@ -45,6 +45,16 @@ public class PinnedMessagesActivity extends AppCompatActivity {
 
         for (int i = 0; i < messages.length; i++){
             //TODO display the messages here this is only for test
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Test");
+            alertDialog.setMessage(messages[i]);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
         }
     }
 
