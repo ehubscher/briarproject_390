@@ -236,4 +236,20 @@ class MessagingManagerImpl extends ConversationClientImpl
 		}
 	}
 
+    @Override
+    public boolean isMessagePinned(MessageId id) throws DbException{
+        Transaction txn = db.startTransaction(false);
+
+        boolean isPinned;
+
+        try {
+            isPinned = db.isMessagePinned(txn, id);
+            db.commitTransaction(txn);
+        }finally {
+            db.endTransaction(txn);
+        }
+
+        return isPinned;
+    }
+
 }

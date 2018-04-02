@@ -60,4 +60,9 @@ public interface MessagingManager extends ConversationClient {
 	 */
 	void setPinned(MessageId id, boolean state) throws DbException;
 
+    /**
+     * Change if message is pinned or not
+     */
+    boolean isMessagePinned(MessageId id) throws DbException;
+
 }
