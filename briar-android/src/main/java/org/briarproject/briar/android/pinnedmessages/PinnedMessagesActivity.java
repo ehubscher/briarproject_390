@@ -46,7 +46,7 @@ public class PinnedMessagesActivity extends AppCompatActivity {
         for (int i = 0; i < messages.length; i++){
             //TODO display the messages here this is only for test
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Pinned: " + i+1);
+            alertDialog.setTitle("Pinned: " + (i+1));
             alertDialog.setMessage(messages[i]);
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "next",
                     new DialogInterface.OnClickListener() {
