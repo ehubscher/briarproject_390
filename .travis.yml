@@ -29,7 +29,8 @@ jobs:
           ./gradlew clean assemble
       - stage: sonar
         script:
-        -  ./gradlew clean assemble && sonar-scanner
+          if branch = master OR branch = dev
+          ./gradlew clean assemble && sonar-scanner
       - stage: test
         script:
           ./gradlew test --info --rerun-tasks --continue
