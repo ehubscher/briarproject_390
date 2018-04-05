@@ -29,7 +29,8 @@ jobs:
           ./gradlew clean assemble
       - stage: sonar
         script:
-             - if [ ($TRAVIS_BRANCH = "dev") || ($TRAVIS_BRANCH = "master")  ]; then ./gradlew clean assemble && sonar-scanner; fi
+             - if [$TRAVIS_BRANCH = "dev"]; then ./gradlew clean assemble && sonar-scanner;
+             else ./gradlew clean assemble; fi
       - stage: test
         script:
           ./gradlew test --info --rerun-tasks --continue
