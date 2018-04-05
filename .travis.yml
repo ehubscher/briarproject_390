@@ -31,9 +31,9 @@ jobs:
         script:
              - |
               if [[ ($TRAVIS_BRANCH == "dev") ]]; then
-                echo $TRAVIS_COMMIT;
+                sonar-scanner;
               else
-                echo $TRAVIS_OS_NAME;
+                echo "Sonar do not scan other branch than dev";
               fi
       - stage: test
         script:
