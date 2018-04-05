@@ -29,7 +29,12 @@ jobs:
           ./gradlew clean assemble
       - stage: sonar
         script:
-             - if [[ ($TRAVIS_BRANCH == "dev") ]]; then echo $TRAVIS_COMMIT; fi
+             - |
+              if [[ ($TRAVIS_BRANCH == "dev") ]]; then
+                echo $TRAVIS_COMMIT;
+              else
+                echo $TRAVIS_OS_NAME;
+              fi
       - stage: test
         script:
           ./gradlew test --info --rerun-tasks --continue
