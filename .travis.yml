@@ -13,24 +13,31 @@ addons:
     token:
       secure: ${SONAR_TOKEN}
     branches:
+      - master
       - dev
 before_install:
-  - yes | sdkmanager "platforms;android-27" 
+  - yes | sdkmanager "platforms;android-27"
 stages:
   - compile
+  - sonar
   - test
-  - static_analysis
+
 jobs:
-    include: 
+    include:
       - stage: compile
-        script: 
+        script:
           ./gradlew clean assemble
-      - stage: test
-        script: 
-          ./gradlew test --rerun-tasks --continue
       - stage: sonar
-        script: 
-          sonar-scanner
+        script:
+             - |
+              if [[($TRAVIS_BRANCH == "master")]]; then
+                ./gradlew clean assemble && sonar-scanner;
+              else
+                echo "Sonar does not scan other branch than master";
+              fi
+      - stage: test
+        script:
+          ./gradlew test --info --rerun-tasks --continue
 cache:
   directories:
     - '$HOME/.m2/repository'

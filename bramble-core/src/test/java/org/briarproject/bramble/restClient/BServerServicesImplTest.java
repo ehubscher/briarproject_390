@@ -5,7 +5,6 @@ import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import java.util.Random;
 
 /**
@@ -58,6 +57,10 @@ public class BServerServicesImplTest {
 		// Check if the returned user has the data previously passed
 		Assert.assertTrue(returnedUser.getUsername().equals(username));
 	}
+
+	/**
+	 * This test is trying to update user's setting information
+	 */
 	@Ignore
 	@Test
 	public void updateUserSettingsTest(){
@@ -69,6 +72,10 @@ public class BServerServicesImplTest {
 		boolean e = services.updateUserSettingInfo(user);
 		Assert.assertTrue(e);
 	}
+
+	/**
+	 *  This test is trying ot update user's network information
+	 */
 	@Ignore
 	@Test
 	public void updateUserTcpTest(){
@@ -80,6 +87,7 @@ public class BServerServicesImplTest {
 		boolean e = services.updateUserNetworkInfo(user);
 		Assert.assertTrue(e);
 	}
+
 
 	private String generateFakeUserName(){
 		String fakeUserName = "";
