@@ -33,7 +33,7 @@ jobs:
               if [[($TRAVIS_BRANCH == "master")]]; then
                 ./gradlew clean assemble && sonar-scanner;
               else
-                echo "Sonar does not scan other branch than dev";
+                echo "Sonar does not scan other branch than master";
               fi
       - stage: test
         script:
