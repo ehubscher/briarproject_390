@@ -1,6 +1,11 @@
-https://travis-ci.com/jhubscher/briarproject_390.svg?token=FuVEZfTxnHNSfuBVWBuR&branch=dev
+
+
 
 # briarproject_390
+
+[![Build Status](https://travis-ci.com/jhubscher/briarproject_390.svg?token=ukzosALsF5WqiygtyhxF&branch=master)](https://travis-ci.com/jhubscher/briarproject_390)
+[![Build Status](https://sonarcloud.io/api/project_badges/measure?project=sonarqubesoen390briar-github%3Adev&metric=alert_status)](https://sonarcloud.io/dashboard?id=sonarqubesoen390briar-github%3Adev)
+
 Concordia University Mini-Capstone (i.e. SOEN 390) project for Team La Famiglia. The Open-Source Project forked is an Android-based secure messaging app called Briar.
 
 See the WIKI description of the project here:
