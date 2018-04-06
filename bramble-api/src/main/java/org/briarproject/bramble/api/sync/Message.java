@@ -9,8 +9,9 @@ public class Message {
 	private final GroupId groupId;
 	private final long timestamp;
 	private final byte[] raw;
+	private final boolean pinned;
 
-	public Message(MessageId id, GroupId groupId, long timestamp, byte[] raw) {
+	public Message(MessageId id, GroupId groupId, long timestamp, byte[] raw, boolean pinned) {
 		if (raw.length <= MESSAGE_HEADER_LENGTH)
 			throw new IllegalArgumentException();
 		if (raw.length > MAX_MESSAGE_LENGTH)
@@ -19,6 +20,7 @@ public class Message {
 		this.groupId = groupId;
 		this.timestamp = timestamp;
 		this.raw = raw;
+		this.pinned = pinned;
 	}
 
 	/**
@@ -55,6 +57,10 @@ public class Message {
 	public byte[] getRaw() {
 		return raw;
 	}
+
+	public boolean isPinned() {
+	    return this.pinned;
+    }
 
 	@Override
 	public int hashCode() {
