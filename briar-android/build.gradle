@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'witness'
 
 dependencies {
+	implementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
+
 	implementation project(path: ':briar-core', configuration: 'default')
 	implementation project(path: ':bramble-core', configuration: 'default')
 	implementation project(path: ':bramble-android', configuration: 'default')

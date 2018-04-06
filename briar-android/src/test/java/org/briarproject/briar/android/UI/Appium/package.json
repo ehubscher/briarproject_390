@@ -1,0 +1,16 @@
+{
+  "name": "briar-soen-390",
+  "version": "1.0.0",
+  "description": "Briar Project - SOEN 390; UI Tests",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "appium": "^1.7.2",
+    "appium-uiautomator2-driver": "^1.7.0",
+    "webdriverio": "^4.12.0"
+  }
+}
