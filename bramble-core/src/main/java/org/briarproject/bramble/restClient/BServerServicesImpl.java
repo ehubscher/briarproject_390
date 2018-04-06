@@ -25,7 +25,6 @@ import retrofit2.Response;
 
 public class BServerServicesImpl implements BServerServices{
 
-    ServerConfig config = ServerConfig.getServerConfig();
     // These variable are used to exchange data between the threads...
     private volatile SavedUser createdUser = null;
     private volatile String resultFromQueryCreateUser = null;
