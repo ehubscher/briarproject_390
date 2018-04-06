@@ -4,20 +4,20 @@ import com.briar.server.exception.DBException;
 import com.briar.server.exception.ObjectAlreadyExistsException;
 import com.briar.server.exception.ObjectDeletedException;
 import com.briar.server.exception.UserContactDoesntExistsException;
-import com.briar.server.handler.UserHandler;
-import com.briar.server.mapper.UserMapper;
-import com.briar.server.model.domainmodelclasses.User;
+import com.briar.server.handler.UserContactHandler;
+import com.briar.server.mapper.UserContactMapper;
+import com.briar.server.model.domainmodelclasses.UserContact;
 
-public class DeleteUser extends AbstractUserTask {
+public class InsertNewUserContact extends AbstractUserContactTask {
 
-    public DeleteUser(User userToDelete, UserHandler handler, UserMapper mapper) {
-        super(userToDelete, handler, mapper);
+    public InsertNewUserContact(UserContact userContactToAdd, UserContactHandler handler, UserContactMapper userContactMapper) {
+        super(userContactToAdd, handler, userContactMapper);
     }
 
     @Override
     public void commitDB() throws DBException {
         try {
-            this.userMapper.removeUser(this.user);
+            userContactMapper.addNewUserContact(this.userContact);
         } catch (Exception e) {
             throw new DBException(e.getMessage());
         }
@@ -25,18 +25,20 @@ public class DeleteUser extends AbstractUserTask {
 
     @Override
     public void commitIdentityMap() throws ObjectDeletedException, ObjectAlreadyExistsException, UserContactDoesntExistsException {
-        this.handler.remove();
+        handler.add();
     }
 
     @Override
     public void revertDB() throws DBException {
-        //TODO Implement the revert algo. Probably need to compile a list of things that are going to be modified by
-        // the commit and revert them afterwards.
+        try {
+            userContactMapper.removeSpecificUserContact(this.userContact);
+        } catch (Exception e) {
+            throw new DBException(e.getMessage());
+        }
     }
 
     @Override
     public void revertIdentityMap() throws ObjectDeletedException, ObjectAlreadyExistsException, UserContactDoesntExistsException {
-        //TODO Implement the revert algo. Probably need to compile a list of things that are going to be modified by
-        // the commit and revert them afterwards.
+        handler.remove();
     }
 }

@@ -16,12 +16,9 @@ public class AbstractService<ServiceType> {
         this.unitOfWork = unitOfWork;
     }
 
-    protected void commitAndPush(ServiceType objectAffected, ITask taskToCommit)
-            throws DataCompromisedException {
+    protected void commitAndPush(ServiceType objectAffected, ITask taskToCommit) throws DataCompromisedException {
         long currentThreadId = Thread.currentThread().getId();
-        String transactionId =
-                objectAffected.toString() + " CURRENT THREAD ID: " +
-                        currentThreadId;
+        String transactionId = objectAffected.toString() + " CURRENT THREAD ID: " + currentThreadId;
         this.unitOfWork.registerCommit(transactionId, taskToCommit);
         this.unitOfWork.pushCommit(transactionId);
     }

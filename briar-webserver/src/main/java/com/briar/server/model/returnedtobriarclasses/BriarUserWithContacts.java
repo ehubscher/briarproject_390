@@ -1,19 +1,25 @@
 package com.briar.server.model.returnedtobriarclasses;
 
-public class BriarUser {
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BriarUserWithContacts {
     private String userName;
     private String ip;
-    private int port;
+    private String port;
     private int statusId;
     private int avatarId;
+    private List<BriarUser> contactList;
 
-    public BriarUser(String userName, String ip, int port, int statusId,
-                     int avatarId) {
+    public BriarUserWithContacts(String userName, String ip, String port, int
+     statusId, int avatarId) {
         this.userName = userName;
         this.ip = ip;
         this.port = port;
         this.statusId = statusId;
         this.avatarId = avatarId;
+        this.contactList = new ArrayList<BriarUser>();
     }
 
     public String getUserName() {
@@ -32,38 +38,51 @@ public class BriarUser {
         this.ip = ip;
     }
 
-    public int getPort() {
+    public String getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(String port) {
         this.port = port;
-    }
-
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
     }
 
     public int getStatusId() {
         return statusId;
     }
 
-    public void setAvatarId(int avatarId) {
-        this.avatarId = avatarId;
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 
     public int getAvatarId() {
         return avatarId;
     }
 
+    public void setAvatarId(int avatarId) {
+        this.avatarId = avatarId;
+    }
+
+    public List<BriarUser> getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(List<BriarUser> contactList) {
+        this.contactList = contactList;
+    }
+
+    public void addUserToContactList(BriarUser user) {
+        this.contactList.add(user);
+    }
+
     @Override
     public String toString() {
-        return "BriarUser{" +
+        return "BriarUserWithContacts{" +
                 "userName='" + userName + '\'' +
                 ", ip='" + ip + '\'' +
-                ", port=" + port +
+                ", port='" + port + '\'' +
                 ", statusId=" + statusId +
                 ", avatarId=" + avatarId +
+                ", contactList=" + contactList +
                 '}';
     }
 }
