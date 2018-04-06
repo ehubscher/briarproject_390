@@ -7,7 +7,6 @@ import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import java.util.Random;
 
 /**
@@ -81,7 +80,6 @@ public class BServerServicesImplTest {
 		boolean e = services.updateUserSettingInfo(user);
 		Assert.assertTrue(e);
 	}
-
     /**
      * Test to update TCP Connection details with default user Bob
      */
