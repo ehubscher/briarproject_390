@@ -28,7 +28,7 @@ public class PinnedMessagesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pinned_messages, container, false);
         RelativeLayout layout = view.findViewById(R.id.layout_pinned);
 
-        //Find linear layout
+        //Create linear layout
         LinearLayout lL = new LinearLayout(this.getContext());
         lL.setOrientation(LinearLayout.VERTICAL);
 
@@ -46,15 +46,15 @@ public class PinnedMessagesFragment extends Fragment {
                 EmojiTextView text = new EmojiTextView(this.getContext());
                 text.setText(a.messages[i]);
                 text.setTextSize(16);
-                text.setPadding(15,20,15,20);
+                text.setPadding(20,20,20,20);
                 lL.addView(text);
 
                 //Add divider between messages
                 ImageView divider = new ImageView(this.getContext());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 3);
-                lp.setMargins(10, 10, 10, 10);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
+                lp.setMargins(10, 15, 10, 15);
                 divider.setLayoutParams(lp);
-                divider.setBackgroundColor(Color.BLACK);
+                divider.setBackgroundColor(Color.LTGRAY);
                 lL.addView(divider);
             }
             layout.addView(lL);//add linear layout to relative layout
