@@ -38,6 +38,7 @@ import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactCl
 import org.briarproject.briar.android.fragment.BaseFragment;
 import org.briarproject.briar.android.keyagreement.KeyAgreementActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
+import org.briarproject.briar.android.wallpaper.WallpaperActivity;
 import org.briarproject.briar.api.android.AndroidNotificationManager;
 import org.briarproject.briar.api.client.BaseMessageHeader;
 import org.briarproject.briar.api.client.MessageTracker.GroupCount;
@@ -168,6 +169,10 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				Intent intent =
 						new Intent(getContext(), KeyAgreementActivity.class);
 				startActivity(intent);
+				return true;
+			case R.id.action_change_wallpaper:
+				Intent i = new Intent(getContext(), WallpaperActivity.class);
+				startActivity(i);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
