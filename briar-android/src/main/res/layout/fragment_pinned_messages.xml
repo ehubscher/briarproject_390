@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/layout_pinned"
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="org.briarproject.briar.android.pinnedmessages.PinnedMessagesFragment"
-    tools:showIn="@layout/activity_pinned_messages">
+    android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/inputDivider_pinned"
-        style="@style/Divider.Horizontal"/>
-
-    <!--to be re-added if we implement time-->
-    <!--android:layout_below="@+id/time_pinned"-->
-
-    <org.thoughtcrime.securesms.components.emoji.EmojiTextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/layout_pinned"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/listitem_vertical_margin"
-        android:paddingBottom="@dimen/listitem_vertical_margin"
-        android:paddingLeft="@dimen/listitem_vertical_margin"
-        android:paddingRight="@dimen/listitem_vertical_margin"
-        android:textColor="@color/briar_text_secondary"
-        android:textSize="@dimen/text_size_small"
-        tools:text="This is a message that has been pinned. Usually, it is expected to be rather short. Not much longer than this one."/>
+        tools:context="org.briarproject.briar.android.pinnedmessages.PinnedMessagesFragment"
+        tools:showIn="@layout/activity_pinned_messages">
 
-    <TextView
-        android:id="@+id/emptyView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:padding="@dimen/margin_activity_horizontal"
-        android:text="@string/no_pinned_messages"
-        android:textSize="@dimen/text_size_large"
-        tools:text="@string/no_pinned_messages"
-        android:visibility="invisible"/>
+        <View
+            android:id="@+id/inputDivider_pinned"
+            style="@style/Divider.Horizontal"/>
 
-</RelativeLayout>
+        <!--to be re-added if we implement time-->
+        <!--android:layout_below="@+id/time_pinned"-->
+
+        <org.thoughtcrime.securesms.components.emoji.EmojiTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/listitem_vertical_margin"
+            android:paddingBottom="@dimen/listitem_vertical_margin"
+            android:paddingLeft="@dimen/listitem_vertical_margin"
+            android:paddingRight="@dimen/listitem_vertical_margin"
+            android:textColor="@color/briar_text_secondary"
+            android:textSize="@dimen/text_size_small"
+            tools:text="This is a message that has been pinned. Usually, it is expected to be rather short. Not much longer than this one."/>
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/margin_activity_horizontal"
+            android:text="@string/no_pinned_messages"
+            android:textSize="@dimen/text_size_large"
+            tools:text="@string/no_pinned_messages"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+</ScrollView>
