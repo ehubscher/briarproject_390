@@ -30,42 +30,20 @@ public class PinnedMessagesActivity extends AppCompatActivity {
 
     private volatile ContactId contactId;
 
+    String[] messages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String[] messages = intent.getStringArrayExtra(PINNED_MESSAGES);
+        messages = intent.getStringArrayExtra(PINNED_MESSAGES);
 
         setContentView(R.layout.activity_pinned_messages);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //Add pinned messages to the layout
-        if(this.findViewById(R.id.layout_pinned) != null) {
-            RelativeLayout layout = (RelativeLayout) this.findViewById(R.id.layout_pinned);
-
-            for (int i = 0; i < messages.length; i++) {
-                EmojiTextView text = new EmojiTextView(this);
-                text.setText(messages[i]);
-
-                layout.addView(text);
-
-                //TODO display the messages here this is only for test
-                /*AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                alertDialog.setTitle("Test");
-                alertDialog.setMessage(messages[i]);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();*/
-            }
-        }
     }
 
     @Override

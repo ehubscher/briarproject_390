@@ -120,6 +120,7 @@
 	<string name="dialog_message_delete_contact">Are you sure that you want to remove this contact and all messages exchanged with this contact?</string>
 	<string name="contact_deleted_toast">Contact deleted</string>
 	<string name="view_pinned_button">View Pinned Messages</string>
+	<string name="no_pinned_messages">There is currently no pinned messages for this conversation. \n\nTry adding some by clicking the bookmark icon on a message that this contact sent you.</string>
 
 	<!-- Adding Contacts -->
 	<string name="add_contact_title">Add a Contact</string>

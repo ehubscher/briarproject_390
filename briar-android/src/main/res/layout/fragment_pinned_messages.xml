@@ -27,4 +27,16 @@
         android:textSize="@dimen/text_size_small"
         tools:text="This is a message that has been pinned. Usually, it is expected to be rather short. Not much longer than this one."/>
 
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:padding="@dimen/margin_activity_horizontal"
+        android:text="@string/no_pinned_messages"
+        android:textSize="@dimen/text_size_large"
+        tools:text="@string/no_pinned_messages"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
