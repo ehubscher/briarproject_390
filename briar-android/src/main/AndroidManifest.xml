@@ -324,16 +324,20 @@
         <activity
             android:name=".android.pinnedmessages.PinnedMessagesActivity"
             android:label="@string/title_activity_pinned_messages"
-            android:parentActivityName=".android.contact.ConversationActivity"
+            android:parentActivityName=".android.activity.BriarActivity"
             android:theme="@style/BriarTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.briarproject.briar.android.contact.ConversationActivity" />
+                android:value="org.briarproject.briar.android.activity.BriarActivity" />
         </activity>
         <activity
             android:name=".android.wallpaper.WallpaperActivity"
             android:label="@string/title_activity_wallpaper"
-            android:theme="@style/BriarTheme.NoActionBar">
+            android:theme="@style/BriarTheme.NoActionBar"
+            android:parentActivityName=".android.settings.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.briarproject.briar.android.settings.SettingsActivity"/>
         </activity>
     </application>
 

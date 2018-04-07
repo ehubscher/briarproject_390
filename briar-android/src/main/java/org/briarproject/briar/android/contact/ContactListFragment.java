@@ -170,10 +170,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						new Intent(getContext(), KeyAgreementActivity.class);
 				startActivity(intent);
 				return true;
-			case R.id.action_change_wallpaper:
-				Intent i = new Intent(getContext(), WallpaperActivity.class);
-				startActivity(i);
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
