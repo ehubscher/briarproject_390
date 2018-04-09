@@ -26,38 +26,38 @@ public class PinnedMessagesFragment extends Fragment {
 
         //Find relative layout
         View view = inflater.inflate(R.layout.fragment_pinned_messages, container, false);
-        RelativeLayout layout = view.findViewById(R.id.layout_pinned);
+        RelativeLayout relativeLayout = view.findViewById(R.id.layout_pinned);
 
         //Create linear layout
-        LinearLayout lL = new LinearLayout(this.getContext());
-        lL.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout linearLayout = new LinearLayout(this.getContext());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-        PinnedMessagesActivity a = (PinnedMessagesActivity) getActivity();
+        PinnedMessagesActivity messagesActivity = (PinnedMessagesActivity) getActivity();
 
         //No messages pinned
-        if(a.messages.length==0){
+        if(messagesActivity.messages.length==0){
            TextView noMessages = view.findViewById(R.id.emptyView);
            noMessages.setVisibility(View.VISIBLE);
         }//Some messages are pinned
         else{
-            for (int i = 0; i < a.messages.length; i++) {
+            for (int i = 0; i < messagesActivity.messages.length; i++) {
                 //TODO: Add timestamp before each messages
                 //Add text
                 EmojiTextView text = new EmojiTextView(this.getContext());
-                text.setText(a.messages[i]);
+                text.setText(messagesActivity.messages[i]);
                 text.setTextSize(16);
                 text.setPadding(20,20,20,20);
-                lL.addView(text);
+                linearLayout.addView(text);
 
                 //Add divider between messages
                 ImageView divider = new ImageView(this.getContext());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
-                lp.setMargins(10, 15, 10, 15);
-                divider.setLayoutParams(lp);
+                LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
+                layoutParam.setMargins(10, 15, 10, 15);
+                divider.setLayoutParams(layoutParam);
                 divider.setBackgroundColor(Color.LTGRAY);
-                lL.addView(divider);
+                linearLayout.addView(divider);
             }
-            layout.addView(lL);//add linear layout to relative layout
+            relativeLayout.addView(linearLayout);//add linear layout to relative layout
         }
         return view;
     }
