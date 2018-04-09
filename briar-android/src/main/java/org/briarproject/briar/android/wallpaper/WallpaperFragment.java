@@ -25,7 +25,27 @@ public class WallpaperFragment extends Fragment {
             R.drawable.hellokitty,
             R.drawable.lake,
             R.drawable.sunset,
-            R.drawable.nebula
+            R.drawable.nebula,
+            R.drawable.abstractimage,
+            R.drawable.animalcrossing,
+            R.drawable.burst,
+            R.drawable.cloud,
+            R.drawable.fireflies,
+            R.drawable.orangepattern,
+            R.drawable.park,
+            R.drawable.planet,
+            R.drawable.water,
+            R.drawable.watercolor,
+            R.drawable.mario,
+            R.drawable.zelda,
+            R.drawable.goldengate,
+            R.drawable.mountain,
+            R.drawable.space,
+            R.drawable.vcolors,
+            R.drawable.kirby,
+            R.drawable.shanghai
+
+
     };
 
     public WallpaperFragment() {
@@ -86,7 +106,7 @@ public class WallpaperFragment extends Fragment {
             ImageView imageView;
             if (convertView == null) {
                 imageView = new ImageView(context);
-                imageView.setLayoutParams(new GridView.LayoutParams(185, 185));
+                imageView.setLayoutParams(new GridView.LayoutParams(190, 210));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setPadding(5, 5, 5, 5);
             }

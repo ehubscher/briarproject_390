@@ -161,7 +161,25 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			R.drawable.hellokitty,
 			R.drawable.lake,
 			R.drawable.sunset,
-			R.drawable.nebula
+			R.drawable.nebula,
+			R.drawable.abstractimage,
+			R.drawable.animalcrossing,
+			R.drawable.burst,
+			R.drawable.cloud,
+			R.drawable.fireflies,
+			R.drawable.orangepattern,
+			R.drawable.park,
+			R.drawable.planet,
+			R.drawable.water,
+			R.drawable.watercolor,
+			R.drawable.mario,
+			R.drawable.zelda,
+			R.drawable.goldengate,
+			R.drawable.mountain,
+			R.drawable.space,
+			R.drawable.vcolors,
+			R.drawable.kirby,
+			R.drawable.shanghai
 	};
 
     //Declared variables for the Image selector
@@ -295,6 +313,42 @@ public class ConversationActivity extends BriarActivity implements EventListener
 				case 5: v.setBackgroundResource(wallpapers[4]);
 					break;
 				case 6: v.setBackgroundResource(wallpapers[5]);
+					break;
+				case 7: v.setBackgroundResource(wallpapers[6]);
+					break;
+				case 8: v.setBackgroundResource(wallpapers[7]);
+					break;
+				case 9: v.setBackgroundResource(wallpapers[8]);
+					break;
+				case 10: v.setBackgroundResource(wallpapers[9]);
+					break;
+				case 11: v.setBackgroundResource(wallpapers[10]);
+					break;
+				case 12: v.setBackgroundResource(wallpapers[11]);
+					break;
+				case 13: v.setBackgroundResource(wallpapers[12]);
+					break;
+				case 14: v.setBackgroundResource(wallpapers[13]);
+					break;
+				case 15: v.setBackgroundResource(wallpapers[14]);
+					break;
+				case 16: v.setBackgroundResource(wallpapers[15]);
+					break;
+				case 17: v.setBackgroundResource(wallpapers[16]);
+					break;
+				case 18: v.setBackgroundResource(wallpapers[17]);
+					break;
+				case 19: v.setBackgroundResource(wallpapers[18]);
+					break;
+				case 20: v.setBackgroundResource(wallpapers[19]);
+					break;
+				case 21: v.setBackgroundResource(wallpapers[20]);
+					break;
+				case 22: v.setBackgroundResource(wallpapers[21]);
+					break;
+				case 23: v.setBackgroundResource(wallpapers[22]);
+					break;
+				case 24: v.setBackgroundResource(wallpapers[23]);
 					break;
 			}
 		}
