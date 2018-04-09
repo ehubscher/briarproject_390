@@ -426,7 +426,7 @@
     <string name="title_activity_pinned_messages">Pinned Messages</string>
 
     <!-- Wallpaper -->
-    <string name="title_activity_wallpaper">Wallpapers</string>
-    <string name="wallpaper_summary">Change the chat wallpaper</string>
+    <string name="title_activity_wallpaper">Choose a wallpaper</string>
+    <string name="wallpaper_summary">Change the chat background</string>
 
 </resources>

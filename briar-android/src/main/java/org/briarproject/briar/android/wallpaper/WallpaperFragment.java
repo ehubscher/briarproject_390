@@ -9,12 +9,9 @@ import android.view.ViewGroup;
 import org.briarproject.briar.R;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class WallpaperActivityFragment extends Fragment {
+public class WallpaperFragment extends Fragment {
 
-    public WallpaperActivityFragment() {
+    public WallpaperFragment() {
     }
 
     @Override

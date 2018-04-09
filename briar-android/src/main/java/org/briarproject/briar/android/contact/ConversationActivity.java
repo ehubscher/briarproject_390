@@ -3,12 +3,14 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
@@ -152,6 +154,16 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	private TextView toolbarTitle;
 	private BriarRecyclerView list;
 
+	//Wallpaper images
+	private Integer[] wallpapers = {
+			R.drawable.bubbles,
+			R.drawable.flower,
+			R.drawable.hellokitty,
+			R.drawable.lake,
+			R.drawable.sunset,
+			R.drawable.nebula
+	};
+
     //Declared variables for the Image selector
 	final Context context = this;
     private TextInputView textInputView;
@@ -260,6 +272,28 @@ public class ConversationActivity extends BriarActivity implements EventListener
                 }
 			}
 		});
+
+		//Set up the wallpaper
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+		int wallpaperId= settings.getInt("wallpaper",0);
+		if(wallpaperId!=0){
+			//change background
+			View v = findViewById(R.id.conversation_layout);
+			switch(wallpaperId){
+				case 1: v.setBackgroundResource(wallpapers[0]);
+					    break;
+				case 2: v.setBackgroundResource(wallpapers[1]);
+						break;
+				case 3: v.setBackgroundResource(wallpapers[2]);
+						break;
+				case 4: v.setBackgroundResource(wallpapers[3]);
+						break;
+				case 5: v.setBackgroundResource(wallpapers[4]);
+						break;
+				case 6: v.setBackgroundResource(wallpapers[5]);
+						break;
+			}
+		}
 
 	}
 
