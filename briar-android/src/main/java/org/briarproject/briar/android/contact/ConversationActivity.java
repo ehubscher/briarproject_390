@@ -273,28 +273,31 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			}
 		});
 
-		//Set up the wallpaper
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-		int wallpaperId= settings.getInt("wallpaper",0);
+		int wallpaperId = settings.getInt("wallpaper",0);
+		setWallpaper(wallpaperId);
+
+	}
+
+	public void setWallpaper(int wallpaperId) {
 		if(wallpaperId!=0){
 			//change background
-			View v = findViewById(R.id.conversation_layout);
+			View v = findViewById(R.id.conversationView);
 			switch(wallpaperId){
 				case 1: v.setBackgroundResource(wallpapers[0]);
-					    break;
+					break;
 				case 2: v.setBackgroundResource(wallpapers[1]);
-						break;
+					break;
 				case 3: v.setBackgroundResource(wallpapers[2]);
-						break;
+					break;
 				case 4: v.setBackgroundResource(wallpapers[3]);
-						break;
+					break;
 				case 5: v.setBackgroundResource(wallpapers[4]);
-						break;
+					break;
 				case 6: v.setBackgroundResource(wallpapers[5]);
-						break;
+					break;
 			}
 		}
-
 	}
 
 	@Override
