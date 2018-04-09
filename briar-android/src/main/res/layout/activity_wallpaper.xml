@@ -20,20 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <GridView
-        android:id="@+id/gridview_wallpaper"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:columnWidth="90dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"
-        android:layout_marginTop="100dp">
-
-    </GridView>
-
     <include layout="@layout/content_wallpaper" />
 
 </android.support.design.widget.CoordinatorLayout>

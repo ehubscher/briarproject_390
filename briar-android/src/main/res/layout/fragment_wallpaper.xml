@@ -16,8 +16,8 @@
         android:horizontalSpacing="10dp"
         android:columnWidth="90dp"
         android:stretchMode="columnWidth"
-        android:gravity="center">
-
+        android:gravity="center"
+        android:layout_marginTop="80dp">
     </GridView>
 
 </android.support.constraint.ConstraintLayout>
