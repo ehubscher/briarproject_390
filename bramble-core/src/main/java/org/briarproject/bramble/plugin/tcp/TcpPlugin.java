@@ -235,12 +235,6 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 			// Get Contact Name from Contact ID
 
-			try {
-				Contact contact = contactManager.getContact(c);
-				int wow = 2;
-			} catch (DbException e1) {
-				e1.printStackTrace();
-			}
 			currentTargetUserID = c.getUniqueID();
 			BServerServicesImpl services = new BServerServicesImpl();
 			SavedUser currentContact = null;
