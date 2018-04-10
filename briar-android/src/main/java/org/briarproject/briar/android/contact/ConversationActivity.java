@@ -52,6 +52,9 @@ import org.briarproject.bramble.api.sync.Message;
 import org.briarproject.bramble.api.sync.MessageId;
 import org.briarproject.bramble.api.sync.event.MessagesAckedEvent;
 import org.briarproject.bramble.api.sync.event.MessagesSentEvent;
+import org.briarproject.bramble.plugin.tcp.ContactHash;
+import org.briarproject.bramble.plugin.tcp.IdContactHash;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -94,6 +97,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -169,6 +173,8 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	});
 
 	private final AtomicBoolean contactNameTaskStarted = new AtomicBoolean(false);
+	private HashMap<String, SavedUser> contactsDetails;
+	private IdContactHash contactsIdName;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -392,8 +398,15 @@ public class ConversationActivity extends BriarActivity implements EventListener
 		runOnUiThreadUnlessDestroyed(() -> {
             //noinspection ConstantConditions
 		    try{
-		        int avatarId = contactManager.getContact(contactId).getAvatarId();
-
+		        int avatarId = 1;
+				        int targetContactId = contactId.getInt();
+				        contactsDetails = ContactHash.getAllCurrentContacts();
+						contactsIdName = IdContactHash.getInstance();
+						if(contactsIdName.containsKey(targetContactId)){
+							String contactName = (String)contactsIdName.get(targetContactId);
+							SavedUser currentContactData = contactsDetails.get(contactName);
+							avatarId = currentContactData.getAvatarId();
+						}
 		        //99 is the avatarId default value when unset by user
                 if(avatarId !=99 && avatarId < 9){
                     // references to our images

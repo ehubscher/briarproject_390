@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class ContactHash {
     private static HashMap<String, SavedUser> allCurrentContacts;
     // Block contructor
-    private ContactHash(){};
+    protected ContactHash(){};
     // Obtain contact hash
     public static HashMap<String, SavedUser> getAllCurrentContacts(){
         if(allCurrentContacts == null){
