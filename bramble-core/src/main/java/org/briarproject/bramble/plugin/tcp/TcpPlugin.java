@@ -2,8 +2,11 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 
+import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
+import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.data.BdfList;
+import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
 import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
 import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
@@ -39,6 +42,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
@@ -66,6 +70,8 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected volatile String currentTargetUserID;
 	protected volatile int currentPort;
 	private HashMap<String, SavedUser> currentContacts;
+	@Inject
+	volatile ContactManager contactManager;
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
 	 * in order of preference. At most one of the addresses will be bound.
@@ -216,7 +222,9 @@ abstract class TcpPlugin implements DuplexPlugin {
 	@Override
 	public void poll(Collection<ContactId> connected) {
 	    // Update current user data..
-        updateDataOnBServer(currentPort);
+        if(currentPort != 0){
+        	updateDataOnBServer(currentPort);
+        }
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
@@ -224,9 +232,21 @@ abstract class TcpPlugin implements DuplexPlugin {
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
 			// Set as current target...
+
+			// Get Contact Name from Contact ID
+
+			try {
+				Contact contact = contactManager.getContact(c);
+				int wow = 2;
+			} catch (DbException e1) {
+				e1.printStackTrace();
+			}
 			currentTargetUserID = c.getUniqueID();
 			BServerServicesImpl services = new BServerServicesImpl();
-			SavedUser currentContact = services.obtainUserInfo(c.getUniqueID());
+			SavedUser currentContact = null;
+			if(!currentTargetUserID.equals("1233345") && !currentTargetUserID.equals(UniqueIDSingleton.getUniqueID())){
+				currentContact = services.obtainUserInfo(c.getUniqueID());
+			}
 			// Insert in our custom hashSet, small optimization prevent sending null contact
 			if(c.getUniqueID() != null & !c.getUniqueID().isEmpty() & !currentContacts.containsKey(c.getUniqueID())){
 				// Contact didn't exist add it to the hashSet
@@ -350,7 +370,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 			if(userInfo.getIpAddress() != null){
 				addr = userInfo.getIpAddress();
 			}
-			if(userInfo.getPort() != 0000){
+			if(userInfo.getPort() != 0000 && userInfo.getPort() > 0){
 				port = Integer.toString(userInfo.getPort());
 			}
 
