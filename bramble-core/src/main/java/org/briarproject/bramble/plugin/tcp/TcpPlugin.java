@@ -227,10 +227,15 @@ abstract class TcpPlugin implements DuplexPlugin {
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
 				callback.getRemoteProperties();
+
+		IdContactHash instance  = IdContactHash.getInstance();
+
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
-			// TODO : Get user from hash instead of using UniqueID field
-			currentTargetUser = "get from hash";
+			currentTargetUser = "";
+			if(instance.containsKey(c.getInt())){
+				currentTargetUser = (String)instance.get(c.getInt());
+			}
 			BServerServicesImpl services = new BServerServicesImpl();
 			SavedUser currentContact = null;
 			if(!currentTargetUser.equals("1233345") && !currentTargetUser.equals(UniqueIDSingleton.getUniqueID())){

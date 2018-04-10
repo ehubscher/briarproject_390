@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
+import org.briarproject.bramble.plugin.tcp.IdContactHash;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
@@ -43,7 +44,13 @@ public class ContactItemViewHolder<I extends ContactItem>
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
 		Author author = item.getContact().getAuthor();
+		String authorName = author.getName();
+		int id = item.getContact().getId().getInt();
 		String contactName = author.getName();
+		IdContactHash instance = IdContactHash.getInstance();
+		if(!instance.containsKey(id) && !instance.containsValue(authorName)){
+			instance.put(id, authorName);
+		}
 		name.setText(contactName);
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
