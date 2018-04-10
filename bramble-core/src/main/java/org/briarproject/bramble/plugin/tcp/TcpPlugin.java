@@ -240,21 +240,12 @@ abstract class TcpPlugin implements DuplexPlugin {
 			SavedUser currentContact = null;
 			if(!currentTargetUser.equals("1233345") && !currentTargetUser.equals(UniqueIDSingleton.getUniqueID())){
 				currentContact = services.obtainUserInfo(currentTargetUser);
-			}
-			// Insert in our custom hashSet, small optimization prevent sending null contact
-			if(currentTargetUser != null & !currentTargetUser .isEmpty() & !currentContacts.containsKey(currentTargetUser )){
-				// Contact didn't exist add it to the hashSet
-			    currentContacts.put(currentTargetUser, currentContact);
-			}else{
-				// Contact exist , update the hashSet
-				currentContacts.remove(currentTargetUser );
-				//small optimization prevent sending null contact
-				if(currentTargetUser != null & !currentTargetUser .isEmpty()){
-					currentContacts.put(currentTargetUser, currentContact);
+				if(currentContacts.containsKey(currentTargetUser)){
+					currentContacts.remove(currentTargetUser);
 				}
-
-
+				currentContacts.put(currentTargetUser, currentContact);
 			}
+
 
 			if (!connected.contains(c)) connectAndCallBack(c, e.getValue());
 		}

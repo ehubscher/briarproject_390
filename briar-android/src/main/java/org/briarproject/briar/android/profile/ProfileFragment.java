@@ -3,6 +3,7 @@ package org.briarproject.briar.android.profile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -15,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import org.briarproject.bramble.api.db.DatabaseConfig;
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -32,10 +33,9 @@ import static java.util.logging.Level.WARNING;
 public class ProfileFragment extends BaseFragment {
 
     UniqueIDSingleton uniqueIDSingleton;
-
-    BServerServicesImpl briarServices = new BServerServicesImpl();
-    SavedUser currentPhoneHolder = briarServices.obtainUserInfo(uniqueIDSingleton.getUniqueID());
-
+    private volatile SavedUser currentPhoneHolder;
+	private volatile boolean updateSuccess = false;
+	private volatile String username;
     private static final Logger LOG =
             Logger.getLogger(ConversationActivity.class.getName());
 
@@ -95,9 +95,21 @@ public class ProfileFragment extends BaseFragment {
         //Set the text field to show the localUserID
         uniqueIdTag = rootView.findViewById(R.id.localUniqueId);
 		String uniqueId = settings.getString("uniqueId", "1233345");
-		if(!uniqueId.isEmpty()){
+		// Make sure to setup Username correctly
+		if(!uniqueId.isEmpty() & !uniqueId.equals("1233345")){
             uniqueIdTag.setText(uniqueId);
+            username = uniqueId;
+			if(UniqueIDSingleton.getUniqueID() == null || UniqueIDSingleton.getUniqueID().isEmpty()){
+				UniqueIDSingleton.setUniqueID(uniqueId);
+			}
         }
+
+	    // Let's obtain SavedUser data from server...
+	    try{
+		    new CallServerAsyncObtainUser().execute();
+	    }catch (Exception ee){
+			LOG.info("BRIAR PROFILE : PROBLEM WHILE CALLING SERVER ");
+	    }
 
 		//Avatar button
 	    buttonAvatar = (Button) rootView.findViewById(R.id.choose_avatar_button);
@@ -175,7 +187,7 @@ public class ProfileFragment extends BaseFragment {
 		//Set the new statusId
         try{
             currentPhoneHolder.setStatusId(status_num);
-            boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+            new CallServerAsyncUpdateUserSettings().execute();
         }catch (Exception e){
 			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
         }
@@ -235,7 +247,7 @@ public class ProfileFragment extends BaseFragment {
 		//Set the new avatarId
         try{
             currentPhoneHolder.setAvatarId(avatarNumber);
-            boolean success = briarServices.updateUserSettingInfo(currentPhoneHolder);
+            new CallServerAsyncUpdateUserSettings().execute();
         }catch (Exception e){
             if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
         }
@@ -261,6 +273,56 @@ public class ProfileFragment extends BaseFragment {
     public static ProfileFragment newInstance() {
 	    return new ProfileFragment();
     }
+
+	/**
+	 * This class is implementing an Async task as recommended for Android
+	 * It is made to make sure to separate server call from main UI Thread
+	 */
+	class CallServerAsyncObtainUser extends AsyncTask<Void, Integer, String> {
+
+		SavedUser resultFromObtainUser;
+
+		@Override
+		protected String doInBackground(Void... voids) {
+			BServerServicesImpl services = new BServerServicesImpl();
+			if(username != null && PwdSingletonServer.getPassword() != null){
+				resultFromObtainUser = services.obtainUserInfo(username);
+			}else{
+				LOG.info("BRIAR PROFILE : username OR pwd not saved");
+			}
+
+			return null;
+		}
+
+		protected void onPostExecute(String result) {
+			currentPhoneHolder = resultFromObtainUser;
+		}
+	}
+	/**
+	 * This class is implementing an Async task as recommended for Android
+	 * It is made to make sure to separate server call from main UI Thread
+	 */
+	class CallServerAsyncUpdateUserSettings extends AsyncTask<Void, Integer, String> {
+
+		boolean resultFromUpdate;
+
+		@Override
+		protected String doInBackground(Void... voids) {
+			BServerServicesImpl services = new BServerServicesImpl();
+			if(currentPhoneHolder != null){
+				resultFromUpdate =  services.updateUserNetworkInfo(currentPhoneHolder);
+			}
+
+			return null;
+		}
+
+		protected void onPostExecute(String result) {
+			updateSuccess = resultFromUpdate;
+		}
+	}
+
+
+
 
 }
 

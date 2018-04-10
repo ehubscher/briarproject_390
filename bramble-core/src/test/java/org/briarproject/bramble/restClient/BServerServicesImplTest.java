@@ -26,7 +26,7 @@ public class BServerServicesImplTest {
 	public void obtainUserInfoTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		// Default User
-        PwdSingletonServer.setPassword("AnotherPassword");
+        PwdSingletonServer.setPassword("123456");
         UniqueIDSingleton.setUniqueID("Bob");
 		SavedUser returnedUser = services.obtainUserInfo("ABADAR");
 		Assert.assertTrue(returnedUser != null);
