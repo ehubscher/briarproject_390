@@ -2,11 +2,9 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 
-import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.data.BdfList;
-import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
 import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
 import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
@@ -67,7 +65,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected volatile ServerSocket socket = null;
 	protected volatile String currentUserID;
 	protected volatile String currentIP;
-	protected volatile String currentTargetUserID;
+	protected volatile String currentTargetUser;
 	protected volatile int currentPort;
 	private HashMap<String, SavedUser> currentContacts;
 	@Inject
@@ -231,26 +229,23 @@ abstract class TcpPlugin implements DuplexPlugin {
 				callback.getRemoteProperties();
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
-			// Set as current target...
-
-			// Get Contact Name from Contact ID
-
-			currentTargetUserID = c.getUniqueID();
+			// TODO : Get user from hash instead of using UniqueID field
+			currentTargetUser = "get from hash";
 			BServerServicesImpl services = new BServerServicesImpl();
 			SavedUser currentContact = null;
-			if(!currentTargetUserID.equals("1233345") && !currentTargetUserID.equals(UniqueIDSingleton.getUniqueID())){
-				currentContact = services.obtainUserInfo(c.getUniqueID());
+			if(!currentTargetUser.equals("1233345") && !currentTargetUser.equals(UniqueIDSingleton.getUniqueID())){
+				currentContact = services.obtainUserInfo(currentTargetUser);
 			}
 			// Insert in our custom hashSet, small optimization prevent sending null contact
-			if(c.getUniqueID() != null & !c.getUniqueID().isEmpty() & !currentContacts.containsKey(c.getUniqueID())){
+			if(currentTargetUser != null & !currentTargetUser .isEmpty() & !currentContacts.containsKey(currentTargetUser )){
 				// Contact didn't exist add it to the hashSet
-			    currentContacts.put(c.getUniqueID(), currentContact);
+			    currentContacts.put(currentTargetUser, currentContact);
 			}else{
 				// Contact exist , update the hashSet
-				currentContacts.remove(c.getUniqueID());
+				currentContacts.remove(currentTargetUser );
 				//small optimization prevent sending null contact
-				if(c.getUniqueID() != null & !c.getUniqueID().isEmpty()){
-					currentContacts.put(c.getUniqueID(), currentContact);
+				if(currentTargetUser != null & !currentTargetUser .isEmpty()){
+					currentContacts.put(currentTargetUser, currentContact);
 				}
 
 
@@ -347,12 +342,12 @@ abstract class TcpPlugin implements DuplexPlugin {
 
 		// Go Get IP/PORT for userID on our Server
 		SavedUser userInfo = null;
-		if(currentContacts.containsKey(currentTargetUserID)){
-			userInfo = currentContacts.get(currentTargetUserID);
+		if(currentContacts.containsKey(currentTargetUser)){
+			userInfo = currentContacts.get(currentTargetUser);
 		}else{
 			BServerServicesImpl services = new BServerServicesImpl();
-			userInfo = services.obtainUserInfo(currentTargetUserID);
-			currentContacts.put(currentTargetUserID, userInfo);
+			userInfo = services.obtainUserInfo(currentTargetUser);
+			currentContacts.put(currentTargetUser, userInfo);
 
 		}
 
