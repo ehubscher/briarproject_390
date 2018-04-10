@@ -2,6 +2,10 @@ package org.briarproject.briar.android.wallpaper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -16,8 +20,16 @@ import android.widget.Toast;
 
 import org.briarproject.briar.R;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 
 public class WallpaperFragment extends Fragment {
+
+    Drawable drawable;
+    Bitmap bitmap1, bitmap2;
+    ByteArrayOutputStream stream;
+    byte[] BYTE;
 
     private Integer[] wallpapers = {
             R.drawable.bubbles,
@@ -44,8 +56,6 @@ public class WallpaperFragment extends Fragment {
             R.drawable.vcolors,
             R.drawable.kirby,
             R.drawable.shanghai
-
-
     };
 
     public WallpaperFragment() {
@@ -80,6 +90,7 @@ public class WallpaperFragment extends Fragment {
         editor.apply();
     }
 
+
     public class ImageAdapter extends BaseAdapter {
         private Context context;
 
@@ -113,7 +124,13 @@ public class WallpaperFragment extends Fragment {
             else {
                 imageView = (ImageView) convertView;
             }
-            imageView.setImageResource(wallpapers[position]);
+            stream = new ByteArrayOutputStream();
+            drawable = getResources().getDrawable(wallpapers[position]);
+            bitmap1 = ((BitmapDrawable)drawable).getBitmap();
+            bitmap1.compress(Bitmap.CompressFormat.JPEG,50, stream);
+            BYTE = stream.toByteArray();
+            bitmap2 = BitmapFactory.decodeByteArray(BYTE, 0, BYTE.length);
+            imageView.setImageBitmap(bitmap2);
             return imageView;
         }
     }
