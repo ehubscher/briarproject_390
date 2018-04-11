@@ -114,7 +114,7 @@ public class IntroducerManagerTest extends BriarTestCase {
 		SecureRandom secureRandom = context.mock(SecureRandom.class);
 		Bytes salt = new Bytes(new byte[64]);
 		Message msg = new Message(new MessageId(TestUtils.getRandomId()),
-				localGroup0.getId(), time, TestUtils.getRandomBytes(64));
+				localGroup0.getId(), time, TestUtils.getRandomBytes(64), false);
 		BdfDictionary state = new BdfDictionary();
 		state.put(SESSION_ID, msg.getId());
 		state.put(STORAGE_ID, msg.getId());

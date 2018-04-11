@@ -61,6 +61,7 @@ public class PasswordControllerImpl extends ConfigControllerImpl
 		});
 	}
 
+	//TODO : Disable this feature as it can create problem with our server
 	@Override
 	public void changePassword(String password, String newPassword,
 			ResultHandler<Boolean> resultHandler) {

@@ -62,7 +62,7 @@ public class ClientHelperImplTest extends BrambleTestCase {
 	private final byte[] rawMessage = getRandomBytes(42);
 	private final MessageId messageId = new MessageId(getRandomId());
 	private final Message message =
-			new Message(messageId, groupId, timestamp, rawMessage);
+			new Message(messageId, groupId, timestamp, rawMessage, false);
 	private final Metadata metadata = new Metadata();
 	private final BdfList list = BdfList.of("Sign this!", getRandomBytes(42));
 	private final String label = StringUtils.getRandomString(5);

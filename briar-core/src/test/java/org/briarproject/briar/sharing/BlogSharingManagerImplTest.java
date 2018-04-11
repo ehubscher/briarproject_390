@@ -185,7 +185,7 @@ public class BlogSharingManagerImplTest extends BrambleMockTestCase {
 		BdfDictionary sessionDict = new BdfDictionary();
 		Message message =
 				new Message(new MessageId(getRandomId()), contactGroup.getId(),
-						42L, getRandomBytes(1337));
+						42L, getRandomBytes(1337), false);
 		context.checking(new Expectations() {{
 			oneOf(contactGroupFactory).createContactGroup(CLIENT_ID,
 					CLIENT_VERSION, contact);

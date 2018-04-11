@@ -12,14 +12,21 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotNullByDefault
 class ConversationMessageInItem extends ConversationItem {
 
+	private boolean isPinned;
+
 	ConversationMessageInItem(PrivateMessageHeader h) {
 		super(h.getId(), h.getGroupId(), null, h.getTimestamp(), h.isRead());
+		isPinned=false;
 	}
 
 	@Override
 	public boolean isIncoming() {
 		return true;
 	}
+
+	public boolean isPinned(){ return isPinned; }
+
+	public void setPinned(boolean pinned) {isPinned=pinned;}
 
 	@LayoutRes
 	@Override

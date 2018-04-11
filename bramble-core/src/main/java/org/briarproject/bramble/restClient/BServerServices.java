@@ -11,17 +11,17 @@ public interface BServerServices {
 
     /**
      * This methis method is getting user info based on unique ID given
-     * @param userID A unique String ID made of 20 random char.
+     * @param targetUser A unique String ID made of 20 random char.
      * @return The object class SavedUser
      */
-    SavedUser obtainUserInfo(String userID);
+    SavedUser obtainUserInfo(String targetUser);
 
     /**
      * Creating a new user in Briar Server
      * @param savedUser Info needed to create a new user
      * @return True -> Success, False -> Failure
      */
-    boolean createNewUser(SavedUser savedUser);
+    boolean createNewUser(SavedUser savedUser, String password);
 
     /**
      * Update an alrready saved user
@@ -36,5 +36,19 @@ public interface BServerServices {
      * @return True -> Success, False -> Failure
      */
     boolean updateUserSettingInfo(SavedUser savedUser);
+
+    /**
+     * Does the username exists in db
+     * @param username username we want to know
+     * @return True -> It exists, False -> Doesn't exists
+     */
+    boolean doesUsernameExistsInDB(String username);
+
+    /**
+     * Create a connection between current user and target contact online
+     * @param targetContact name of the contact to connect with
+     * @return True -> Success , False -> Fail
+     */
+    boolean connectWithContact(String targetContact);
 
 }

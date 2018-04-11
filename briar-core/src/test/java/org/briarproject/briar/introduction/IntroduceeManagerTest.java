@@ -159,14 +159,14 @@ public class IntroduceeManagerTest extends BriarTestCase {
 				new MessageId(TestUtils.getRandomId()),
 				localGroup1.getId(),
 				time,
-				TestUtils.getRandomBytes(MESSAGE_HEADER_LENGTH + 1)
-		);
+				TestUtils.getRandomBytes(MESSAGE_HEADER_LENGTH + 1),
+                false);
 		message1 = new Message(
 				new MessageId(TestUtils.getRandomId()),
 				introductionGroup1.getId(),
 				time,
-				TestUtils.getRandomBytes(MESSAGE_HEADER_LENGTH + 1)
-		);
+				TestUtils.getRandomBytes(MESSAGE_HEADER_LENGTH + 1),
+                false);
 
 		txn = new Transaction(null, false);
 	}

@@ -52,8 +52,6 @@ import org.briarproject.bramble.api.sync.Message;
 import org.briarproject.bramble.api.sync.MessageId;
 import org.briarproject.bramble.api.sync.event.MessagesAckedEvent;
 import org.briarproject.bramble.api.sync.event.MessagesSentEvent;
-import org.briarproject.bramble.restClient.BServerServicesImpl;
-import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -62,6 +60,7 @@ import org.briarproject.briar.android.blog.BlogActivity;
 import org.briarproject.briar.android.contact.ConversationAdapter.ConversationListener;
 import org.briarproject.briar.android.forum.ForumActivity;
 import org.briarproject.briar.android.introduction.IntroductionActivity;
+import org.briarproject.briar.android.pinnedmessages.PinnedMessagesActivity;
 import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
@@ -91,11 +90,9 @@ import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 import org.thoughtcrime.securesms.components.util.FutureTaskListener;
 import org.thoughtcrime.securesms.components.util.ListenableFutureTask;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -121,6 +118,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PINNED_MESSAGES;
 import static org.briarproject.briar.android.settings.SettingsFragment.SETTINGS_NAMESPACE;
 import static org.briarproject.briar.android.util.UiUtils.getAvatarTransitionName;
 import static org.briarproject.briar.android.util.UiUtils.getBulbTransitionName;
@@ -132,6 +130,7 @@ import static uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.S
 @ParametersNotNullByDefault
 public class ConversationActivity extends BriarActivity implements EventListener, ConversationListener, TextInputListener {
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
+    public static final String PINNED_MESSAGES = "briar.PINNED_MESSAGES";
 
 	private static final Logger LOG = Logger.getLogger(ConversationActivity.class.getName());
 	private static final String SHOW_ONBOARDING_INTRODUCTION = "showOnboardingIntroduction";
@@ -224,6 +223,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
 		setTransitionName(toolbarStatus, getBulbTransitionName(contactId));
 
 		adapter = new ConversationAdapter(this, this);
+		adapter.setMessagingManager(this.messagingManager);
 		list = findViewById(R.id.conversationView);
 		list.setLayoutManager(new LinearLayoutManager(this));
 		list.setAdapter(adapter);
@@ -324,11 +324,29 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			case android.R.id.home:
 				onBackPressed();
 				return true;
+			case R.id.action_view_pinned:
+                Intent intentPinned = new Intent(this, PinnedMessagesActivity.class);
+                try{
+                    Collection<MessageId> listOfMessageId = messagingManager.getPinnedMessages(contactId);
+                    //Loop the list to get the body of each pinned messages
+                    String[] messages = new String[listOfMessageId.size()];
+                    int i = 0;
+                    for (MessageId messageId: listOfMessageId) {
+                        messages[i] = messagingManager.getMessageBody(messageId);
+                        i++;
+                    }
+                    intentPinned.putExtra(PINNED_MESSAGES, messages);
+                }catch (DbException e){
+                    String[] messages = {"Nothing"};
+                    intentPinned.putExtra(PINNED_MESSAGES, messages);
+                }
+				startActivityForResult(intentPinned, REQUEST_PINNED_MESSAGES);
+				return true;
 			case R.id.action_introduction:
 				if (contactId == null) return false;
-				Intent intent = new Intent(this, IntroductionActivity.class);
-				intent.putExtra(CONTACT_ID, contactId.getInt());
-				startActivityForResult(intent, REQUEST_INTRODUCTION);
+				Intent intentIntro = new Intent(this, IntroductionActivity.class);
+				intentIntro.putExtra(CONTACT_ID, contactId.getInt());
+				startActivityForResult(intentIntro, REQUEST_INTRODUCTION);
 				return true;
 			case R.id.action_social_remove_person:
 				askToRemoveContact();
@@ -463,16 +481,30 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			if (revision == adapter.getRevision()) {
 				adapter.incrementRevision();
 				textInputView.setSendButtonEnabled(true);
-				List<ConversationItem> items = createItems(headers,
-						introductions, invitations);
+				List<ConversationItem> items = createItems(headers, introductions, invitations);
 				if (items.isEmpty()) list.showData();
 				else adapter.addAll(items);
 				// Scroll to the bottom
 				list.scrollToPosition(adapter.getItemCount() - 1);
+
+				for (ConversationItem i: items) {
+					if(i.getClass() == ConversationMessageInItem.class) {
+                        try {
+                            if (messagingManager.isMessagePinned(i.getId())) {
+                                messagingManager.setPinned(i.getId(), true);
+                            } else {
+                                messagingManager.setPinned(i.getId(), false);
+                            }
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+					}
+				}
 			} else {
 				LOG.info("Concurrent update, reloading");
 				loadMessages();
 			}
+
 		});
 	}
 

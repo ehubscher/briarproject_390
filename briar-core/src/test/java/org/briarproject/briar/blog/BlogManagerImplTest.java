@@ -103,9 +103,9 @@ public class BlogManagerImplTest extends BriarTestCase {
 		messageId = new MessageId(getRandomId());
 		rssMessageId = new MessageId(getRandomId());
 		message = new Message(messageId, blog1.getId(), timestamp,
-				getRandomBytes(MAX_MESSAGE_LENGTH));
+				getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		rssMessage = new Message(rssMessageId, rssBlog.getId(), timestamp,
-				getRandomBytes(MAX_MESSAGE_LENGTH));
+				getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		comment = getRandomString(MAX_BLOG_COMMENT_LENGTH);
 	}
 
@@ -363,7 +363,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		);
 		MessageId commentId = new MessageId(getRandomId());
 		Message commentMsg = new Message(commentId, blog1.getId(),
-				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary commentMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, COMMENT.getInt()),
 				new BdfEntry(KEY_COMMENT, comment),
@@ -442,7 +442,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		BdfList originalPostBody = BdfList.of("originalPostBody");
 		MessageId wrappedPostId = new MessageId(getRandomId());
 		Message wrappedPostMsg = new Message(wrappedPostId, blog2.getId(),
-				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary wrappedPostMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, WRAPPED_POST.getInt()),
 				new BdfEntry(KEY_RSS_FEED, false),
@@ -453,7 +453,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		);
 		MessageId commentId = new MessageId(getRandomId());
 		Message commentMsg = new Message(commentId, blog2.getId(),
-				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary commentMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, COMMENT.getInt()),
 				new BdfEntry(KEY_COMMENT, comment),
@@ -545,7 +545,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		BdfList originalPostBody = BdfList.of("originalPostBody");
 		MessageId wrappedPostId = new MessageId(getRandomId());
 		Message wrappedPostMsg = new Message(wrappedPostId, blog1.getId(),
-				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary wrappedPostMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, WRAPPED_POST.getInt()),
 				new BdfEntry(KEY_RSS_FEED, true),
@@ -556,7 +556,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		);
 		MessageId commentId = new MessageId(getRandomId());
 		Message commentMsg = new Message(commentId, blog1.getId(),
-				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary commentMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, COMMENT.getInt()),
 				new BdfEntry(KEY_COMMENT, comment),
@@ -650,7 +650,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		// The post and comment were reblogged to blog 2 with another comment
 		MessageId rewrappedPostId = new MessageId(getRandomId());
 		Message rewrappedPostMsg = new Message(rewrappedPostId,
-				blog2.getId(), timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				blog2.getId(), timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary rewrappedPostMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, WRAPPED_POST.getInt()),
 				new BdfEntry(KEY_RSS_FEED, true),
@@ -661,7 +661,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		);
 		MessageId wrappedCommentId = new MessageId(getRandomId());
 		Message wrappedCommentMsg = new Message(wrappedCommentId,
-				blog2.getId(), timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				blog2.getId(), timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary wrappedCommentMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, WRAPPED_COMMENT.getInt()),
 				new BdfEntry(KEY_COMMENT, comment),
@@ -674,7 +674,7 @@ public class BlogManagerImplTest extends BriarTestCase {
 		String localComment = getRandomString(MAX_BLOG_COMMENT_LENGTH);
 		MessageId localCommentId = new MessageId(getRandomId());
 		Message localCommentMsg = new Message(localCommentId,
-				blog2.getId(), timestamp, getRandomBytes(MAX_MESSAGE_LENGTH));
+				blog2.getId(), timestamp, getRandomBytes(MAX_MESSAGE_LENGTH), false);
 		BdfDictionary localCommentMeta = BdfDictionary.of(
 				new BdfEntry(KEY_TYPE, COMMENT.getInt()),
 				new BdfEntry(KEY_COMMENT, localComment),
