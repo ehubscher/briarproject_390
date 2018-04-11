@@ -1,6 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'witness'
 
+sourceSets {
+	androidTest {
+		java.srcDirs = ['androidTest/java']
+	}
+}
+
 dependencies {
 	// Robotium
 	implementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
@@ -216,14 +222,14 @@ android {
 			applicationIdSuffix ".debug"
 			resValue "string", "app_package", "org.briarproject.briar.android.debug"
 			resValue "string", "app_name", "Briar Debug"
-			shrinkResources false
-			minifyEnabled true
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+			//shrinkResources true
+			//minifyEnabled true
+			//proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 		release {
-			shrinkResources true
-			minifyEnabled true
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+			//shrinkResources true
+			//minifyEnabled true
+			//proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 	}
 
