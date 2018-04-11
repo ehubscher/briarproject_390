@@ -3,6 +3,7 @@ package com.briar.server.resources;
 import com.briar.server.mapper.UserContactMapper;
 import com.briar.server.mapper.UserMapper;
 import com.briar.server.model.domainmodelclasses.User;
+import com.briar.server.model.returnedtobriarclasses.BriarProfileUser;
 import com.briar.server.model.returnedtobriarclasses.BriarUser;
 import com.briar.server.services.UserService;
 import io.swagger.annotations.Api;
@@ -124,6 +125,55 @@ public class UsersResource {
 
             // Launching the process of modifying the identity map and DB
             BriarUser returnObject = this.userService.modifyUser(userInMemory);
+
+            // If no error is returned, we send back OK
+            response = Response.status(Response.Status.OK).entity(returnObject).build();
+            System.out.println(response);
+            return response;
+
+        } catch (Exception e) {
+            // Any exception we catch is an internal server error.
+            //TODO Eventually we'll need a log service.
+            System.out.println(e);
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            System.out.println(response);
+            return response;
+        }
+    }
+
+    /**
+     * Type: GET
+     * Route: /users/{userId}/profile
+     * Method used to get the profile information of a user. Example of
+     *
+     * @param phoneGeneratedId
+     * @return
+     * {
+     *     phoneGeneratedId: "someId",
+     *     statusId: 2,
+     *     avatarId: 12
+     * }
+     */
+    @GET
+    @Path("/users/{userId}/profile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProfile(@PathParam("userId") String phoneGeneratedId) {
+        Response response;
+
+        try {
+
+            boolean userExists = this.userService.doesUserExists(phoneGeneratedId);
+            if (!userExists) {
+                // You can't update a user if it isn't created
+                response = Response.status(Response.Status.NOT_FOUND).build();
+                System.out.println(response);
+                return response;
+            }
+
+            User userInMemory = this.userService.readUser(phoneGeneratedId);
+
+            BriarProfileUser returnObject = new BriarProfileUser(userInMemory);
 
             // If no error is returned, we send back OK
             response = Response.status(Response.Status.OK).entity(returnObject).build();
