@@ -113,7 +113,7 @@ public class FeedManagerImplTest extends BrambleMockTestCase {
 		entries.add(entry);
 		String body = "<p> (" + entry.getUpdatedDate().toString() + ")</p>";
 		Message msg = new Message(new MessageId(getRandomId()), blogGroupId, 0,
-				getRandomBytes(42));
+				getRandomBytes(42), false);
 		BlogPost post = new BlogPost(msg, null, localAuthor);
 
 		context.checking(new Expectations() {{

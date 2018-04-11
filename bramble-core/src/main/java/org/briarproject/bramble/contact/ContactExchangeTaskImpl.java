@@ -29,6 +29,7 @@ import org.briarproject.bramble.api.properties.TransportPropertyManager;
 import org.briarproject.bramble.api.system.Clock;
 import org.briarproject.bramble.api.transport.StreamReaderFactory;
 import org.briarproject.bramble.api.transport.StreamWriterFactory;
+import org.briarproject.bramble.restClient.BServerServicesImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,6 +79,9 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 	private volatile TransportId transportId;
 	private volatile SecretKey masterSecret;
 	private volatile boolean alice;
+	private volatile String contactAddedName;
+	private volatile int NumberOfServerCall = 0;
+    private BServerServicesImpl services = new BServerServicesImpl();;
 
 	@Inject
 	ContactExchangeTaskImpl(DatabaseComponent db,
@@ -191,6 +195,8 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 		} catch (GeneralSecurityException | IOException e) {
 			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			listener.contactExchangeFailed();
+			// Clean the shared variable
+			contactAddedName = null;
 			tryToClose(conn, true);
 			return;
 		}
@@ -207,14 +213,34 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 					conn);
 			// Pseudonym exchange succeeded
 			LOG.info("Pseudonym exchange succeeded");
+
+			// Prevent Calling Server 10 times
+			if(NumberOfServerCall < 3){
+				// Now is the time to exchange data with our server
+				boolean resultConnectionContact  = services.connectWithContact(contactAddedName);
+				NumberOfServerCall++;
+				// If it doesn't work
+				if(!resultConnectionContact){
+					LOG.info("FAILURE TO ADD CONNECTION BETWEEN, current User and " + contactAddedName);
+				}else{
+					LOG.info("SUCCESS TO ADD CONNECTION BETWEEN, current User and " + contactAddedName);
+				}
+			}
+
+
 			listener.contactExchangeSucceeded(remoteAuthor);
 		} catch (ContactExistsException e) {
 			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+			// Clean the shared variable
+			contactAddedName = null;
 			tryToClose(conn, true);
 			listener.duplicateContact(remoteAuthor);
+
 		} catch (DbException e) {
 			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			tryToClose(conn, true);
+			// Clean the shared variable
+			contactAddedName = null;
 			listener.contactExchangeFailed();
 		}
 	}
@@ -249,6 +275,8 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 				LOG.info("Invalid signature");
 			throw new GeneralSecurityException();
 		}
+		// Hook, let's add the name to our shared variable to add it on server later
+		contactAddedName = name;
 		return authorFactory.createAuthor(name, publicKey);
 	}
 
@@ -328,3 +356,4 @@ class ContactExchangeTaskImpl extends Thread implements ContactExchangeTask {
 		}
 	}
 }
+

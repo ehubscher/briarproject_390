@@ -290,6 +290,24 @@ public interface DatabaseComponent {
 	byte[] getRawMessage(Transaction txn, MessageId m) throws DbException;
 
 	/**
+	 * Returns if the message is pinned for given ID, in serialised form
+	 */
+	@Nullable
+	boolean isMessagePinned(Transaction transaction, MessageId messageId) throws DbException;
+
+	/**
+	 * Returns a list of messageId for the groupId that are marked has pinned
+	 */
+	@Nullable
+	Collection<MessageId> getPinnedMessages(Transaction transaction, GroupId groupId) throws DbException;
+
+    /**
+     * Set the message pinned status
+     */
+    @Nullable
+    void setMessagePinned(Transaction transaction, boolean pinned, MessageId messageId) throws DbException;
+
+	/**
 	 * Returns the metadata for all delivered messages in the given group.
 	 * <p/>
 	 * Read-only.

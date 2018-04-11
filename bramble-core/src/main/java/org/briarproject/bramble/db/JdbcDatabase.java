@@ -144,6 +144,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 					+ " shared BOOLEAN NOT NULL,"
 					+ " length INT NOT NULL,"
 					+ " raw BLOB," // Null if message has been deleted
+					+ " pinned BOOLEAN NOT NULL,"
 					+ " PRIMARY KEY (messageId),"
 					+ " FOREIGN KEY (groupId)"
 					+ " REFERENCES groups (groupId)"
@@ -613,8 +614,8 @@ abstract class JdbcDatabase implements Database<Connection> {
 		PreparedStatement ps = null;
 		try {
 			String sql = "INSERT INTO messages (messageId, groupId, timestamp,"
-					+ " state, shared, length, raw)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ " state, shared, length, raw, pinned)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = txn.prepareStatement(sql);
 			ps.setBytes(1, m.getId().getBytes());
 			ps.setBytes(2, m.getGroupId().getBytes());
@@ -624,6 +625,7 @@ abstract class JdbcDatabase implements Database<Connection> {
 			byte[] raw = m.getRaw();
 			ps.setInt(6, raw.length);
 			ps.setBytes(7, raw);
+			ps.setBoolean(8, m.isPinned());
 			int affected = ps.executeUpdate();
 			if (affected != 1) throw new DbStateException();
 			ps.close();
@@ -1881,27 +1883,89 @@ abstract class JdbcDatabase implements Database<Connection> {
 
 	@Override
 	@Nullable
-	public byte[] getRawMessage(Connection txn, MessageId m)
+	public byte[] getRawMessage(Connection connection, MessageId messageId)
 			throws DbException {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			String sql = "SELECT raw FROM messages WHERE messageId = ?";
-			ps = txn.prepareStatement(sql);
-			ps.setBytes(1, m.getBytes());
-			rs = ps.executeQuery();
-			if (!rs.next()) throw new DbStateException();
-			byte[] raw = rs.getBytes(1);
-			if (rs.next()) throw new DbStateException();
-			rs.close();
-			ps.close();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setBytes(1, messageId.getBytes());
+			resultSet = preparedStatement.executeQuery();
+			if (!resultSet.next()) throw new DbStateException();
+			byte[] raw = resultSet.getBytes(1);
+			if (resultSet.next()) throw new DbStateException();
+			resultSet.close();
+			preparedStatement.close();
 			return raw;
 		} catch (SQLException e) {
-			tryToClose(rs);
-			tryToClose(ps);
+			tryToClose(resultSet);
+			tryToClose(preparedStatement);
 			throw new DbException(e);
 		}
 	}
+
+	@Override
+	@Nullable
+	public Collection<MessageId> getPinnedMessages(Connection connection, GroupId groupId) throws DbException {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			String sql = "SELECT messageId FROM messages WHERE GroupID = ? AND pinned = TRUE";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setBytes(1, groupId.getBytes());
+			resultSet = preparedStatement.executeQuery();
+            List<MessageId> ids = new ArrayList<>();
+            while (resultSet.next()) ids.add(new MessageId(resultSet.getBytes(1)));
+            resultSet.close();
+            resultSet.close();
+            return ids;
+		} catch (SQLException e) {
+			tryToClose(resultSet);
+			tryToClose(preparedStatement);
+			throw new DbException(e);
+		}
+	}
+
+    @Nullable
+    public boolean isMessagePinned(Connection txn, MessageId m)
+            throws DbException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT pinned FROM messages WHERE messageId = ?";
+            ps = txn.prepareStatement(sql);
+            ps.setBytes(1, m.getBytes());
+            rs = ps.executeQuery();
+            if (!rs.next()) throw new DbStateException();
+            Boolean pinned = rs.getBoolean(1);
+            if (rs.next()) throw new DbStateException();
+            rs.close();
+            ps.close();
+            return pinned;
+        } catch (SQLException e) {
+            tryToClose(rs);
+            tryToClose(ps);
+            throw new DbException(e);
+        }
+    }
+
+    @Override
+    public void setMessagePinned(Connection connection, boolean pinned, MessageId messageId) throws DbException {
+        PreparedStatement preparedStatement = null;
+        try {
+            String sql = "UPDATE messages SET pinned = ? WHERE messageId = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1, pinned);
+            preparedStatement.setBytes(2, messageId.getBytes());
+            int affected = preparedStatement.executeUpdate();
+            if (affected < 0 || affected > 1) throw new DbStateException();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            tryToClose(preparedStatement);
+            throw new DbException(e);
+        }
+    }
 
 	@Override
 	public Collection<MessageId> getRequestedMessagesToSend(Connection txn,

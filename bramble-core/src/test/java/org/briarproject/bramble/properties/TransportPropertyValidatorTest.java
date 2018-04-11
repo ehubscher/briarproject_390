@@ -44,7 +44,7 @@ public class TransportPropertyValidatorTest extends BrambleTestCase {
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		long timestamp = System.currentTimeMillis();
 		byte[] body = TestUtils.getRandomBytes(123);
-		message = new Message(messageId, groupId, timestamp, body);
+		message = new Message(messageId, groupId, timestamp, body, false);
 
 		Mockery context = new Mockery();
 		ClientHelper clientHelper = context.mock(ClientHelper.class);

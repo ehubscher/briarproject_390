@@ -14,6 +14,7 @@ import org.briarproject.briar.test.BriarIntegrationTest;
 import org.briarproject.briar.test.BriarIntegrationTestComponent;
 import org.briarproject.briar.test.DaggerBriarIntegrationTestComponent;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -281,6 +282,7 @@ public class BlogManagerIntegrationTest
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testCommentOnComment() throws Exception {
 		// add a post to blog0

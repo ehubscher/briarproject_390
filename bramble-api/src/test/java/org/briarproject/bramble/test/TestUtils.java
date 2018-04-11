@@ -101,7 +101,7 @@ public class TestUtils {
 		MessageId id = new MessageId(getRandomId());
 		byte[] raw = getRandomBytes(rawLength);
 		long timestamp = System.currentTimeMillis();
-		return new Message(id, groupId, timestamp, raw);
+		return new Message(id, groupId, timestamp, raw, false);
 	}
 
 	public static double getMedian(Collection<? extends Number> samples) {

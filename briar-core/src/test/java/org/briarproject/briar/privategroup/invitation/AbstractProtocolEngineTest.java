@@ -76,7 +76,7 @@ public abstract class AbstractProtocolEngineTest extends BrambleMockTestCase {
 	protected final MessageId messageId = new MessageId(getRandomId());
 	protected final Message message =
 			new Message(messageId, contactGroupId, messageTimestamp,
-					getRandomBytes(42));
+					getRandomBytes(42), false);
 	private final BdfDictionary meta =
 			BdfDictionary.of(new BdfEntry("me", "ta"));
 	protected final ContactId contactId = new ContactId(5);

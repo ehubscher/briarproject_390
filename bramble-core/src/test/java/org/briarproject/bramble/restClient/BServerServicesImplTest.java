@@ -1,11 +1,12 @@
 package org.briarproject.bramble.restClient;
 
 
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import java.util.Random;
 
 /**
@@ -24,7 +25,10 @@ public class BServerServicesImplTest {
 	@Test
 	public void obtainUserInfoTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		SavedUser returnedUser = services.obtainUserInfo("1233345");
+		// Default User
+        PwdSingletonServer.setPassword("AnotherPassword");
+        UniqueIDSingleton.setUniqueID("Bob");
+		SavedUser returnedUser = services.obtainUserInfo("ABADAR");
 		Assert.assertTrue(returnedUser != null);
 	}
 
@@ -36,8 +40,9 @@ public class BServerServicesImplTest {
 	@Test
 	public void createNewUserTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
+		String defaultPassword = "qwerty";
 		SavedUser userToCreate = new SavedUser(generateFakeUserName(), generateFakeIp(), generateFakePort(), 1, 99);
-		Assert.assertTrue(services.createNewUser(userToCreate));
+		Assert.assertTrue(services.createNewUser(userToCreate, defaultPassword));
 
 	}
 
@@ -50,36 +55,74 @@ public class BServerServicesImplTest {
 	public void createAndObtainDataForUserTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		String username = generateFakeUserName();
+		String defaultPassword = "qwerty";
 		SavedUser userToCreate = new SavedUser(username, generateFakeIp(), generateFakePort(), 1,99);
-		if(!services.createNewUser(userToCreate)){
+		if(!services.createNewUser(userToCreate, defaultPassword)){
 			Assert.fail();
 		}
 		SavedUser returnedUser = services.obtainUserInfo(username);
 		// Check if the returned user has the data previously passed
 		Assert.assertTrue(returnedUser.getUsername().equals(username));
 	}
+
+    /**
+     * Test to update Avartar and Status on Server with default user Bob
+     */
 	@Ignore
 	@Test
 	public void updateUserSettingsTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		String defaultUser = "1233345";
+		String defaultUser = "Bob";
+		PwdSingletonServer.setPassword("AnotherPassword");
 		String ipp = generateFakeIp();
 		int fakePort = generateFakePort();
 		SavedUser user = new SavedUser(defaultUser, ipp, fakePort, 2,33);
 		boolean e = services.updateUserSettingInfo(user);
 		Assert.assertTrue(e);
 	}
+    /**
+     * Test to update TCP Connection details with default user Bob
+     */
 	@Ignore
 	@Test
 	public void updateUserTcpTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
-		String defaultUser = "1233345";
+		String defaultUser = "Bob";
+		PwdSingletonServer.setPassword("AnotherPassword");
 		String ipp = generateFakeIp();
 		int fakePort = generateFakePort();
 		SavedUser user = new SavedUser(defaultUser, ipp, fakePort, 2, 22);
 		boolean e = services.updateUserNetworkInfo(user);
 		Assert.assertTrue(e);
 	}
+
+	/**
+	 * Test the function DoesUsernameExistsInDB with default user Bob
+	 */
+	@Ignore
+	@Test
+	public void doesUserExistsTest(){
+		BServerServicesImpl services = new BServerServicesImpl();
+		String defaultCreatedUser  = "Bob";
+		boolean result  = services.doesUsernameExistsInDB(defaultCreatedUser);
+		Assert.assertTrue(result);
+	}
+
+    /**
+     * Test the functino connectWithContact trying to connect Bob with ABADAR
+     * the two defaults contact
+     */
+	@Ignore
+    @Test
+    public void connectWithContactTest(){
+        BServerServicesImpl services = new BServerServicesImpl();
+        String defaultCreateUser = "Bob";
+        UniqueIDSingleton.setUniqueID(defaultCreateUser);
+        PwdSingletonServer.setPassword("AnotherPassword");
+        boolean result = services.connectWithContact("ABADAR");
+        Assert.assertTrue(result);
+
+    }
 
 	private String generateFakeUserName(){
 		String fakeUserName = "";

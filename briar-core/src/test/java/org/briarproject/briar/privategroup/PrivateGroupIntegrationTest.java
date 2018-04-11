@@ -18,6 +18,7 @@ import org.briarproject.briar.test.BriarIntegrationTest;
 import org.briarproject.briar.test.BriarIntegrationTestComponent;
 import org.briarproject.briar.test.DaggerBriarIntegrationTestComponent;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -125,6 +126,7 @@ public class PrivateGroupIntegrationTest
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testRevealContacts() throws Exception {
 		// invite two contacts

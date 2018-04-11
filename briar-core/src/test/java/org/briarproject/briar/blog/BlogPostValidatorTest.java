@@ -86,7 +86,7 @@ public class BlogPostValidatorTest extends BriarTestCase {
 		MessageId messageId = new MessageId(TestUtils.getRandomId());
 		long timestamp = System.currentTimeMillis();
 		byte[] raw = TestUtils.getRandomBytes(123);
-		message = new Message(messageId, group.getId(), timestamp, raw);
+		message = new Message(messageId, group.getId(), timestamp, raw, false);
 
 		MetadataEncoder metadataEncoder = context.mock(MetadataEncoder.class);
 		Clock clock = new SystemClock();

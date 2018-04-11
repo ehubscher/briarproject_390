@@ -106,13 +106,13 @@ public class GroupInvitationManagerImplTest extends BrambleMockTestCase {
 	private final BdfDictionary meta = BdfDictionary.of(new BdfEntry("m", "e"));
 	private final Message message =
 			new Message(new MessageId(getRandomId()), contactGroup.getId(),
-					0L, getRandomBytes(MESSAGE_HEADER_LENGTH + 1));
+					0L, getRandomBytes(MESSAGE_HEADER_LENGTH + 1), false);
 	private final BdfList body = BdfList.of("body");
 	private final SessionId sessionId =
 			new SessionId(privateGroup.getId().getBytes());
 	private final Message storageMessage =
 			new Message(new MessageId(getRandomId()), contactGroup.getId(),
-					0L, getRandomBytes(MESSAGE_HEADER_LENGTH + 1));
+					0L, getRandomBytes(MESSAGE_HEADER_LENGTH + 1), false);
 	private final BdfDictionary bdfSession =
 			BdfDictionary.of(new BdfEntry("f", "o"));
 	private final Map<MessageId, BdfDictionary> oneResult =
@@ -715,7 +715,7 @@ public class GroupInvitationManagerImplTest extends BrambleMockTestCase {
 		results.put(message.getId(), meta);
 		results.put(messageId2, meta2);
 		Message message2 = new Message(messageId2, contactGroup.getId(),
-				0L, getRandomBytes(MESSAGE_HEADER_LENGTH + 1));
+				0L, getRandomBytes(MESSAGE_HEADER_LENGTH + 1), false);
 		long time1 = 1L, time2 = 2L;
 		String groupName = getRandomString(MAX_GROUP_NAME_LENGTH);
 		byte[] salt = getRandomBytes(GROUP_SALT_LENGTH);

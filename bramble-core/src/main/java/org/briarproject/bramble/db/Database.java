@@ -463,6 +463,23 @@ interface Database<T> {
 	@Nullable
 	byte[] getRawMessage(T txn, MessageId m) throws DbException;
 
+    /**
+     * Returns a list of the pinned messages with the selected groupId
+     */
+    @Nullable
+	Collection<MessageId> getPinnedMessages(T transaction, GroupId groupId) throws DbException;
+
+	/**
+	 * Returns if the message with the given ID is pinned
+	 */
+	@Nullable
+	boolean isMessagePinned(T txn, MessageId m) throws DbException;
+
+	/**
+     * Set the message has pinned or not
+     */
+    void setMessagePinned(T transaction, boolean pinned, MessageId messageId) throws DbException;
+
 	/**
 	 * Returns the IDs of some messages that are eligible to be sent to the
 	 * given contact and have been requested by the contact, up to the given

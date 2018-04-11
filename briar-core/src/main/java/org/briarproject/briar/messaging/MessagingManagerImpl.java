@@ -208,4 +208,48 @@ class MessagingManagerImpl extends ConversationClientImpl
 		}
 	}
 
+	/**
+	 * Returns a list of messageId of the private messages that are pinned.
+	 */
+	@Override
+	public Collection<MessageId> getPinnedMessages(ContactId contactId) throws DbException{
+        Collection<MessageId> pinnedMessaged;
+        GroupId groupId = getConversationId(contactId);
+        Transaction txn = db.startTransaction(false);
+        try {
+            pinnedMessaged = db.getPinnedMessages(txn, groupId);
+            db.commitTransaction(txn);
+        }finally {
+            db.endTransaction(txn);
+        }
+        return pinnedMessaged;
+    }
+
+	@Override
+	public void setPinned(MessageId id, boolean state) throws DbException{
+		Transaction txn = db.startTransaction(false);
+		try {
+			db.setMessagePinned(txn,state,id);
+			db.commitTransaction(txn);
+		}finally {
+			db.endTransaction(txn);
+		}
+	}
+
+    @Override
+    public boolean isMessagePinned(MessageId id) throws DbException{
+        Transaction txn = db.startTransaction(false);
+
+        boolean isPinned;
+
+        try {
+            isPinned = db.isMessagePinned(txn, id);
+            db.commitTransaction(txn);
+        }finally {
+            db.endTransaction(txn);
+        }
+
+        return isPinned;
+    }
+
 }
