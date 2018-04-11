@@ -127,7 +127,7 @@ public class WallpaperFragment extends Fragment {
             stream = new ByteArrayOutputStream();
             drawable = getResources().getDrawable(wallpapers[position]);
             bitmap1 = ((BitmapDrawable)drawable).getBitmap();
-            bitmap1.compress(Bitmap.CompressFormat.JPEG,50, stream);
+            bitmap1.compress(Bitmap.CompressFormat.JPEG,10, stream);
             BYTE = stream.toByteArray();
             bitmap2 = BitmapFactory.decodeByteArray(BYTE, 0, BYTE.length);
             imageView.setImageBitmap(bitmap2);
