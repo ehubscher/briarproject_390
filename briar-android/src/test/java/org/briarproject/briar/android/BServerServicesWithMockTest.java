@@ -3,6 +3,7 @@ package org.briarproject.briar.android;
 import com.google.common.base.Verify;
 
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -130,6 +131,19 @@ public class BServerServicesWithMockTest {
         // Let's assume that the connection is successful
         when(mockingServer.connectWithContact(targetContact)).thenReturn(true);
         Assert.assertTrue(mockingServer.connectWithContact(targetContact));
+
+    }
+    /**
+     * Ths test is testing contact link creation, with mocking the server
+     */
+    @Test
+    public void getUserPreferencesTest(){
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String targetContact = "Bob";
+        PreferenceUser preferenceUser = new PreferenceUser(targetContact, 2, 2);
+        // Let's assume that the connection is successful
+        when(mockingServer.getUserPreferences(targetContact)).thenReturn(preferenceUser);
+        Assert.assertTrue(mockingServer.getUserPreferences(targetContact).equals(preferenceUser));
 
     }
 
