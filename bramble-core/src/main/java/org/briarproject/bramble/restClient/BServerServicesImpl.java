@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.restClient.ServerObj.ServerConfig;
@@ -31,6 +32,7 @@ public class BServerServicesImpl implements BServerServices{
     private volatile String resultFromQueryUpdateUser = null;
     private volatile boolean resultFromQueryExists = false;
     private volatile boolean resultFromConnection = false;
+    private volatile PreferenceUser resultFromGetPreference = null;
     private int TIME_WAITING = 1;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
@@ -41,6 +43,7 @@ public class BServerServicesImpl implements BServerServices{
         BriarServerService service = ServerConfig.getServerService();
         JSONObject parameters =  new JSONObject();
         parameters.put("password", PwdSingletonServer.getPassword());
+        createdUser = null;
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
             @Override
@@ -66,7 +69,7 @@ public class BServerServicesImpl implements BServerServices{
                                     String convertedIP = ip.getAsString();
                                     int convertedPort = port.getAsInt();
                                     int convertedStatusId = statusId.getAsInt();
-                                    int convertedAvatarId = statusId.getAsInt();
+                                    int convertedAvatarId = avatarId.getAsInt();
                                     // Store info in a SavedUser object...
                                     createdUser = new SavedUser(convertedUsername, convertedIP, convertedPort, convertedStatusId, convertedAvatarId);
 
@@ -284,6 +287,56 @@ public class BServerServicesImpl implements BServerServices{
             LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
         }
         return resultFromConnection;
+    }
+
+    @Override
+    public PreferenceUser getUserPreferences(String username) {
+	    BriarServerService serv = ServerConfig.getServerService();
+	    resultFromGetPreference = null;
+	    ExecutorService executorService = Executors.newFixedThreadPool(1);
+	    executorService.execute(new Runnable() {
+		    @Override
+		    public void run() {
+			    serv.obtainSettingsUser(username).enqueue(new Callback<String>() {
+				    @Override
+				    public void onResponse(Call<String> call, Response<String> response) {
+					    if(response.body() != null){
+						    JsonParser parser = new JsonParser();
+						    JsonElement element = parser.parse(response.body());
+						    if(!element.isJsonNull()){
+							    JsonObject obj;
+							    try{
+								    obj = element.getAsJsonObject();
+								    JsonElement statusId = obj.get("statusId");
+								    JsonElement avatarId = obj.get("avatarId");
+
+								    int convertedStatusId = statusId.getAsInt();
+								    int convertedAvatarId = avatarId.getAsInt();
+								    // Store info in a SavedUser object...
+								    resultFromGetPreference = new PreferenceUser(username, convertedStatusId, convertedAvatarId);
+
+							    }catch (Exception ee){
+								    LOG.info("PROBLEM WHILE EXECUTING ObtainUserInfo : " + ee.getMessage());
+							    }
+
+						    }
+					    }
+				    }
+				    @Override
+				    public void onFailure(Call<String> call, Throwable t) {
+					    LOG.info(" BRIAR SERVER : Failure to get user preferences  " + t.getMessage());
+				    }
+			    });
+		    }
+	    });
+	    // Wait for the call to server to be done...
+	    try{
+		    executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+	    }catch (Exception ee){
+		    LOG.info("FROM GET PREFERENCES: " +  ee.getMessage());
+	    }
+	    return resultFromGetPreference;
+
     }
 
 }
