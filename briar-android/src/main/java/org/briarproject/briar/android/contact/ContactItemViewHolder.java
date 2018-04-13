@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
+import org.briarproject.bramble.plugin.tcp.ContactHash;
 import org.briarproject.bramble.plugin.tcp.IdContactHash;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
+
+import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +32,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 	protected final ImageView avatar;
 	protected final TextView name;
     private final TextView favourite_contact;
+	private volatile HashMap<String, SavedUser> contactsDetails;
+	private volatile IdContactHash contactsIdName;
 	@Nullable
 	protected final ImageView bulb;
 
@@ -43,6 +49,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 	}
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
+		contactsDetails = ContactHash.getAllCurrentContacts();
+		contactsIdName = IdContactHash.getInstance();
 		Author author = item.getContact().getAuthor();
 		String authorName = author.getName();
 		int id = item.getContact().getId().getInt();
@@ -56,8 +64,28 @@ public class ContactItemViewHolder<I extends ContactItem>
 				new IdenticonDrawable(author.getId().getBytes()));//to be removed later
 
 		//get the statusId
-        int status = item.getContact().getStatusId();
+        int status = 1;
+		int avatarId = 99;
+		try{
 
+			// iff we have the contact is in our hash
+			if(contactsIdName.containsKey(id)) {
+				String nameInHash = (String) contactsIdName.get(id);
+				SavedUser currentContactData = contactsDetails.get(nameInHash);
+				if (currentContactData.getAvatarId() == 99) {
+					//TODO:  Refresh the contact...
+				}
+				avatarId = currentContactData.getAvatarId();
+				status = currentContactData.getStatusId();
+				item.setAvatar(avatarId);
+
+			}else{
+				avatarId = item.getContact().getAvatarId();
+				status = item.getContact().getStatusId();
+			}
+		} catch (Exception e){
+			//continue
+		}
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
@@ -73,7 +101,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 			}
 		}
 
-		int avatarId = item.getContact().getAvatarId();
+
+
 
 		//99 is the default value for the unselected avatar
 		if(avatarId != 99 && avatarId < 9){
