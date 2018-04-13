@@ -424,12 +424,17 @@ abstract class TcpPlugin implements DuplexPlugin {
 		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
 		BServerServicesImpl services = new BServerServicesImpl();
+		if(currentUserID == null)currentUserID = UniqueIDSingleton.getUniqueID();
 		PreferenceUser preferenceUser = services.getUserPreferences(currentUserID);
-		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
-		// Make sure it is not default user or empty
-		if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
-			services.updateUserNetworkInfo(currentUser);
-		}
+		// Check if server is up
+		if(preferenceUser != null){
+		    SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
+            // Make sure it is not default user or empty
+            if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
+                services.updateUserNetworkInfo(currentUser);
+            }
+        }
+
 
 	}
 

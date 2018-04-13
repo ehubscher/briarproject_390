@@ -186,9 +186,12 @@ public class ProfileFragment extends BaseFragment {
 		storeInPreferences("current_status",status_num);
 
 		//Set the new statusId
+
         try{
-            currentPhoneHolder.setStatusId(status_num);
-            new CallServerAsyncUpdateUserSettings().execute();
+            if(currentPhoneHolder != null){
+                currentPhoneHolder.setStatusId(status_num);
+                new CallServerAsyncUpdateUserSettings().execute();
+            }
 			if(!updateSuccess){
 				LOG.info(" FAIL TO UPDATE SETTINGS ");
 			}
@@ -212,6 +215,7 @@ public class ProfileFragment extends BaseFragment {
 
 		popup.show();
 	}
+
 
 	private void saveAvatar(String item){
 		int avatarNumber = 0;
@@ -250,8 +254,10 @@ public class ProfileFragment extends BaseFragment {
 
 		//Set the new avatarId
         try{
-            currentPhoneHolder.setAvatarId(avatarNumber);
-            new CallServerAsyncUpdateUserSettings().execute();
+            if(currentPhoneHolder != null){
+                currentPhoneHolder.setAvatarId(avatarNumber);
+                new CallServerAsyncUpdateUserSettings().execute();
+            }
             if(!updateSuccess){
             	LOG.info(" FAIL TO UPDATE SETTINGS ");
 			}
@@ -294,9 +300,12 @@ public class ProfileFragment extends BaseFragment {
 			BServerServicesImpl services = new BServerServicesImpl();
 			if(username != null && PwdSingletonServer.getPassword() != null){
 				PreferenceUser preferenceUser = services.getUserPreferences(username);
-				// Build fake SavedUser data
-                SavedUser fakeSavedUser = new SavedUser(username, "123.123.123.123", 2222, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
-                resultFromObtainUser = fakeSavedUser;
+				// Build fake SavedUser data, only if server id up
+                if(preferenceUser != null){
+                    SavedUser fakeSavedUser = new SavedUser(username, "123.123.123.123", 2222, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
+                    resultFromObtainUser = fakeSavedUser;
+                }
+
 			}else{
 				LOG.info("BRIAR PROFILE : username OR pwd not saved");
 			}

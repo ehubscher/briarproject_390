@@ -291,6 +291,7 @@ public class BServerServicesImpl implements BServerServices{
 
     @Override
     public PreferenceUser getUserPreferences(String username) {
+        if(username == null)return null;
 	    BriarServerService serv = ServerConfig.getServerService();
 	    resultFromGetPreference = null;
 	    ExecutorService executorService = Executors.newFixedThreadPool(1);
