@@ -15,6 +15,7 @@ import org.briarproject.bramble.api.plugin.duplex.DuplexTransportConnection;
 import org.briarproject.bramble.api.properties.TransportProperties;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.IpifyServices;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 
@@ -422,8 +423,9 @@ abstract class TcpPlugin implements DuplexPlugin {
 	    currentPort = port;
 		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
-		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, 1, 99);
 		BServerServicesImpl services = new BServerServicesImpl();
+		PreferenceUser preferenceUser = services.getUserPreferences(currentUserID);
+		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
 		// Make sure it is not default user or empty
 		if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
 			services.updateUserNetworkInfo(currentUser);

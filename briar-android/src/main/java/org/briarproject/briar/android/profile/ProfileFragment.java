@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
@@ -188,6 +189,9 @@ public class ProfileFragment extends BaseFragment {
         try{
             currentPhoneHolder.setStatusId(status_num);
             new CallServerAsyncUpdateUserSettings().execute();
+			if(!updateSuccess){
+				LOG.info(" FAIL TO UPDATE SETTINGS ");
+			}
         }catch (Exception e){
 			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
         }
@@ -248,6 +252,9 @@ public class ProfileFragment extends BaseFragment {
         try{
             currentPhoneHolder.setAvatarId(avatarNumber);
             new CallServerAsyncUpdateUserSettings().execute();
+            if(!updateSuccess){
+            	LOG.info(" FAIL TO UPDATE SETTINGS ");
+			}
         }catch (Exception e){
             if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
         }
@@ -286,7 +293,10 @@ public class ProfileFragment extends BaseFragment {
 		protected String doInBackground(Void... voids) {
 			BServerServicesImpl services = new BServerServicesImpl();
 			if(username != null && PwdSingletonServer.getPassword() != null){
-				resultFromObtainUser = services.obtainUserInfo(username);
+				PreferenceUser preferenceUser = services.getUserPreferences(username);
+				// Build fake SavedUser data
+                SavedUser fakeSavedUser = new SavedUser(username, "123.123.123.123", 2222, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
+                resultFromObtainUser = currentPhoneHolder;
 			}else{
 				LOG.info("BRIAR PROFILE : username OR pwd not saved");
 			}
@@ -310,7 +320,7 @@ public class ProfileFragment extends BaseFragment {
 		protected String doInBackground(Void... voids) {
 			BServerServicesImpl services = new BServerServicesImpl();
 			if(currentPhoneHolder != null){
-				resultFromUpdate =  services.updateUserNetworkInfo(currentPhoneHolder);
+				resultFromUpdate =  services.updateUserSettingInfo(currentPhoneHolder);
 			}
 
 			return null;
