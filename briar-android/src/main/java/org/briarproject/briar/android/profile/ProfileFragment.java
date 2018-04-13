@@ -34,7 +34,7 @@ import static java.util.logging.Level.WARNING;
 public class ProfileFragment extends BaseFragment {
 
     UniqueIDSingleton uniqueIDSingleton;
-    private volatile SavedUser currentPhoneHolder;
+    private static volatile SavedUser currentPhoneHolder;
 	private volatile boolean updateSuccess = false;
 	private volatile String username;
     private static final Logger LOG =
@@ -296,7 +296,7 @@ public class ProfileFragment extends BaseFragment {
 				PreferenceUser preferenceUser = services.getUserPreferences(username);
 				// Build fake SavedUser data
                 SavedUser fakeSavedUser = new SavedUser(username, "123.123.123.123", 2222, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
-                resultFromObtainUser = currentPhoneHolder;
+                resultFromObtainUser = fakeSavedUser;
 			}else{
 				LOG.info("BRIAR PROFILE : username OR pwd not saved");
 			}
