@@ -421,7 +421,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
                             R.drawable.penguin,
                             R.drawable.robot
                     };
-                    toolbarAvatar.setImageResource(mThumbIds[avatarId]);
+                    toolbarAvatar.setImageResource(mThumbIds[avatarId-1]);
                 }
                 else{//Use Identicon by default
                     toolbarAvatar.setImageDrawable(
