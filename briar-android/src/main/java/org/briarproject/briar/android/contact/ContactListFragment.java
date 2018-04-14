@@ -236,7 +236,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 						}
 					} catch (Exception e){
-						//continue
+						LOG.info("Exception while getting hash data : " + e.getMessage());
 					}
 				}
 				long duration = System.currentTimeMillis() - now;

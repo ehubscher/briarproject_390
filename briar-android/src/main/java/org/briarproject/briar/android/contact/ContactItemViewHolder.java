@@ -96,7 +96,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 				status = item.getContact().getStatusId();
 			}
 		} catch (Exception e){
-			//continue
+			LOG.info("Exception from getting hash user preferences " + e.getMessage());
 		}
 		if (bulb != null) {
 			// online/offline
