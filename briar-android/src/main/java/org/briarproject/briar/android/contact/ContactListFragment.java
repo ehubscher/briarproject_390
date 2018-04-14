@@ -187,6 +187,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		notificationManager.clearAllIntroductionNotifications();
 		loadContacts();
 		list.startPeriodicUpdate();
+		// Force to reload contact list to make sure all data are loaded
+		loadContacts();
 	}
 
 	@Override
@@ -224,9 +226,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						if(contactsIdName.containsKey(c.getId().getInt())) {
 							String contactName = (String) contactsIdName.get(c.getId().getInt());
 							SavedUser currentContactData = contactsDetails.get(contactName);
-							if (currentContactData.getAvatarId() == 99) {
-								// Refresh the contact...
-							}
+							// Get data of user if available
 							int avatarId = currentContactData.getAvatarId();
 							int statusId = currentContactData.getStatusId();
 
