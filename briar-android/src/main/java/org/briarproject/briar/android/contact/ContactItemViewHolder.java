@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.contact;
 
+import android.os.AsyncTask;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,11 +14,14 @@ import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.plugin.tcp.ContactHash;
 import org.briarproject.bramble.plugin.tcp.IdContactHash;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 
@@ -34,9 +38,11 @@ public class ContactItemViewHolder<I extends ContactItem>
     private final TextView favourite_contact;
 	private volatile HashMap<String, SavedUser> contactsDetails;
 	private volatile IdContactHash contactsIdName;
+	private volatile String targetUsername;
 	@Nullable
 	protected final ImageView bulb;
-
+    private static final Logger LOG =
+            Logger.getLogger(ContactItemViewHolder.class.getName());
 	public ContactItemViewHolder(View v) {
 		super(v);
 
@@ -71,10 +77,16 @@ public class ContactItemViewHolder<I extends ContactItem>
 			// iff we have the contact is in our hash
 			if(contactsIdName.containsKey(id)) {
 				String nameInHash = (String) contactsIdName.get(id);
+				if(nameInHash != null && !nameInHash.isEmpty()){
+				    targetUsername = nameInHash;
+                }
 				SavedUser currentContactData = contactsDetails.get(nameInHash);
-				if (currentContactData.getAvatarId() == 99) {
-					//TODO:  Refresh the contact...
+				// Algo to fill hash
+				if(currentContactData == null && nameInHash != null){
+                    new CallServerAsyncObtainUser().execute();
 				}
+				// Try to take again the data
+				currentContactData = contactsDetails.get(nameInHash);
 				avatarId = currentContactData.getAvatarId();
 				status = currentContactData.getStatusId();
 				item.setAvatar(avatarId);
@@ -138,5 +150,41 @@ public class ContactItemViewHolder<I extends ContactItem>
 			if (listener != null) listener.onItemClick(avatar, item);
 		});
 	}
+
+    /**
+     * This class is implementing an Async task as recommended for Android
+     * It is made to make sure to separate server call from main UI Thread
+     */
+    class CallServerAsyncObtainUser extends AsyncTask<Void, Integer, String> {
+
+        SavedUser resultFromObtainUser;
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            BServerServicesImpl services = new BServerServicesImpl();
+            if(targetUsername != null && PwdSingletonServer.getPassword() != null){
+                PreferenceUser preferenceUser = services.getUserPreferences(targetUsername);
+                // Build fake SavedUser data, only if server id up
+                if(preferenceUser != null){
+                    SavedUser fakeSavedUser = new SavedUser(targetUsername, "123.123.123.123", 2222, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
+                    resultFromObtainUser = fakeSavedUser;
+                }
+
+            }else{
+                LOG.info("BRIAR PROFILE : username OR pwd not saved");
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            if(contactsDetails.containsKey(targetUsername)){
+                contactsDetails.remove(targetUsername);
+                contactsDetails.put(targetUsername, resultFromObtainUser);
+            }else{
+                contactsDetails.put(targetUsername, resultFromObtainUser);
+            }
+        }
+    }
 
 }

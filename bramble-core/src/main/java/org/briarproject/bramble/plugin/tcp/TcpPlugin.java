@@ -336,13 +336,18 @@ abstract class TcpPlugin implements DuplexPlugin {
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
 
-
+		BServerServicesImpl services = new BServerServicesImpl();
 		// Go Get IP/PORT for userID on our Server
 		SavedUser userInfo = null;
 		if(currentContacts.containsKey(currentTargetUser)){
 			userInfo = currentContacts.get(currentTargetUser);
+			// In the case user has been initialized by other services...
+			if(userInfo.getIpAddress().equals("123.123.123.123")){
+				currentContacts.remove(currentTargetUser);
+				userInfo = services.obtainUserInfo(currentTargetUser);
+				currentContacts.put(currentTargetUser, userInfo);
+			}
 		}else{
-			BServerServicesImpl services = new BServerServicesImpl();
 			userInfo = services.obtainUserInfo(currentTargetUser);
 			currentContacts.put(currentTargetUser, userInfo);
 
