@@ -26,12 +26,8 @@ import java.io.ByteArrayOutputStream;
 
 public class WallpaperFragment extends Fragment {
 
-    Drawable drawable;
-    Bitmap bitmap1, bitmap2;
-    ByteArrayOutputStream stream;
-    byte[] BYTE;
-
-    private Integer[] wallpapers = {
+    //This instance is public since it needs to be accessed outside the package
+     public Integer[] wallpapers = {
             R.drawable.bubbles,
             R.drawable.flower,
             R.drawable.hellokitty,
@@ -93,6 +89,10 @@ public class WallpaperFragment extends Fragment {
 
     public class ImageAdapter extends BaseAdapter {
         private Context context;
+        Drawable drawable;
+        Bitmap bitmap1, bitmap2;
+        ByteArrayOutputStream stream;
+        byte[] BYTE;
 
         public ImageAdapter(Context c) {
             context = c;

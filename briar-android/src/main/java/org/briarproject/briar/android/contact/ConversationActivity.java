@@ -67,6 +67,7 @@ import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
 import org.briarproject.briar.android.view.TextInputView.TextInputListener;
+import org.briarproject.briar.android.wallpaper.WallpaperFragment;
 import org.briarproject.briar.api.android.AndroidNotificationManager;
 import org.briarproject.briar.api.blog.BlogSharingManager;
 import org.briarproject.briar.api.client.ProtocolStateException;
@@ -154,33 +155,8 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	private TextView toolbarTitle;
 	private BriarRecyclerView list;
 
-	//Wallpaper images
-	private Integer[] wallpapers = {
-			R.drawable.bubbles,
-			R.drawable.flower,
-			R.drawable.hellokitty,
-			R.drawable.lake,
-			R.drawable.sunset,
-			R.drawable.nebula,
-			R.drawable.abstractimage,
-			R.drawable.animalcrossing,
-			R.drawable.burst,
-			R.drawable.cloud,
-			R.drawable.fireflies,
-			R.drawable.orangepattern,
-			R.drawable.park,
-			R.drawable.planet,
-			R.drawable.water,
-			R.drawable.watercolor,
-			R.drawable.mario,
-			R.drawable.zelda,
-			R.drawable.goldengate,
-			R.drawable.mountain,
-			R.drawable.space,
-			R.drawable.vcolors,
-			R.drawable.kirby,
-			R.drawable.shanghai
-	};
+	//Instance to give us access to the wallpapers array from Wallpaper
+	private WallpaperFragment wallpaperFragment;
 
     //Declared variables for the Image selector
 	final Context context = this;
@@ -291,6 +267,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			}
 		});
 
+		wallpaperFragment = new WallpaperFragment();
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		int wallpaperId = settings.getInt("wallpaper",0);
 		setWallpaper(wallpaperId);
@@ -301,7 +278,8 @@ public class ConversationActivity extends BriarActivity implements EventListener
 		if(wallpaperId!=0){
 			//change background
 			View v = findViewById(R.id.conversationView);
-			switch(wallpaperId){
+
+			/*switch(wallpaperId){
 				case 1: v.setBackgroundResource(wallpapers[0]);
 					break;
 				case 2: v.setBackgroundResource(wallpapers[1]);
@@ -350,7 +328,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
 					break;
 				case 24: v.setBackgroundResource(wallpapers[23]);
 					break;
-			}
+			}*/
 		}
 	}
 
