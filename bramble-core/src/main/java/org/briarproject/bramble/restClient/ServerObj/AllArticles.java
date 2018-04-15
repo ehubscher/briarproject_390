@@ -20,4 +20,11 @@ public class AllArticles {
         }
         return instanceAllArticles;
     }
+
+     public static void setInstanceAllArticles(List<Article> updatedAllArticles){
+        if(updatedAllArticles != null){
+            instanceAllArticles = updatedAllArticles;
+        }
+
+    }
 }

@@ -1,15 +1,22 @@
 package org.briarproject.bramble.restClient;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.AllArticles;
+import org.briarproject.bramble.restClient.ServerObj.Article;
 import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.restClient.ServerObj.ServerConfig;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +39,7 @@ public class BServerServicesImpl implements BServerServices{
     private volatile String resultFromQueryUpdateUser = null;
     private volatile boolean resultFromQueryExists = false;
     private volatile boolean resultFromConnection = false;
+    private volatile boolean resultFromGetArticles = false;
     private volatile PreferenceUser resultFromGetPreference = null;
     private int TIME_WAITING = 1;
     private static final Logger LOG =
@@ -342,7 +350,66 @@ public class BServerServicesImpl implements BServerServices{
 
     @Override
     public boolean getOrUpdateAllArticles() {
-        return false;
+        BriarServerService service = ServerConfig.getServerService();
+        resultFromGetArticles = false;
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                service.getArticles().enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.body() != null && !response.body().isEmpty()){
+                            JsonParser parser = new JsonParser();
+                            JsonElement element = parser.parse(response.body());
+                            if(!element.isJsonNull()){
+                                try{
+                                    JsonArray arr = element.getAsJsonArray();
+                                    List<Article> newListOfArticle = new ArrayList<>();
+                                    Article articleToAdd;
+                                    for(int i = 0; i < arr.size(); i++){
+                                        JsonElement obj  = arr.get(i);
+                                        JsonObject articleJson = obj.getAsJsonObject();
+                                        String author = articleJson.get("author").getAsString();
+                                        String date = articleJson.get("publicationDate").getAsString();
+                                        String title = articleJson.get("title").getAsString();
+                                        JsonArray para = articleJson.get("body").getAsJsonArray();
+                                        List<String> allBodyArticle = new ArrayList<>();
+                                        for(int j = 0; j < para.size(); j++){
+                                            if(para.get(j).getAsString() != null && !para.get(j).getAsString().isEmpty()){
+                                                allBodyArticle.add(para.get(j).getAsString());
+                                            }
+                                        }
+
+                                        articleToAdd = new Article(author, date, title, allBodyArticle);
+                                        newListOfArticle.add(articleToAdd);
+                                    }
+                                    AllArticles.setInstanceAllArticles(newListOfArticle);
+                                    resultFromGetArticles = true;
+                                }catch (Exception ee){
+                                    LOG.info("PROBLEM WHILE EXECUTING getOrUpdateAllArticles : " + ee.getMessage());
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        LOG.info(" BRIAR SERVER : Failure to get user Exception, getOrUpdateAllArticles: " + t.getMessage());
+                    }
+                });
+            }
+        });
+
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+        }catch (InterruptedException ee){
+            LOG.info(ee.getMessage());
+        }
+
+        return resultFromGetArticles;
     }
 
 }
