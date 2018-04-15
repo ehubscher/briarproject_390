@@ -1,10 +1,13 @@
 package com.briar.server.resources;
 
+import com.briar.server.mapper.ArticleMapper;
 import com.briar.server.mapper.UserContactMapper;
 import com.briar.server.mapper.UserMapper;
+import com.briar.server.model.domainmodelclasses.Article;
 import com.briar.server.model.domainmodelclasses.User;
 import com.briar.server.model.returnedtobriarclasses.BriarProfileUser;
 import com.briar.server.model.returnedtobriarclasses.BriarUser;
+import com.briar.server.services.ArticleService;
 import com.briar.server.services.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
@@ -19,14 +22,18 @@ import javax.ws.rs.core.Response;
 public class UsersResource {
 
     private UserService userService;
+    private ArticleService articleService;
+
     private UserContactMapper userContactMapper;
-
     private UserMapper userMapper;
+    private ArticleMapper articleMapper;
 
-    public UsersResource(UserMapper userMapper, UserContactMapper userContactMapper) {
+    public UsersResource(UserMapper userMapper, UserContactMapper userContactMapper, ArticleMapper articleMapper) {
         this.userMapper = userMapper;
         this.userContactMapper = userContactMapper;
         this.userService = new UserService(userMapper);
+        this.articleMapper = articleMapper;
+        this.articleService = new ArticleService(articleMapper);
     }
 
     public void supercedeUserServiceForForTestsOnly(UserService userService) {
@@ -349,5 +356,11 @@ public class UsersResource {
     public ContactsResource getContactsResource() {
         return new ContactsResource(userMapper, userContactMapper);
     }
+
+    @Path("/users/{userId}/article")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArticleResource getArticleResource() { return new ArticleResource(articleMapper, userMapper);}
+
 
 }
