@@ -3,10 +3,16 @@ package org.briarproject.briar.android;
 import com.google.common.base.Verify;
 
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.AllArticles;
+import org.briarproject.bramble.restClient.ServerObj.Article;
 import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -144,6 +150,24 @@ public class BServerServicesWithMockTest {
         // Let's assume that the connection is successful
         when(mockingServer.getUserPreferences(targetContact)).thenReturn(preferenceUser);
         Assert.assertTrue(mockingServer.getUserPreferences(targetContact).equals(preferenceUser));
+
+    }
+
+    /**
+     * Using mock test the get articles method
+     */
+    @Test
+    public void getOrUpdateAllArticlesTest(){
+     BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+     List<String> fakeBody = new ArrayList<>();
+     fakeBody.add("fake para 1");
+     fakeBody.add("fake para 2");
+     Article fakeArticle = new Article("Bob", "October 23, 2012","Fake article ", fakeBody);
+     List<Article> fakeListArticle = new ArrayList<>();
+     fakeListArticle.add(fakeArticle);
+     AllArticles.setInstanceAllArticles(fakeListArticle);
+     when(mockingServer.getOrUpdateAllArticles()).thenReturn(true);
+     Assert.assertTrue(mockingServer.getOrUpdateAllArticles() && AllArticles.getInstanceAllArticles().size() > 0);
 
     }
 
