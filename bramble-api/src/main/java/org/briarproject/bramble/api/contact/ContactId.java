@@ -13,21 +13,12 @@ import javax.annotation.concurrent.Immutable;
 public class ContactId {
 
 	private final int id;
-	private String uniqueID;
 	public ContactId(int id) {
 		this.id = id;
 	}
 
 	public int getInt() {
 		return id;
-	}
-
-	public void setUniqueID(String uniqueID){
-		this.uniqueID = uniqueID;
-	}
-
-	public String getUniqueID(){
-		return uniqueID;
 	}
 
 	@Override

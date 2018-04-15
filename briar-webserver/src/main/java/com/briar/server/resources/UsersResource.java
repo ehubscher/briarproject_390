@@ -1,9 +1,13 @@
 package com.briar.server.resources;
 
+import com.briar.server.mapper.ArticleMapper;
 import com.briar.server.mapper.UserContactMapper;
 import com.briar.server.mapper.UserMapper;
+import com.briar.server.model.domainmodelclasses.Article;
 import com.briar.server.model.domainmodelclasses.User;
+import com.briar.server.model.returnedtobriarclasses.BriarProfileUser;
 import com.briar.server.model.returnedtobriarclasses.BriarUser;
+import com.briar.server.services.ArticleService;
 import com.briar.server.services.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Component;
@@ -18,14 +22,18 @@ import javax.ws.rs.core.Response;
 public class UsersResource {
 
     private UserService userService;
+    private ArticleService articleService;
+
     private UserContactMapper userContactMapper;
-
     private UserMapper userMapper;
+    private ArticleMapper articleMapper;
 
-    public UsersResource(UserMapper userMapper, UserContactMapper userContactMapper) {
+    public UsersResource(UserMapper userMapper, UserContactMapper userContactMapper, ArticleMapper articleMapper) {
         this.userMapper = userMapper;
         this.userContactMapper = userContactMapper;
         this.userService = new UserService(userMapper);
+        this.articleMapper = articleMapper;
+        this.articleService = new ArticleService(articleMapper);
     }
 
     public void supercedeUserServiceForForTestsOnly(UserService userService) {
@@ -124,6 +132,55 @@ public class UsersResource {
 
             // Launching the process of modifying the identity map and DB
             BriarUser returnObject = this.userService.modifyUser(userInMemory);
+
+            // If no error is returned, we send back OK
+            response = Response.status(Response.Status.OK).entity(returnObject).build();
+            System.out.println(response);
+            return response;
+
+        } catch (Exception e) {
+            // Any exception we catch is an internal server error.
+            //TODO Eventually we'll need a log service.
+            System.out.println(e);
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            System.out.println(response);
+            return response;
+        }
+    }
+
+    /**
+     * Type: GET
+     * Route: /users/{userId}/profile
+     * Method used to get the profile information of a user. Example of
+     *
+     * @param phoneGeneratedId
+     * @return
+     * {
+     *     phoneGeneratedId: "someId",
+     *     statusId: 2,
+     *     avatarId: 12
+     * }
+     */
+    @GET
+    @Path("/users/{userId}/profile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProfile(@PathParam("userId") String phoneGeneratedId) {
+        Response response;
+
+        try {
+
+            boolean userExists = this.userService.doesUserExists(phoneGeneratedId);
+            if (!userExists) {
+                // You can't update a user if it isn't created
+                response = Response.status(Response.Status.NOT_FOUND).build();
+                System.out.println(response);
+                return response;
+            }
+
+            User userInMemory = this.userService.readUser(phoneGeneratedId);
+
+            BriarProfileUser returnObject = new BriarProfileUser(userInMemory);
 
             // If no error is returned, we send back OK
             response = Response.status(Response.Status.OK).entity(returnObject).build();
@@ -299,5 +356,11 @@ public class UsersResource {
     public ContactsResource getContactsResource() {
         return new ContactsResource(userMapper, userContactMapper);
     }
+
+    @Path("/users/{userId}/article")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ArticleResource getArticleResource() { return new ArticleResource(articleMapper, userMapper);}
+
 
 }

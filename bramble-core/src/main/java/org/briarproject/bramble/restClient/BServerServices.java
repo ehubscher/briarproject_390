@@ -1,5 +1,6 @@
 package org.briarproject.bramble.restClient;
 
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 
 /**
@@ -50,5 +51,13 @@ public interface BServerServices {
      * @return True -> Success , False -> Fail
      */
     boolean connectWithContact(String targetContact);
+
+    /**
+     * This method is getting the setting preferences
+     * for a user
+     * @param username name of the user
+     * @return non-null if user if found, null if user is not found
+     */
+    PreferenceUser getUserPreferences(String username);
 
 }

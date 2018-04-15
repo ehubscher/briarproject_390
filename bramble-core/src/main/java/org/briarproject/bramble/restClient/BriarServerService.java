@@ -81,6 +81,10 @@ public interface BriarServerService {
     @POST("users/{userID}/contact")
     Call<String> createConnection(@Path("userID") String userID, @Body String bodyJSON);
 
+    @Headers("Content-Type: application/json")
+    @GET("users/{userID}/profile")
+    Call<String> obtainSettingsUser(@Path("userID") String userID);
+
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(config.getServerAddress())
             .addConverterFactory(ScalarsConverterFactory.create())
