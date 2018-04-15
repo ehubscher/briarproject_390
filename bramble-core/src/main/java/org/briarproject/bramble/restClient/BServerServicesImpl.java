@@ -149,7 +149,7 @@ public class BServerServicesImpl implements BServerServices{
         parameters.put("ip", savedUser.getIpAddress());
         parameters.put("password", PwdSingletonServer.getPassword());
         // prevent unexpected input
-        if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
+        if(savedUser.getUsername() == null || savedUser.getUsername().length() < 2){
             return false;
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -188,7 +188,7 @@ public class BServerServicesImpl implements BServerServices{
         parameters.put("avatarId", savedUser.getAvatarId());
         parameters.put("password", PwdSingletonServer.getPassword());
         // prevent unexpected input
-        if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
+        if(savedUser.getUsername() == null || savedUser.getUsername().length() < 2){
             return false;
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -338,6 +338,11 @@ public class BServerServicesImpl implements BServerServices{
 	    }
 	    return resultFromGetPreference;
 
+    }
+
+    @Override
+    public boolean getOrUpdateAllArticles() {
+        return false;
     }
 
 }
