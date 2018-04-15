@@ -1327,6 +1327,45 @@ public abstract class JdbcDatabaseTest extends BrambleTestCase {
 		db.close();
 	}
 
+	@Test
+	public void testSetMessagePinned() throws Exception {
+		MessageId messageId1 = new MessageId(TestUtils.getRandomId());
+		MessageId messageId2 = new MessageId(TestUtils.getRandomId());
+		Message message1 = new Message(messageId1, groupId, timestamp, raw, false);
+		Message message2 = new Message(messageId2, groupId, timestamp, raw, false);
+
+		Database<Connection> db = open(false);
+		Connection txn = db.startTransaction();
+
+		// Add a group and some messages with different status
+        db.addGroup(txn, group);
+		db.addMessage(txn, message, PENDING, true);
+		db.addMessage(txn, message1, DELIVERED, true);
+		db.addMessage(txn, message2, INVALID, true);
+
+		//assert that the messages are false by default
+		assertFalse(db.isMessagePinned(txn, messageId1));
+		assertFalse(db.isMessagePinned(txn, messageId2));
+
+		//change message 1 to pinned true and test to see
+		//if the database takes effect for that one but not the other
+		db.setMessagePinned(txn, true, messageId1);
+
+		assertTrue(db.isMessagePinned(txn, messageId1));
+		assertFalse(db.isMessagePinned(txn, messageId2));
+
+		//change message 2 to pinned true and test to see
+		//if the database takes effect for that one but not the other
+		db.setMessagePinned(txn, true, messageId2);
+
+		assertTrue(db.isMessagePinned(txn, messageId1));
+		assertTrue(db.isMessagePinned(txn, messageId2));
+
+		db.commitTransaction(txn);
+		db.close();
+
+	}
+
 	@Ignore
 	@Test
 	public void testMessageDependenciesAcrossGroups() throws Exception {
