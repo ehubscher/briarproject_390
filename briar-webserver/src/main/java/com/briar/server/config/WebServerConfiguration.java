@@ -1,7 +1,6 @@
 package com.briar.server.config;
 
-import com.briar.server.resources.ContactResource;
-import com.briar.server.resources.UsersResource;
+import com.briar.server.resources.*;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -22,6 +21,9 @@ public class WebServerConfiguration extends ResourceConfig {
     public void jerseyConfiguration() {
         register(ContactResource.class);
         register(UsersResource.class);
+        register(ContactsResource.class);
+        register(ArticleResource.class);
+        register(ArticlesResource.class);
     }
 
     private void configureSwagger() {

@@ -1,7 +1,16 @@
-# Android defaults and rules from ../bramble-android/proguard-rules.txt are also applied
+# Android defaults and rules from ../bramble-android/-rules.txt are also applied
 
 -dontobfuscate
 -keepattributes SourceFile, LineNumberTable, *Annotation*, Signature, InnerClasses, EnclosingMethod
+
+# Ignore Warning for xmlpull libraries
+-dontwarn org.xmlpull.v1.**
+
+# Hail Mary
+-ignorewarnings
+-keep class * {
+    public private *;
+}
 
 # QR codes
 -keep class com.google.zxing.Result

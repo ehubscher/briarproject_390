@@ -1,5 +1,14 @@
 -keep,includedescriptorclasses class org.briarproject.** { *; }
 
+# Ignore Warning for xmlpull libraries
+-dontwarn org.xmlpull.v1.**
+
+# Hail Mary
+-ignorewarnings
+-keep class * {
+    public private *;
+}
+
 -keep class org.h2.** { *; }
 -dontwarn org.h2.**
 -dontnote org.h2.**
