@@ -275,61 +275,16 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	}
 
 	public void setWallpaper(int wallpaperId) {
-		if(wallpaperId!=0){
-			//change background
-			View v = findViewById(R.id.conversationView);
+        if(wallpaperId!=0){
+            //change background
+            View v = findViewById(R.id.conversationView);
 
-			/*switch(wallpaperId){
-				case 1: v.setBackgroundResource(wallpapers[0]);
-					break;
-				case 2: v.setBackgroundResource(wallpapers[1]);
-					break;
-				case 3: v.setBackgroundResource(wallpapers[2]);
-					break;
-				case 4: v.setBackgroundResource(wallpapers[3]);
-					break;
-				case 5: v.setBackgroundResource(wallpapers[4]);
-					break;
-				case 6: v.setBackgroundResource(wallpapers[5]);
-					break;
-				case 7: v.setBackgroundResource(wallpapers[6]);
-					break;
-				case 8: v.setBackgroundResource(wallpapers[7]);
-					break;
-				case 9: v.setBackgroundResource(wallpapers[8]);
-					break;
-				case 10: v.setBackgroundResource(wallpapers[9]);
-					break;
-				case 11: v.setBackgroundResource(wallpapers[10]);
-					break;
-				case 12: v.setBackgroundResource(wallpapers[11]);
-					break;
-				case 13: v.setBackgroundResource(wallpapers[12]);
-					break;
-				case 14: v.setBackgroundResource(wallpapers[13]);
-					break;
-				case 15: v.setBackgroundResource(wallpapers[14]);
-					break;
-				case 16: v.setBackgroundResource(wallpapers[15]);
-					break;
-				case 17: v.setBackgroundResource(wallpapers[16]);
-					break;
-				case 18: v.setBackgroundResource(wallpapers[17]);
-					break;
-				case 19: v.setBackgroundResource(wallpapers[18]);
-					break;
-				case 20: v.setBackgroundResource(wallpapers[19]);
-					break;
-				case 21: v.setBackgroundResource(wallpapers[20]);
-					break;
-				case 22: v.setBackgroundResource(wallpapers[21]);
-					break;
-				case 23: v.setBackgroundResource(wallpapers[22]);
-					break;
-				case 24: v.setBackgroundResource(wallpapers[23]);
-					break;
-			}*/
-		}
+            for(int i = 0; i < wallpaperFragment.wallpapers.length; i++) {
+                if(wallpaperId == i+1) {
+                    v.setBackgroundResource(wallpaperFragment.wallpapers[i]);
+                }
+            }
+        }
 	}
 
 	@Override
