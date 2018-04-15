@@ -3,12 +3,14 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
@@ -68,6 +70,7 @@ import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
 import org.briarproject.briar.android.view.TextInputView.TextInputListener;
+import org.briarproject.briar.android.wallpaper.WallpaperFragment;
 import org.briarproject.briar.api.android.AndroidNotificationManager;
 import org.briarproject.briar.api.blog.BlogSharingManager;
 import org.briarproject.briar.api.client.ProtocolStateException;
@@ -155,6 +158,9 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	private ImageView toolbarStatus;
 	private TextView toolbarTitle;
 	private BriarRecyclerView list;
+
+	//Instance to give us access to the wallpapers array from Wallpaper
+	private WallpaperFragment wallpaperFragment;
 
     //Declared variables for the Image selector
 	final Context context = this;
@@ -267,6 +273,24 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			}
 		});
 
+		wallpaperFragment = new WallpaperFragment();
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+		int wallpaperId = settings.getInt("wallpaper",0);
+		setWallpaper(wallpaperId);
+
+	}
+
+	public void setWallpaper(int wallpaperId) {
+        if(wallpaperId!=0){
+            //change background
+            View v = findViewById(R.id.conversationView);
+
+            for(int i = 0; i < wallpaperFragment.wallpapers.length; i++) {
+                if(wallpaperId == i+1) {
+                    v.setBackgroundResource(wallpaperFragment.wallpapers[i]);
+                }
+            }
+        }
 	}
 
 	@Override

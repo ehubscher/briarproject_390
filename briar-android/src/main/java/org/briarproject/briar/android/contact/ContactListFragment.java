@@ -40,6 +40,7 @@ import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactCl
 import org.briarproject.briar.android.fragment.BaseFragment;
 import org.briarproject.briar.android.keyagreement.KeyAgreementActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
+import org.briarproject.briar.android.wallpaper.WallpaperActivity;
 import org.briarproject.briar.api.android.AndroidNotificationManager;
 import org.briarproject.briar.api.client.BaseMessageHeader;
 import org.briarproject.briar.api.client.MessageTracker.GroupCount;
