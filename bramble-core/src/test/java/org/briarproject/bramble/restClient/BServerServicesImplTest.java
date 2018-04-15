@@ -2,6 +2,7 @@ package org.briarproject.bramble.restClient;
 
 
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
@@ -26,7 +27,7 @@ public class BServerServicesImplTest {
 	public void obtainUserInfoTest(){
 		BServerServicesImpl services = new BServerServicesImpl();
 		// Default User
-        PwdSingletonServer.setPassword("AnotherPassword");
+        PwdSingletonServer.setPassword("123456");
         UniqueIDSingleton.setUniqueID("Bob");
 		SavedUser returnedUser = services.obtainUserInfo("ABADAR");
 		Assert.assertTrue(returnedUser != null);
@@ -109,7 +110,7 @@ public class BServerServicesImplTest {
 	}
 
     /**
-     * Test the functino connectWithContact trying to connect Bob with ABADAR
+     * Test the function connectWithContact trying to connect Bob with ABADAR
      * the two defaults contact
      */
 	@Ignore
@@ -123,6 +124,18 @@ public class BServerServicesImplTest {
         Assert.assertTrue(result);
 
     }
+	/**
+	 * Test the function to get preferences for user
+	 */
+	@Ignore
+	@Test
+	public void getUserPreferencesTest(){
+		BServerServicesImpl services = new BServerServicesImpl();
+		String user  = "Bob";
+		PreferenceUser preferenceUser = services.getUserPreferences(user);
+		Assert.assertTrue(preferenceUser != null);
+
+	}
 
 	private String generateFakeUserName(){
 		String fakeUserName = "";

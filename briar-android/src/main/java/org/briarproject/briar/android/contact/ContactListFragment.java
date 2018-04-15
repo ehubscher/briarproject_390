@@ -30,6 +30,8 @@ import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
 import org.briarproject.bramble.api.plugin.ConnectionRegistry;
 import org.briarproject.bramble.api.plugin.event.ContactConnectedEvent;
 import org.briarproject.bramble.api.plugin.event.ContactDisconnectedEvent;
+import org.briarproject.bramble.plugin.tcp.ContactHash;
+import org.briarproject.bramble.plugin.tcp.IdContactHash;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
@@ -54,6 +56,7 @@ import org.briarproject.briar.api.sharing.event.InvitationRequestReceivedEvent;
 import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -72,6 +75,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	public static final String TAG = ContactListFragment.class.getName();
 	private static final Logger LOG = Logger.getLogger(TAG);
+	private volatile HashMap<String, SavedUser> contactsDetails;
+	private volatile IdContactHash contactsIdName;
 
 	@Inject
 	ConnectionRegistry connectionRegistry;
@@ -182,6 +187,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		notificationManager.clearAllIntroductionNotifications();
 		loadContacts();
 		list.startPeriodicUpdate();
+		// Force to reload contact list to make sure all data are loaded
+		loadContacts();
 	}
 
 	@Override
@@ -193,15 +200,15 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		list.stopPeriodicUpdate();
 	}
 
-    BServerServicesImpl briarServices = new BServerServicesImpl();
-    SavedUser targetContactUserInfo;
-
 	private void loadContacts() {
+		contactsDetails = ContactHash.getAllCurrentContacts();
+		contactsIdName = IdContactHash.getInstance();
 		int revision = adapter.getRevision();
 		listener.runOnDbThread(() -> {
 			try {
 				long now = System.currentTimeMillis();
 				List<ContactListItem> contacts = new ArrayList<>();
+
 				for (Contact c : contactManager.getActiveContacts()) {
 					try {
 						ContactId id = c.getId();
@@ -213,20 +220,24 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					} catch (NoSuchContactException e) {
 						// Continue
 					}
-//					try{
-//						//get the contact name and retrieve the avatarId and statusId
-//						String name = c.getAuthor().getName();
-//						targetContactUserInfo = briarServices.obtainUserInfo(name);
-//
-//						int avatarId = targetContactUserInfo.getAvatarId();
-//						int statusId = targetContactUserInfo.getStatusId();
-//
-//						//setting the values in the local database
-//						contactManager.setAvatarId(name, avatarId);
-//						contactManager.setContactStatus(name, statusId);
-//					} catch (Exception e){
-//						//continue
-//					}
+					try{
+
+						// iff we have the contact is in our hash
+						if(contactsIdName.containsKey(c.getId().getInt())) {
+							String contactName = (String) contactsIdName.get(c.getId().getInt());
+							SavedUser currentContactData = contactsDetails.get(contactName);
+							// Get data of user if available
+							int avatarId = currentContactData.getAvatarId();
+							int statusId = currentContactData.getStatusId();
+
+							//setting the values in the local database
+							contactManager.setAvatarId(contactName, avatarId);
+							contactManager.setContactStatus(contactName, statusId);
+
+						}
+					} catch (Exception e){
+						LOG.info("Exception while getting hash data : " + e.getMessage());
+					}
 				}
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
