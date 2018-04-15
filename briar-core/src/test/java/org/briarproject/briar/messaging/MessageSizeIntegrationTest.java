@@ -47,7 +47,7 @@ public class MessageSizeIntegrationTest extends BriarTestCase {
 		injectEagerSingletons(component);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void testPrivateMessageFitsIntoPacket() throws Exception {
 		// Create a maximum-length private message
@@ -64,7 +64,7 @@ public class MessageSizeIntegrationTest extends BriarTestCase {
 		assertTrue(length <= MAX_RECORD_PAYLOAD_LENGTH);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void testForumPostFitsIntoPacket() throws Exception {
 		// Create a maximum-length author
