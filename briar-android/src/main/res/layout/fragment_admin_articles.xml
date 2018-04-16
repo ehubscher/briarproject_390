@@ -6,4 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.briarproject.briar.android.adminarticles.AdminArticlesActivity"
-    tools:showIn="@layout/activity_admin_articles"/>
+    tools:showIn="@layout/activity_admin_articles">
+
+    <TextView
+    android:id="@+id/emptyView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:padding="@dimen/margin_activity_horizontal"
+    android:text="@string/no_admin_articles"
+    android:textSize="@dimen/text_size_large"
+    tools:text="@string/no_admin_articles"
+    android:visibility="visible"/>
+
+</RelativeLayout>

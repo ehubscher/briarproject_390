@@ -431,5 +431,6 @@
 
     <!-- Admin Articles -->
     <string name="title_activity_admin_articles">Admin Articles</string>
+    <string name="no_admin_articles">It seems that there is currently no admin articles. \n\nPlease come back later.</string>
 
 </resources>

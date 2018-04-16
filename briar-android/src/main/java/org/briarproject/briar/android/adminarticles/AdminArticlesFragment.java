@@ -27,6 +27,7 @@ public class AdminArticlesFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Admin Articles");
         return inflater.inflate(R.layout.fragment_admin_articles, container, false);
     }
 
