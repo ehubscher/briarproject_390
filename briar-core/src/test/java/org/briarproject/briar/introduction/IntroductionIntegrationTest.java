@@ -140,7 +140,7 @@ public class IntroductionIntegrationTest
 		injectEagerSingletons(c2);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void testIntroductionSession() throws Exception {
 		addListeners(true, true);
@@ -149,14 +149,11 @@ public class IntroductionIntegrationTest
 		long time = clock.currentTimeMillis();
 		Contact introducee1 = contact1From0;
 		Contact introducee2 = contact2From0;
-		introductionManager0
-				.makeIntroduction(introducee1, introducee2, "Hi!", time);
+		introductionManager0.makeIntroduction(introducee1, introducee2, "Hi!", time);
 
 		// check that messages are tracked properly
-		Group g1 = introductionGroupFactory
-				.createIntroductionGroup(introducee1);
-		Group g2 = introductionGroupFactory
-				.createIntroductionGroup(introducee2);
+		Group g1 = introductionGroupFactory.createIntroductionGroup(introducee1);
+		Group g2 = introductionGroupFactory.createIntroductionGroup(introducee2);
 		assertGroupCount(messageTracker0, g1.getId(), 1, 0, time);
 		assertGroupCount(messageTracker0, g2.getId(), 1, 0, time);
 
@@ -203,10 +200,8 @@ public class IntroductionIntegrationTest
 		assertTrue(listener1.succeeded);
 		assertTrue(listener2.succeeded);
 
-		assertTrue(contactManager1
-				.contactExists(author2.getId(), author1.getId()));
-		assertTrue(contactManager2
-				.contactExists(author1.getId(), author2.getId()));
+		assertTrue(contactManager1.contactExists(author2.getId(), author1.getId()));
+		assertTrue(contactManager2.contactExists(author1.getId(), author2.getId()));
 
 		// make sure that introduced contacts are not verified
 		for (Contact c : contactManager1.getActiveContacts()) {
