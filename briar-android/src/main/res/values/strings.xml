@@ -429,4 +429,7 @@
     <string name="title_activity_wallpaper">Choose a wallpaper</string>
     <string name="wallpaper_summary">Change the chat background</string>
 
+    <!-- Admin Articles -->
+    <string name="title_activity_admin_articles">Admin Articles</string>
+
 </resources>

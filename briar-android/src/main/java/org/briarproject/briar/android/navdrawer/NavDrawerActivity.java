@@ -29,6 +29,7 @@ import org.briarproject.bramble.api.plugin.TransportId;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
+import org.briarproject.briar.android.adminarticles.AdminArticlesFragment;
 import org.briarproject.briar.android.blog.FeedFragment;
 import org.briarproject.briar.android.contact.ContactListFragment;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
@@ -68,6 +69,7 @@ public class NavDrawerActivity extends BriarActivity implements
 	public static final String INTENT_FORUMS = "intent_forums";
 	public static final String INTENT_BLOGS = "intent_blogs";
 	public static final String INTENT_PROFILE = "intent_profile";
+	public static final String INTENT_ADMIN_ARTICLES = "intent_admin_articles";
 
 	private static final Logger LOG =
 			Logger.getLogger(NavDrawerActivity.class.getName());
@@ -97,8 +99,10 @@ public class NavDrawerActivity extends BriarActivity implements
 					R.id.nav_btn_contacts);
 		} else if (intent.getBooleanExtra(INTENT_BLOGS, false)) {
 			startFragment(FeedFragment.newInstance(), R.id.nav_btn_blogs);
-		}else if (intent.getBooleanExtra(INTENT_PROFILE, false)) {
+		} else if (intent.getBooleanExtra(INTENT_PROFILE, false)) {
 			startFragment(FeedFragment.newInstance(), R.id.nav_btn_profile);
+		} else if (intent.getBooleanExtra(INTENT_ADMIN_ARTICLES, false)) {
+			startFragment(AdminArticlesFragment.newInstance(), R.id.nav_btn_admin_articles);
 		}
 		setIntent(null);
 	}
@@ -197,6 +201,9 @@ public class NavDrawerActivity extends BriarActivity implements
 				break;
 			case R.id.nav_btn_profile:
 				startFragment(ProfileFragment.newInstance());
+				break;
+			case R.id.nav_btn_admin_articles:
+				startFragment(AdminArticlesFragment.newInstance());
 				break;
 			case R.id.nav_btn_settings:
 				startActivity(new Intent(this, SettingsActivity.class));

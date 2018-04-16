@@ -333,11 +333,17 @@
         <activity
             android:name=".android.wallpaper.WallpaperActivity"
             android:label="@string/title_activity_wallpaper"
-            android:theme="@style/BriarTheme.NoActionBar"
-            android:parentActivityName=".android.settings.SettingsActivity">
+            android:parentActivityName=".android.settings.SettingsActivity"
+            android:theme="@style/BriarTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.briarproject.briar.android.settings.SettingsActivity"/>
+                android:value="org.briarproject.briar.android.settings.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".android.adminarticles.AdminArticlesActivity"
+            android:label="@string/title_activity_admin_articles"
+            android:theme="@style/BriarTheme.NoActionBar"
+            android:parentActivityName=".android.navdrawer.NavDrawerActivity">
         </activity>
     </application>
 
