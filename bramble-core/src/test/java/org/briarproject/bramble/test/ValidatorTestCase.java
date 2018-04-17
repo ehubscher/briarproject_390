@@ -27,7 +27,7 @@ public abstract class ValidatorTestCase extends BrambleMockTestCase {
 	protected final long timestamp = 1234567890 * 1000L;
 	protected final byte[] raw = TestUtils.getRandomBytes(123);
 	protected final Message message =
-			new Message(messageId, groupId, timestamp, raw);
+			new Message(messageId, groupId, timestamp, raw, false);
 	protected final ClientId clientId =
 			new ClientId(StringUtils.getRandomString(123));
 	protected final byte[] descriptor = TestUtils.getRandomBytes(123);

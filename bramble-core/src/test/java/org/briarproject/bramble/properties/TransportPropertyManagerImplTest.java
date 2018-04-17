@@ -614,7 +614,7 @@ public class TransportPropertyManagerImplTest extends BrambleMockTestCase {
 	private Message getMessage(GroupId g, long timestamp) {
 		MessageId messageId = new MessageId(getRandomId());
 		byte[] raw = getRandomBytes(MAX_MESSAGE_BODY_LENGTH);
-		return new Message(messageId, g, timestamp, raw);
+		return new Message(messageId, g, timestamp, raw, false);
 	}
 
 	private void expectGetLocalProperties(Transaction txn) throws Exception {

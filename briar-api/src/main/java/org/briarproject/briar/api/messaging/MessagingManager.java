@@ -5,6 +5,7 @@ import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.bramble.api.sync.ClientId;
 import org.briarproject.bramble.api.sync.GroupId;
+import org.briarproject.bramble.api.sync.Message;
 import org.briarproject.bramble.api.sync.MessageId;
 import org.briarproject.briar.api.messaging.ConversationManager.ConversationClient;
 
@@ -48,5 +49,20 @@ public interface MessagingManager extends ConversationClient {
 	 * Returns the body of the private message with the given ID.
 	 */
 	String getMessageBody(MessageId m) throws DbException;
+
+	/**
+	 * Returns a list of messageId of the private messages that are pinned.
+	 */
+	Collection<MessageId> getPinnedMessages(ContactId contactId) throws DbException;
+
+	/**
+	 * Change if message is pinned or not
+	 */
+	void setPinned(MessageId id, boolean state) throws DbException;
+
+    /**
+     * Change if message is pinned or not
+     */
+    boolean isMessagePinned(MessageId id) throws DbException;
 
 }

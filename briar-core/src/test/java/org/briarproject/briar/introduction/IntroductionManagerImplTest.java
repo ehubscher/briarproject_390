@@ -92,8 +92,8 @@ public class IntroductionManagerImplTest extends BriarTestCase {
 				new MessageId(TestUtils.getRandomId()),
 				introductionGroup1.getId(),
 				time,
-				TestUtils.getRandomBytes(MESSAGE_HEADER_LENGTH + 1)
-		);
+				TestUtils.getRandomBytes(MESSAGE_HEADER_LENGTH + 1),
+                false);
 
 		// mock ALL THE THINGS!!!
 		context = new Mockery();

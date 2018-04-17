@@ -114,7 +114,7 @@ public class DatabaseComponentImplTest extends BrambleMockTestCase {
 		messageId1 = new MessageId(TestUtils.getRandomId());
 		size = 1234;
 		raw = new byte[size];
-		message = new Message(messageId, groupId, timestamp, raw);
+		message = new Message(messageId, groupId, timestamp, raw, false);
 		metadata = new Metadata();
 		metadata.put("foo", new byte[] {'b', 'a', 'r'});
 		transportId = new TransportId("id");

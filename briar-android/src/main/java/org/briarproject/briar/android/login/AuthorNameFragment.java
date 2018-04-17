@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.login;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -20,10 +22,12 @@ import static org.briarproject.briar.android.util.UiUtils.setError;
 public class AuthorNameFragment extends SetupFragment {
 
 	private final static String TAG = AuthorNameFragment.class.getName();
-
+    private BServerServicesImpl services = new BServerServicesImpl();;
 	private TextInputLayout authorNameWrapper;
 	private TextInputEditText authorNameInput;
 	private Button nextButton;
+	private Button confirmationButton;
+	private volatile boolean  NickNameTaken = false;
 
 	public static AuthorNameFragment newInstance() {
 		return new AuthorNameFragment();
@@ -38,10 +42,10 @@ public class AuthorNameFragment extends SetupFragment {
 		authorNameWrapper = v.findViewById(R.id.nickname_entry_wrapper);
 		authorNameInput = v.findViewById(R.id.nickname_entry);
 		nextButton = v.findViewById(R.id.next);
-
+        confirmationButton = v.findViewById(R.id.confirmation);
 		authorNameInput.addTextChangedListener(this);
 		nextButton.setOnClickListener(this);
-
+		confirmationButton.setOnClickListener(this);
 		return v;
 	}
 
@@ -69,12 +73,52 @@ public class AuthorNameFragment extends SetupFragment {
 		authorNameInput
 				.setImeOptions(enabled ? IME_ACTION_NEXT : IME_ACTION_NONE);
 		authorNameInput.setOnEditorActionListener(enabled ? this : null);
-		nextButton.setEnabled(enabled);
+		NickNameTaken = false;
+		nextButton.setEnabled(false);
+
 	}
 
 	@Override
 	public void onClick(View view) {
-		setupController.setAuthorName(authorNameInput.getText().toString());
+            setError(authorNameWrapper, getString(R.string.name_already_taken), NickNameTaken);
+            authorNameInput
+                    .setImeOptions(NickNameTaken? IME_ACTION_NEXT : IME_ACTION_NONE);
+            authorNameInput.setOnEditorActionListener(NickNameTaken ? this : null);
+        switch (view.getId()){
+            case R.id.next:
+                if(!NickNameTaken)setupController.setAuthorName(authorNameInput.getText().toString());
+            break;
+            case R.id.confirmation:
+                new CallServerAsync().execute();
+
+            break;
+            default:
+                break;
+
+        }
 	}
 
+    /**
+     * This class is implementing an Async task as recommended for Android
+     * It is made to make sure to separate server call from main UI Thread
+     */
+	class CallServerAsync extends AsyncTask<Void,Integer,String>{
+
+	    boolean resultFromDoesItExists;
+        @Override
+        protected String doInBackground(Void... voids) {
+                boolean obj = services.doesUsernameExistsInDB(authorNameInput.getText().toString());
+                resultFromDoesItExists = obj;
+                return null;
+        }
+
+        protected void onPostExecute(String result) {
+            NickNameTaken = resultFromDoesItExists;
+            if(!NickNameTaken){
+                nextButton.setEnabled(true);
+            }else{
+                nextButton.setEnabled(false);
+            }
+        }
+    }
 }

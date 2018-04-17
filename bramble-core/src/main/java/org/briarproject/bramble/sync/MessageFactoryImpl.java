@@ -45,8 +45,7 @@ class MessageFactoryImpl implements MessageFactory {
 		System.arraycopy(groupIdBytes, 0, raw, 0, UniqueId.LENGTH);
 		ByteUtils.writeUint64(timestamp, raw, UniqueId.LENGTH);
 		System.arraycopy(body, 0, raw, MESSAGE_HEADER_LENGTH, body.length);
-
-		return new Message(id, groupId, timestamp, raw);
+		return new Message(id, groupId, timestamp, raw, false);
 	}
 
 	@Override
@@ -56,6 +55,16 @@ class MessageFactoryImpl implements MessageFactory {
 		byte[] groupId = new byte[UniqueId.LENGTH];
 		System.arraycopy(raw, 0, groupId, 0, UniqueId.LENGTH);
 		long timestamp = ByteUtils.readUint64(raw, UniqueId.LENGTH);
-		return new Message(m, new GroupId(groupId), timestamp, raw);
+		return new Message(m, new GroupId(groupId), timestamp, raw, false);
+	}
+
+	@Override
+	public Message createMessage(MessageId m, byte[] raw, Boolean pinned) {
+		if (raw.length < MESSAGE_HEADER_LENGTH)
+			throw new IllegalArgumentException();
+		byte[] groupId = new byte[UniqueId.LENGTH];
+		System.arraycopy(raw, 0, groupId, 0, UniqueId.LENGTH);
+		long timestamp = ByteUtils.readUint64(raw, UniqueId.LENGTH);
+		return new Message(m, new GroupId(groupId), timestamp, raw, pinned);
 	}
 }

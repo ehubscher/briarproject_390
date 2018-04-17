@@ -103,7 +103,7 @@ public class BdfMessageValidatorTest extends ValidatorTestCase {
 	public void testAcceptsMinLengthMessage() throws Exception {
 		byte[] shortRaw = new byte[MESSAGE_HEADER_LENGTH + 1];
 		Message shortMessage =
-				new Message(messageId, groupId, timestamp, shortRaw);
+				new Message(messageId, groupId, timestamp, shortRaw, false);
 
 		context.checking(new Expectations() {{
 			oneOf(clock).currentTimeMillis();

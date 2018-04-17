@@ -41,7 +41,7 @@ abstract class ConversationItem {
 	private boolean read;
 
 	ConversationItem(MessageId id, GroupId groupId, @Nullable String body,
-			long time, boolean read) {
+					 long time, boolean read) {
 		this.id = id;
 		this.groupId = groupId;
 		this.body = body;

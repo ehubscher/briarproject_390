@@ -30,3 +30,5 @@ projectFilesBackup/
 
 #Node.js
 node_modules/
+
+/bin/

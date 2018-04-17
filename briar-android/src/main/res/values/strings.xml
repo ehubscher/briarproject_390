@@ -11,6 +11,7 @@
 	<string name="setup_title">Welcome to Briar</string>
 	<string name="setup_name_explanation">Your nickname will be shown next to any content you post. You can\'t change it after creating your account.</string>
 	<string name="setup_next">Next</string>
+	<string name="confirmation">Confirm</string>
 	<string name="setup_password_intro">Choose a Password</string>
 	<string name="setup_password_explanation">Your Briar account is stored encrypted on your device, not in the cloud. If you forget your password or uninstall Briar, there\'s no way to recover your account.\n\nChoose a long password that\'s hard to guess, such as four random words, or ten random letters, numbers and symbols.</string>
 	<string name="setup_doze_title">Background Connections</string>
@@ -21,6 +22,7 @@
 	<string name="choose_password">Choose your password</string>
 	<string name="confirm_password">Confirm your password</string>
 	<string name="name_too_long">Name is too long</string>
+	<string name="name_already_taken">This name is already taken</string>
 	<string name="password_too_weak">Password is too weak</string>
 	<string name="passwords_do_not_match">Passwords do not match</string>
 	<string name="create_account_button">Create Account</string>
@@ -115,10 +117,11 @@
 	<string name="date_no_private_messages">No messages.</string>
 	<string name="no_private_messages">This is the conversation view.\n\nThere seems to be a lack of conversation.\n\nJust tap the input field at the bottom to start a conversation.</string>
 	<string name="message_hint">Type message</string>
-	<string name="delete_contact">Delete contact</string>
+	<string name="delete_contact">Delete Contact</string>
 	<string name="dialog_title_delete_contact">Confirm Contact Deletion</string>
 	<string name="dialog_message_delete_contact">Are you sure that you want to remove this contact and all messages exchanged with this contact?</string>
 	<string name="contact_deleted_toast">Contact deleted</string>
+	<string name="view_pinned_button">View Pinned Messages</string>
 
 	<!-- Adding Contacts -->
 	<string name="add_contact_title">Add a Contact</string>
@@ -419,5 +422,6 @@
 
 	<!-- Profile -->
 	<string name="title_activity_profile">Profile</string>
+    <string name="title_activity_pinned_messages">Pinned Messages</string>
 
 </resources>
