@@ -1,10 +1,10 @@
 package org.briarproject.briar.android.UI.Robotium;
 
-import com.robotium.solo.Solo;
-
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.robotium.solo.Solo;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.login.PasswordActivity;
@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class SignInTest {
+public class PinnedMessagesTest {
     @Rule
     public ActivityTestRule<PasswordActivity> activityTestRule = new ActivityTestRule<>(PasswordActivity.class);
 
@@ -31,12 +31,15 @@ public class SignInTest {
     @After
     public void tearDown() {
         //tearDown() is run after a test case has finished.
-        //finishOpenedActivities() will finish all the activities that have been opened during the test execution.
-       // solo.finishOpenedActivities();
+        // finishOpenedActivities() will finish all the activities that have been opened during the test execution.
+        solo.finishOpenedActivities();
     }
 
     @Test
-    public void signIn() {
+    public void pinMessage() {
+        //SignInTest login = new SignInTest();
+        //login.signIn();
+
         solo.unlockScreen();
         solo.assertCurrentActivity("Expected Password Activity", PasswordActivity.class);
 
@@ -44,5 +47,7 @@ public class SignInTest {
         solo.clickOnView(solo.getView(R.id.edit_password));
         solo.enterText(0, "123456");
         solo.clickOnView(solo.getView(R.id.btn_sign_in));
+
+        solo.waitForFragmentById(R.layout.list);
     }
 }
