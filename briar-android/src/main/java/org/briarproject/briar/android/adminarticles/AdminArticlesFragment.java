@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.AllArticles;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.fragment.BaseFragment;
@@ -49,6 +51,12 @@ public class AdminArticlesFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        BServerServicesImpl webServer = new BServerServicesImpl();
+
+        if(webServer.getOrUpdateAllArticles()) {
+            AllArticles.getInstanceAllArticles();
+        }
     }
 
     @Override
