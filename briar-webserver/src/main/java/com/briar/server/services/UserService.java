@@ -15,16 +15,16 @@ import com.briar.server.services.tasks.ModifyUser;
 
 public class UserService extends AbstractService<User> {
 
-    UserMapper mapper;
     private UserIdentityMap userIdentityMap;
+
+    UserMapper mapper;
 
     public UserService(UserMapper mapper) {
         this(UserIdentityMap.getInstance(), UnitOfWork.getInstance(), mapper);
     }
 
     // Parametrised constructor for testing purposes
-    public UserService(UserIdentityMap userIdentityMap, UnitOfWork unitOfWork,
-                       UserMapper mapper) {
+    public UserService(UserIdentityMap userIdentityMap, UnitOfWork unitOfWork, UserMapper mapper) {
         super(unitOfWork);
         this.userIdentityMap = userIdentityMap;
         this.mapper = mapper;
@@ -32,31 +32,40 @@ public class UserService extends AbstractService<User> {
 
 
     public BriarUser convertUserToBriarUser(User user) {
-        return new BriarUser(user.getPhoneGeneratedId(), user.getIp(),
-                user.getPort());
+        return new BriarUser(user.getPhoneGeneratedId(), user.getIp(), user
+                .getPort(), user.getStatusId(), user.getAvatarId());
     }
 
     public boolean validateHackUserParams(User user) {
-        return user.getPhoneGeneratedId() != null &&
-                !user.getPhoneGeneratedId().equalsIgnoreCase("") &&
-                user.getPassword() != null &&
-                !user.getPassword().equalsIgnoreCase("");
+        return user.getPhoneGeneratedId() != null && !user.getPhoneGeneratedId().equalsIgnoreCase("") &&
+                user.getPassword() != null && !user.getPassword().equalsIgnoreCase("");
     }
 
     public boolean validateUserParams(User user) {
-        return user.getPhoneGeneratedId() != null &&
-                !user.getPhoneGeneratedId().equalsIgnoreCase("") &&
+        return user.getPhoneGeneratedId() != null && !user.getPhoneGeneratedId().equalsIgnoreCase("") &&
                 user.getPort() != 0 &&
-                user.getPassword() != null &&
-                !user.getPassword().equalsIgnoreCase("") &&
+                user.getPassword() != null && !user.getPassword().equalsIgnoreCase("") &&
+                user.getIp() != null && !user.getIp().equalsIgnoreCase("") &&
+                user.getStatusId() != 0 && user.getAvatarId() != 0;
+    }
+
+    public boolean validateUpdateTCPParams(User user) {
+        return user.getPhoneGeneratedId() != null && !user.getPhoneGeneratedId().equalsIgnoreCase("") &&
+                user.getPort() != 0 &&
+                user.getPassword() != null && !user.getPassword().equalsIgnoreCase("") &&
                 user.getIp() != null && !user.getIp().equalsIgnoreCase("");
+    }
+
+    public boolean validateUpdateProfileParams(User user) {
+        return user.getPhoneGeneratedId() != null && !user.getPhoneGeneratedId().equalsIgnoreCase("") &&
+                user.getPassword() != null && !user.getPassword().equalsIgnoreCase("") &&
+                user.getStatusId() != 0 && user.getAvatarId() != 0;
     }
 
     public boolean authenticate(User user) throws ObjectDeletedException {
         String userName = user.getPhoneGeneratedId();
         User readUser = readUser(userName);
-        boolean isAuthenticated =
-                user.getPassword().equals(readUser.getPassword());
+        boolean isAuthenticated = user.getPassword().equals(readUser.getPassword());
         return isAuthenticated;
     }
 
@@ -83,8 +92,7 @@ public class UserService extends AbstractService<User> {
         User user;
         if (existsInMap) {
             try {
-                user = this.userIdentityMap
-                        .getUser(userName, Constants.Lock.reading);
+                user = this.userIdentityMap.getUser(userName, Constants.Lock.reading);
             } catch (ObjectDeletedException e) {
                 user = this.mapper.findUser(userName);
                 if (user == null) {
@@ -112,8 +120,7 @@ public class UserService extends AbstractService<User> {
      */
     public BriarUser addUser(User user) throws DataCompromisedException {
         UserHandler userHandler = new UserHandler(user);
-        InsertNewUser insertUserTask =
-                new InsertNewUser(user, userHandler, mapper);
+        InsertNewUser insertUserTask = new InsertNewUser(user, userHandler, mapper);
         this.commitAndPush(user, insertUserTask);
         return this.convertUserToBriarUser(user);
     }
@@ -125,15 +132,12 @@ public class UserService extends AbstractService<User> {
      * @throws ObjectDeletedException
      * @throws DataCompromisedException
      */
-    public BriarUser modifyUser(User user)
-            throws ObjectDeletedException, DataCompromisedException {
+    public BriarUser modifyUser(User user) throws ObjectDeletedException, DataCompromisedException {
         String userName = user.getPhoneGeneratedId();
         User oldUser = readUser(userName);
         UserHandler userHandler = new UserHandler(user);
         UserHandler oldUserHandler = new UserHandler(oldUser);
-        ModifyUser modifyUserTask =
-                new ModifyUser(user, oldUser, userHandler, oldUserHandler,
-                        mapper);
+        ModifyUser modifyUserTask = new ModifyUser(user, oldUser, userHandler, oldUserHandler, mapper);
         this.commitAndPush(user, modifyUserTask);
         return this.convertUserToBriarUser(user);
     }

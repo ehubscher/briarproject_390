@@ -3,14 +3,14 @@ package com.briar.server.services.tasks;
 import com.briar.server.exception.DBException;
 import com.briar.server.exception.ObjectAlreadyExistsException;
 import com.briar.server.exception.ObjectDeletedException;
+import com.briar.server.exception.UserContactDoesntExistsException;
 import com.briar.server.handler.UserHandler;
 import com.briar.server.mapper.UserMapper;
 import com.briar.server.model.domainmodelclasses.User;
 
 public class DeleteUser extends AbstractUserTask {
 
-    public DeleteUser(User userToDelete, UserHandler handler,
-                      UserMapper mapper) {
+    public DeleteUser(User userToDelete, UserHandler handler, UserMapper mapper) {
         super(userToDelete, handler, mapper);
     }
 
@@ -24,8 +24,7 @@ public class DeleteUser extends AbstractUserTask {
     }
 
     @Override
-    public void commitIdentityMap()
-            throws ObjectDeletedException, ObjectAlreadyExistsException {
+    public void commitIdentityMap() throws ObjectDeletedException, ObjectAlreadyExistsException, UserContactDoesntExistsException {
         this.handler.remove();
     }
 
@@ -36,8 +35,7 @@ public class DeleteUser extends AbstractUserTask {
     }
 
     @Override
-    public void revertIdentityMap()
-            throws ObjectDeletedException, ObjectAlreadyExistsException {
+    public void revertIdentityMap() throws ObjectDeletedException, ObjectAlreadyExistsException, UserContactDoesntExistsException {
         //TODO Implement the revert algo. Probably need to compile a list of things that are going to be modified by
         // the commit and revert them afterwards.
     }

@@ -3,6 +3,7 @@ package org.briarproject.bramble.plugin.tcp;
 
 
 import org.briarproject.bramble.api.contact.ContactId;
+import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.data.BdfList;
 import org.briarproject.bramble.api.keyagreement.KeyAgreementListener;
 import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
@@ -14,6 +15,7 @@ import org.briarproject.bramble.api.plugin.duplex.DuplexTransportConnection;
 import org.briarproject.bramble.api.properties.TransportProperties;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
 import org.briarproject.bramble.restClient.IpifyServices;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 
@@ -39,6 +41,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
@@ -63,9 +66,11 @@ abstract class TcpPlugin implements DuplexPlugin {
 	protected volatile ServerSocket socket = null;
 	protected volatile String currentUserID;
 	protected volatile String currentIP;
-	protected volatile String currentTargetUserID;
+	protected volatile String currentTargetUser;
 	protected volatile int currentPort;
 	private HashMap<String, SavedUser> currentContacts;
+	@Inject
+	volatile ContactManager contactManager;
 	/**
 	 * Returns zero or more socket addresses on which the plugin should listen,
 	 * in order of preference. At most one of the addresses will be bound.
@@ -216,31 +221,32 @@ abstract class TcpPlugin implements DuplexPlugin {
 	@Override
 	public void poll(Collection<ContactId> connected) {
 	    // Update current user data..
-        updateDataOnBServer(currentPort);
+        if(currentPort != 0){
+        	updateDataOnBServer(currentPort);
+        }
 		if (!isRunning()) return;
 		backoff.increment();
 		Map<ContactId, TransportProperties> remote =
 				callback.getRemoteProperties();
+
+		IdContactHash instance  = IdContactHash.getInstance();
+
 		for (Entry<ContactId, TransportProperties> e : remote.entrySet()) {
 			ContactId c = e.getKey();
-			// Set as current target...
-			currentTargetUserID = c.getUniqueID();
-			BServerServicesImpl services = new BServerServicesImpl();
-			SavedUser currentContact = services.obtainUserInfo(c.getUniqueID());
-			// Insert in our custom hashSet, small optimization prevent sending null contact
-			if(c.getUniqueID() != null & !c.getUniqueID().isEmpty() & !currentContacts.containsKey(c.getUniqueID())){
-				// Contact didn't exist add it to the hashSet
-			    currentContacts.put(c.getUniqueID(), currentContact);
-			}else{
-				// Contact exist , update the hashSet
-				currentContacts.remove(c.getUniqueID());
-				//small optimization prevent sending null contact
-				if(c.getUniqueID() != null & !c.getUniqueID().isEmpty()){
-					currentContacts.put(c.getUniqueID(), currentContact);
-				}
-
-
+			currentTargetUser = "";
+			if(instance.containsKey(c.getInt())){
+				currentTargetUser = (String)instance.get(c.getInt());
 			}
+			BServerServicesImpl services = new BServerServicesImpl();
+			SavedUser currentContact = null;
+			if(!currentTargetUser.equals("1233345") && !currentTargetUser.equals(UniqueIDSingleton.getUniqueID())){
+				currentContact = services.obtainUserInfo(currentTargetUser);
+				if(currentContacts.containsKey(currentTargetUser)){
+					currentContacts.remove(currentTargetUser);
+				}
+				currentContacts.put(currentTargetUser, currentContact);
+			}
+
 
 			if (!connected.contains(c)) connectAndCallBack(c, e.getValue());
 		}
@@ -330,15 +336,20 @@ abstract class TcpPlugin implements DuplexPlugin {
 		String[] split = ipPort.split(":");
 		if (split.length != 2) return null;
 
-
+		BServerServicesImpl services = new BServerServicesImpl();
 		// Go Get IP/PORT for userID on our Server
 		SavedUser userInfo = null;
-		if(currentContacts.containsKey(currentTargetUserID)){
-			userInfo = currentContacts.get(currentTargetUserID);
+		if(currentContacts.containsKey(currentTargetUser)){
+			userInfo = currentContacts.get(currentTargetUser);
+			// In the case user has been initialized by other services...
+			if(userInfo.getIpAddress().equals("123.123.123.123")){
+				currentContacts.remove(currentTargetUser);
+				userInfo = services.obtainUserInfo(currentTargetUser);
+				currentContacts.put(currentTargetUser, userInfo);
+			}
 		}else{
-			BServerServicesImpl services = new BServerServicesImpl();
-			userInfo = services.obtainUserInfo(currentTargetUserID);
-			currentContacts.put(currentTargetUserID, userInfo);
+			userInfo = services.obtainUserInfo(currentTargetUser);
+			currentContacts.put(currentTargetUser, userInfo);
 
 		}
 
@@ -350,7 +361,7 @@ abstract class TcpPlugin implements DuplexPlugin {
 			if(userInfo.getIpAddress() != null){
 				addr = userInfo.getIpAddress();
 			}
-			if(userInfo.getPort() != 0000){
+			if(userInfo.getPort() != 0000 && userInfo.getPort() > 0){
 				port = Integer.toString(userInfo.getPort());
 			}
 
@@ -417,12 +428,22 @@ abstract class TcpPlugin implements DuplexPlugin {
 	    currentPort = port;
 		currentUserID = UniqueIDSingleton.getUniqueID();
 		currentIP = IpifyServices.getPublicIpOfDevice();
-		SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, 1, 99);
 		BServerServicesImpl services = new BServerServicesImpl();
-		// Make sure it is not default user or empty
-		if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
-			services.updateUserNetworkInfo(currentUser);
+		// if user is not set yet...
+		if(currentUserID == null){
+			currentUserID = UniqueIDSingleton.getUniqueID();
 		}
+		// get user preferences...
+		PreferenceUser preferenceUser = services.getUserPreferences(currentUserID);
+		// Check if server is up, as this method will always provide data if server is up...
+		if(preferenceUser != null){
+		    SavedUser currentUser = new SavedUser(currentUserID, currentIP, currentPort, preferenceUser.getStatusId(), preferenceUser.getAvatarId());
+            // Make sure it is not default user or empty
+            if(currentUserID != null && !currentUserID.isEmpty() && !currentUserID.equals("1233345")){
+                services.updateUserNetworkInfo(currentUser);
+            }
+        }
+
 
 	}
 

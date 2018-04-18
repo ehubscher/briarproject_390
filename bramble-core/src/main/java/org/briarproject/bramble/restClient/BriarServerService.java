@@ -7,6 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -18,6 +19,8 @@ import retrofit2.http.Path;
  */
 
 public interface BriarServerService {
+
+
     ServerConfig config = ServerConfig.getServerConfig();
     /**
      * This method is made to get info from a user
@@ -26,8 +29,8 @@ public interface BriarServerService {
      * @return A JSON body with IP address, PORT and username
      */
     @Headers("Content-Type: application/json")
-    @POST("hack/users/{userID}")
-    Call<String> obtainUserData(@Path("userID") String userID , @Body String bodyJSON);
+    @POST("/users/{currentUser}/contacts/{targetUser}")
+    Call<String> obtainUserData(@Path("currentUser") String userID , @Body String bodyJSON, @Path("targetUser") String targetUser);
 
     /**
      * This method is creating a new user
@@ -57,6 +60,30 @@ public interface BriarServerService {
     @Headers("Content-Type: application/json")
     @PUT("users/{userID}/profile")
     Call<String> updateUserSettings(@Path("userID") String userID, @Body String bodyJSON);
+
+    /**
+     * This method is checking if user exists on server
+     * @param userID target user we want to know if exists
+     * @return A JSON Body true if exists false otherwise
+     */
+    @Headers("Content-Type: application/json")
+    @GET("users/{userID}")
+    Call<String> doesUserExists(@Path("userID") String userID);
+
+    /**
+     * This method is creating a connection between current user and target contact id,
+     * the targetContact is passed in body
+     * @param userID
+     * @param bodyJSON
+     * @return
+     */
+    @Headers("Content-Type: application/json")
+    @POST("users/{userID}/contact")
+    Call<String> createConnection(@Path("userID") String userID, @Body String bodyJSON);
+
+    @Headers("Content-Type: application/json")
+    @GET("users/{userID}/profile")
+    Call<String> obtainSettingsUser(@Path("userID") String userID);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(config.getServerAddress())

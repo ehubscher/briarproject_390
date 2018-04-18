@@ -3,6 +3,7 @@ package org.briarproject.briar.android;
 import com.google.common.base.Verify;
 
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -96,14 +97,55 @@ public class BServerServicesWithMockTest {
         BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
         String username = "Robert";
         String ip = "123.123.123.123";
+        // Only for testing purpose we will write a pwd
+        String pwdOfUser = "ThisIsSecret";
         int port = 2222;
         int avatar = 11;
         int status = 2;
         SavedUser user = new SavedUser(username, ip, port, status, avatar);
         // mocking what server would returned
-        when(mockingServer.createNewUser(user)).thenReturn(true);
-
-        Assert.assertTrue(mockingServer.createNewUser(user));
+        when(mockingServer.createNewUser(user, pwdOfUser)).thenReturn(true);
+        Assert.assertTrue(mockingServer.createNewUser(user, pwdOfUser));
 
     }
+
+    /**
+     * This test is testing does a user exists, with mocking the server
+     */
+    @Test
+    public void doesUsernameExistsInDBTest(){
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String userFake = "Bob";
+        // Let's assume Bob is a taken username
+        when(mockingServer.doesUsernameExistsInDB(userFake)).thenReturn(true);
+        Assert.assertTrue(mockingServer.doesUsernameExistsInDB(userFake));
+    }
+
+    /**
+     * Ths test is testing contact link creation, with mocking the server
+     */
+    @Test
+    public void connectWithContactTest(){
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String targetContact = "Robert";
+        // Let's assume that the connection is successful
+        when(mockingServer.connectWithContact(targetContact)).thenReturn(true);
+        Assert.assertTrue(mockingServer.connectWithContact(targetContact));
+
+    }
+    /**
+     * Ths test is testing contact link creation, with mocking the server
+     */
+    @Test
+    public void getUserPreferencesTest(){
+        BServerServicesImpl mockingServer = mock(BServerServicesImpl.class);
+        String targetContact = "Bob";
+        PreferenceUser preferenceUser = new PreferenceUser(targetContact, 2, 2);
+        // Let's assume that the connection is successful
+        when(mockingServer.getUserPreferences(targetContact)).thenReturn(preferenceUser);
+        Assert.assertTrue(mockingServer.getUserPreferences(targetContact).equals(preferenceUser));
+
+    }
+
+
 }

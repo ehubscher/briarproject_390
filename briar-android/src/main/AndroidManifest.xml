@@ -315,12 +315,12 @@
         </activity>
         <activity
             android:name=".android.panic.ExitActivity"
-            android:theme="@android:style/Theme.NoDisplay"></activity>
+            android:theme="@android:style/Theme.NoDisplay" />
         <activity
             android:name=".android.profile.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".android.navdrawer.NavDrawerActivity"
-            android:theme="@style/BriarTheme.NoActionBar"></activity>
+            android:theme="@style/BriarTheme.NoActionBar" />
         <activity
             android:name=".android.pinnedmessages.PinnedMessagesActivity"
             android:label="@string/title_activity_pinned_messages"
@@ -329,6 +329,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.briarproject.briar.android.activity.BriarActivity" />
+        </activity>
+        <activity
+            android:name=".android.wallpaper.WallpaperActivity"
+            android:label="@string/title_activity_wallpaper"
+            android:theme="@style/BriarTheme.NoActionBar"
+            android:parentActivityName=".android.settings.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.briarproject.briar.android.settings.SettingsActivity"/>
         </activity>
     </application>
 

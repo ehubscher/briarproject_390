@@ -3,12 +3,14 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.UiThread;
 import android.support.design.widget.Snackbar;
@@ -52,6 +54,9 @@ import org.briarproject.bramble.api.sync.Message;
 import org.briarproject.bramble.api.sync.MessageId;
 import org.briarproject.bramble.api.sync.event.MessagesAckedEvent;
 import org.briarproject.bramble.api.sync.event.MessagesSentEvent;
+import org.briarproject.bramble.plugin.tcp.ContactHash;
+import org.briarproject.bramble.plugin.tcp.IdContactHash;
+import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -65,6 +70,7 @@ import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
 import org.briarproject.briar.android.view.TextInputView.TextInputListener;
+import org.briarproject.briar.android.wallpaper.WallpaperFragment;
 import org.briarproject.briar.api.android.AndroidNotificationManager;
 import org.briarproject.briar.api.blog.BlogSharingManager;
 import org.briarproject.briar.api.client.ProtocolStateException;
@@ -94,6 +100,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +159,9 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	private TextView toolbarTitle;
 	private BriarRecyclerView list;
 
+	//Instance to give us access to the wallpapers array from Wallpaper
+	private WallpaperFragment wallpaperFragment;
+
     //Declared variables for the Image selector
 	final Context context = this;
     private TextInputView textInputView;
@@ -169,6 +179,8 @@ public class ConversationActivity extends BriarActivity implements EventListener
 	});
 
 	private final AtomicBoolean contactNameTaskStarted = new AtomicBoolean(false);
+	private HashMap<String, SavedUser> contactsDetails;
+	private IdContactHash contactsIdName;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -261,6 +273,24 @@ public class ConversationActivity extends BriarActivity implements EventListener
 			}
 		});
 
+		wallpaperFragment = new WallpaperFragment();
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+		int wallpaperId = settings.getInt("wallpaper",0);
+		setWallpaper(wallpaperId);
+
+	}
+
+	public void setWallpaper(int wallpaperId) {
+        if(wallpaperId!=0){
+            //change background
+            View v = findViewById(R.id.conversationView);
+
+            for(int i = 0; i < wallpaperFragment.wallpapers.length; i++) {
+                if(wallpaperId == i+1) {
+                    v.setBackgroundResource(wallpaperFragment.wallpapers[i]);
+                }
+            }
+        }
 	}
 
 	@Override
@@ -392,8 +422,15 @@ public class ConversationActivity extends BriarActivity implements EventListener
 		runOnUiThreadUnlessDestroyed(() -> {
             //noinspection ConstantConditions
 		    try{
-		        int avatarId = contactManager.getContact(contactId).getAvatarId();
-
+		        int avatarId = 1;
+				        int targetContactId = contactId.getInt();
+				        contactsDetails = ContactHash.getAllCurrentContacts();
+						contactsIdName = IdContactHash.getInstance();
+						if(contactsIdName.containsKey(targetContactId)){
+							String contactName = (String)contactsIdName.get(targetContactId);
+							SavedUser currentContactData = contactsDetails.get(contactName);
+							avatarId = currentContactData.getAvatarId();
+						}
 		        //99 is the avatarId default value when unset by user
                 if(avatarId !=99 && avatarId < 9){
                     // references to our images
@@ -408,7 +445,7 @@ public class ConversationActivity extends BriarActivity implements EventListener
                             R.drawable.penguin,
                             R.drawable.robot
                     };
-                    toolbarAvatar.setImageResource(mThumbIds[avatarId]);
+                    toolbarAvatar.setImageResource(mThumbIds[avatarId-1]);
                 }
                 else{//Use Identicon by default
                     toolbarAvatar.setImageDrawable(

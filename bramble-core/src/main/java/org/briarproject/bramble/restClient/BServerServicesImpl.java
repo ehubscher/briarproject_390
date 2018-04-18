@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
+import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.bramble.restClient.ServerObj.ServerConfig;
 import org.json.JSONObject;
@@ -23,26 +26,29 @@ import retrofit2.Response;
 
 public class BServerServicesImpl implements BServerServices{
 
-    ServerConfig config = ServerConfig.getServerConfig();
     // These variable are used to exchange data between the threads...
-    private volatile static SavedUser createdUser = null;
-    private volatile static String resultFromQueryCreateUser = null;
-    private volatile static String resultFromQueryUpdateUser = null;
+    private volatile SavedUser createdUser = null;
+    private volatile String resultFromQueryCreateUser = null;
+    private volatile String resultFromQueryUpdateUser = null;
+    private volatile boolean resultFromQueryExists = false;
+    private volatile boolean resultFromConnection = false;
+    private volatile PreferenceUser resultFromGetPreference = null;
     private int TIME_WAITING = 1;
     private static final Logger LOG =
             Logger.getLogger(BServerServicesImpl.class.getName());
     public BServerServicesImpl(){}
     @Override
-    public SavedUser obtainUserInfo(String userID) {
+    public SavedUser obtainUserInfo(String targetUserID) {
 
         BriarServerService service = ServerConfig.getServerService();
         JSONObject parameters =  new JSONObject();
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", PwdSingletonServer.getPassword());
+        createdUser = null;
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                service.obtainUserData(userID, parameters.toString()).enqueue(new Callback<String>() {
+                service.obtainUserData(UniqueIDSingleton.getUniqueID(), parameters.toString(), targetUserID).enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         createdUser = null;
@@ -63,7 +69,7 @@ public class BServerServicesImpl implements BServerServices{
                                     String convertedIP = ip.getAsString();
                                     int convertedPort = port.getAsInt();
                                     int convertedStatusId = statusId.getAsInt();
-                                    int convertedAvatarId = statusId.getAsInt();
+                                    int convertedAvatarId = avatarId.getAsInt();
                                     // Store info in a SavedUser object...
                                     createdUser = new SavedUser(convertedUsername, convertedIP, convertedPort, convertedStatusId, convertedAvatarId);
 
@@ -94,7 +100,7 @@ public class BServerServicesImpl implements BServerServices{
     }
 
     @Override
-    public boolean createNewUser(SavedUser savedUser) {
+    public boolean createNewUser(SavedUser savedUser, String password) {
         BriarServerService serv = ServerConfig.getServerService();
         resultFromQueryCreateUser = null;
 
@@ -102,7 +108,7 @@ public class BServerServicesImpl implements BServerServices{
         parameters.put("port", savedUser.getPort());
         parameters.put("ip", savedUser.getIpAddress());
         parameters.put("phoneGeneratedId", savedUser.getUsername());
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", password);
         parameters.put("statusId", savedUser.getStatusId());
         parameters.put("avatarId", savedUser.getAvatarId());
 
@@ -141,7 +147,7 @@ public class BServerServicesImpl implements BServerServices{
         JSONObject parameters = new JSONObject();
         parameters.put("port", savedUser.getPort());
         parameters.put("ip", savedUser.getIpAddress());
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", PwdSingletonServer.getPassword());
         // prevent unexpected input
         if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
             return false;
@@ -180,7 +186,7 @@ public class BServerServicesImpl implements BServerServices{
         JSONObject parameters = new JSONObject();
         parameters.put("statusId", savedUser.getStatusId());
         parameters.put("avatarId", savedUser.getAvatarId());
-        parameters.put("password", config.getServerPassword());
+        parameters.put("password", PwdSingletonServer.getPassword());
         // prevent unexpected input
         if(savedUser.getUsername() == null | savedUser.getUsername().length() < 2){
             return false;
@@ -211,4 +217,127 @@ public class BServerServicesImpl implements BServerServices{
         }
         return (resultFromQueryUpdateUser != null && !resultFromQueryUpdateUser.isEmpty());
     }
+
+    @Override
+    public boolean doesUsernameExistsInDB(String username) {
+        BriarServerService serv = ServerConfig.getServerService();
+        resultFromQueryExists = false;
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                    serv.doesUserExists(username).enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if(response.body().toString().equals("true")){
+                                resultFromQueryExists = true;
+                            }else{
+                                resultFromQueryExists = false;
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            resultFromQueryExists =  false;
+                            LOG.info("BRIAR SERVER : IS DISABLE, RETURN FALSE DEFAULT");
+                        }
+                    });
+            }
+        });
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
+        }
+        return resultFromQueryExists;
+    }
+
+    @Override
+    public boolean connectWithContact(String targetContact) {
+        BriarServerService serv = ServerConfig.getServerService();
+        resultFromConnection = false;
+
+        JSONObject parameters = new JSONObject();
+        parameters.put("password", PwdSingletonServer.getPassword());
+        parameters.put("targetPhoneGeneratedId", targetContact);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                serv.createConnection(UniqueIDSingleton.getUniqueID(), parameters.toString()).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.body() != null){
+                            resultFromConnection = true;
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        LOG.info(" BRIAR SERVER : Failure to create Connection  " + t.getMessage());
+                    }
+                });
+            }
+        });
+        // Wait for the call to server to be done...
+        try{
+            executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+        }catch (Exception ee){
+            LOG.info("FROM CREATE NEW USER : " +  ee.getMessage());
+        }
+        return resultFromConnection;
+    }
+
+    @Override
+    public PreferenceUser getUserPreferences(String username) {
+        if(username == null)return null;
+	    BriarServerService serv = ServerConfig.getServerService();
+	    resultFromGetPreference = null;
+	    ExecutorService executorService = Executors.newFixedThreadPool(1);
+	    executorService.execute(new Runnable() {
+		    @Override
+		    public void run() {
+			    serv.obtainSettingsUser(username).enqueue(new Callback<String>() {
+				    @Override
+				    public void onResponse(Call<String> call, Response<String> response) {
+					    if(response.body() != null){
+						    JsonParser parser = new JsonParser();
+						    JsonElement element = parser.parse(response.body());
+						    if(!element.isJsonNull()){
+							    JsonObject obj;
+							    try{
+								    obj = element.getAsJsonObject();
+								    JsonElement statusId = obj.get("statusId");
+								    JsonElement avatarId = obj.get("avatarId");
+
+								    int convertedStatusId = statusId.getAsInt();
+								    int convertedAvatarId = avatarId.getAsInt();
+								    // Store info in a SavedUser object...
+								    resultFromGetPreference = new PreferenceUser(username, convertedStatusId, convertedAvatarId);
+
+							    }catch (Exception ee){
+								    LOG.info("PROBLEM WHILE EXECUTING ObtainUserInfo : " + ee.getMessage());
+							    }
+
+						    }
+					    }
+				    }
+				    @Override
+				    public void onFailure(Call<String> call, Throwable t) {
+					    LOG.info(" BRIAR SERVER : Failure to get user preferences  " + t.getMessage());
+				    }
+			    });
+		    }
+	    });
+	    // Wait for the call to server to be done...
+	    try{
+		    executorService.awaitTermination(TIME_WAITING, TimeUnit.SECONDS);
+	    }catch (Exception ee){
+		    LOG.info("FROM GET PREFERENCES: " +  ee.getMessage());
+	    }
+	    return resultFromGetPreference;
+
+    }
+
 }

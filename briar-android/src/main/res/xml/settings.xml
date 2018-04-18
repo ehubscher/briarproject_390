@@ -44,6 +44,17 @@
 			android:summary="%s"
 			android:title="@string/theme_settings_title"/>
 
+		<Preference
+			android:key="pref_change_wallpaper"
+			android:title="@string/title_activity_wallpaper"
+			android:summary="@string/wallpaper_summary">
+
+			<intent
+				android:targetClass="org.briarproject.briar.android.wallpaper.WallpaperActivity"
+				android:targetPackage="@string/app_package"/>
+
+		</Preference>
+
 	</PreferenceCategory>
 
 	<PreferenceCategory android:layout="@layout/divider_preference"/>

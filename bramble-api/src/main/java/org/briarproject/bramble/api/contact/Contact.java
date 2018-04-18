@@ -30,8 +30,6 @@ public class Contact {
 		this.avatarId = avatarId;
 		this.statusId = status;
 		this.uniqueId = author.getName();
-		// Hack for TCP method...
-		id.setUniqueID(uniqueId);
 	}
 
 	public ContactId getId() {
