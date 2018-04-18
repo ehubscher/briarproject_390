@@ -73,7 +73,6 @@ import static org.briarproject.briar.android.contact.ConversationActivity.CONTAC
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
 public class ContactListFragment extends BaseFragment implements EventListener {
-
 	public static final String TAG = ContactListFragment.class.getName();
 	private static final Logger LOG = Logger.getLogger(TAG);
 	private volatile HashMap<String, SavedUser> contactsDetails;
@@ -114,9 +113,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater,
-			@Nullable ViewGroup container,
-			@Nullable Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 		getActivity().setTitle(R.string.contact_list_button);
 
@@ -130,22 +127,15 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					i.putExtra(CONTACT_ID, contactId.getInt());
 
 					if (Build.VERSION.SDK_INT >= 23) {
-						ContactListItemViewHolder holder =
-								(ContactListItemViewHolder) list
-										.getRecyclerView()
-										.findViewHolderForAdapterPosition(
-												adapter.findItemPosition(item));
-						Pair<View, String> avatar =
-								Pair.create(holder.avatar,
-										getTransitionName(holder.avatar));
-						Pair<View, String> bulb =
-								Pair.create(holder.bulb,
-										getTransitionName(holder.bulb));
-						ActivityOptionsCompat options =
-								makeSceneTransitionAnimation(getActivity(),
-										avatar, bulb);
-						ActivityCompat.startActivity(getActivity(), i,
-								options.toBundle());
+						ContactListItemViewHolder holder = (ContactListItemViewHolder) list
+                                .getRecyclerView()
+								.findViewHolderForAdapterPosition(adapter.findItemPosition(item));
+
+						Pair<View, String> avatar = Pair.create(holder.avatar, getTransitionName(holder.avatar));
+						Pair<View, String> bulb = Pair.create(holder.bulb, getTransitionName(holder.bulb));
+
+						ActivityOptionsCompat options = makeSceneTransitionAnimation(getActivity(), avatar, bulb);
+						ActivityCompat.startActivity(getActivity(), i, options.toBundle());
 					} else {
 						// work-around for android bug #224270
 						startActivity(i);

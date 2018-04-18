@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 
 import org.briarproject.briar.R;
 
-public class ContactListAdapter extends
-		BaseContactListAdapter<ContactListItem, ContactListItemViewHolder> {
-
-	public ContactListAdapter(Context context,
-			OnContactClickListener<ContactListItem> listener) {
+public class ContactListAdapter extends BaseContactListAdapter<ContactListItem, ContactListItemViewHolder> {
+	public ContactListAdapter(Context context, OnContactClickListener<ContactListItem> listener) {
 		super(context, ContactListItem.class, listener);
 	}
 
 	@Override
-	public ContactListItemViewHolder onCreateViewHolder(ViewGroup viewGroup,
-			int i) {
+	public ContactListItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View v = LayoutInflater.from(viewGroup.getContext()).inflate(
-				R.layout.list_item_contact, viewGroup, false);
+				R.layout.list_item_contact,
+				viewGroup,
+				false
+		);
 
 		return new ContactListItemViewHolder(v);
 	}
@@ -31,9 +30,11 @@ public class ContactListAdapter extends
 		if (c1.getUnreadCount() != c2.getUnreadCount()) {
 			return false;
 		}
+
 		if (c1.getTimestamp() != c2.getTimestamp()) {
 			return false;
 		}
+
 		return c1.isConnected() == c2.isConnected();
 	}
 
@@ -44,16 +45,20 @@ public class ContactListAdapter extends
 		boolean favourite1 = c1.getContact().isFavourite();
 		boolean favourite2 = c2.getContact().isFavourite();
 
-		//Show conversations with favourite contacts first
-        if(favourite1 && !favourite2){
+		// Show conversations with favourite contacts first
+        if(favourite1 && !favourite2) {
             return -1;
-        }
-        else if(!favourite1 && favourite2){
+        } else if(!favourite1 && favourite2) {
             return 1;
-        }
-        else{
-            if (time1 < time2) return 1;
-            if (time1 > time2) return -1;
+        } else {
+            if (time1 < time2) {
+                return 1;
+            }
+
+            if (time1 > time2) {
+                return -1;
+            }
+
             return 0;
         }
 	}
