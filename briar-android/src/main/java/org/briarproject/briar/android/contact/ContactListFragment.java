@@ -114,15 +114,13 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 		getActivity().setTitle(R.string.contact_list_button);
 
 		View contentView = inflater.inflate(R.layout.list, container, false);
 
 		OnContactClickListener<ContactListItem> onContactClickListener =
 				(view, item) -> {
-					Intent i = new Intent(getActivity(),
-							ConversationActivity.class);
+					Intent i = new Intent(getActivity(), ConversationActivity.class);
 					ContactId contactId = item.getContact().getId();
 					i.putExtra(CONTACT_ID, contactId.getInt());
 
@@ -161,8 +159,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 			case R.id.action_add_contact:
-				Intent intent =
-						new Intent(getContext(), KeyAgreementActivity.class);
+				Intent intent = new Intent(getContext(), KeyAgreementActivity.class);
 				startActivity(intent);
 				return true;
 			default:
@@ -203,16 +200,14 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				for (Contact c : contactManager.getActiveContacts()) {
 					try {
 						ContactId id = c.getId();
-						GroupCount count =
-								conversationManager.getGroupCount(id);
-						boolean connected =
-								connectionRegistry.isConnected(c.getId());
+						GroupCount count = conversationManager.getGroupCount(id);
+						boolean connected = connectionRegistry.isConnected(c.getId());
 						contacts.add(new ContactListItem(c, connected, count));
 					} catch (NoSuchContactException e) {
 						// Continue
 					}
-					try{
 
+					try{
 						// iff we have the contact is in our hash
 						if(contactsIdName.containsKey(c.getId().getInt())) {
 							String contactName = (String) contactsIdName.get(c.getId().getInt());
@@ -224,7 +219,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 							//setting the values in the local database
 							contactManager.setAvatarId(contactName, avatarId);
 							contactManager.setContactStatus(contactName, statusId);
-
 						}
 					} catch (Exception e){
 						LOG.info("Exception while getting hash data : " + e.getMessage());
@@ -257,11 +251,14 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	public void eventOccurred(Event e) {
 		if (e instanceof ContactStatusChangedEvent) {
 			ContactStatusChangedEvent c = (ContactStatusChangedEvent) e;
+
 			if (c.isActive()) {
 				LOG.info("Contact activated, reloading");
+
 				loadContacts();
 			} else {
 				LOG.info("Contact deactivated, removing item");
+
 				removeItem(c.getContactId());
 			}
 		} else if (e instanceof ContactConnectedEvent) {
@@ -270,37 +267,44 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			setConnected(((ContactDisconnectedEvent) e).getContactId(), false);
 		} else if (e instanceof ContactRemovedEvent) {
 			LOG.info("Contact removed, removing item");
+
 			removeItem(((ContactRemovedEvent) e).getContactId());
 		} else if (e instanceof PrivateMessageReceivedEvent) {
 			LOG.info("Private message received, updating item");
+
 			PrivateMessageReceivedEvent p = (PrivateMessageReceivedEvent) e;
 			PrivateMessageHeader h = p.getMessageHeader();
+
 			updateItem(p.getContactId(), h);
 		} else if (e instanceof IntroductionRequestReceivedEvent) {
 			LOG.info("Introduction request received, updating item");
-			IntroductionRequestReceivedEvent m =
-					(IntroductionRequestReceivedEvent) e;
+
+			IntroductionRequestReceivedEvent m = (IntroductionRequestReceivedEvent) e;
 			IntroductionRequest ir = m.getIntroductionRequest();
+
 			updateItem(m.getContactId(), ir);
 		} else if (e instanceof IntroductionResponseReceivedEvent) {
 			LOG.info("Introduction response received, updating item");
-			IntroductionResponseReceivedEvent m =
-					(IntroductionResponseReceivedEvent) e;
+
+			IntroductionResponseReceivedEvent m = (IntroductionResponseReceivedEvent) e;
 			IntroductionResponse ir = m.getIntroductionResponse();
+
 			updateItem(m.getContactId(), ir);
 		} else if (e instanceof InvitationRequestReceivedEvent) {
 			LOG.info("Invitation Request received, update item");
-			InvitationRequestReceivedEvent m =
-					(InvitationRequestReceivedEvent) e;
+
+			InvitationRequestReceivedEvent m = (InvitationRequestReceivedEvent) e;
 			InvitationRequest ir = m.getRequest();
+
 			updateItem(m.getContactId(), ir);
-		} else if (e instanceof InvitationResponseReceivedEvent) {
+		} else if(e instanceof InvitationResponseReceivedEvent) {
 			LOG.info("Invitation response received, updating item");
-			InvitationResponseReceivedEvent m =
-					(InvitationResponseReceivedEvent) e;
+
+			InvitationResponseReceivedEvent m = (InvitationResponseReceivedEvent) e;
 			InvitationResponse ir = m.getResponse();
+
 			updateItem(m.getContactId(), ir);
-		} else if(e instanceof ContactAvatarChangedEvent){
+		} else if(e instanceof ContactAvatarChangedEvent) {
 			setAvatar(((ContactAvatarChangedEvent) e).getContactId(), ((ContactAvatarChangedEvent) e).getAvatarId());
 		}
 	}

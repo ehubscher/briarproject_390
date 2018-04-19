@@ -9,22 +9,21 @@ import java.util.List;
  */
 
 public class AllArticles {
-
     private static List<Article> instanceAllArticles;
 
     protected AllArticles(){};
 
-    public static List<Article> getInstanceAllArticles(){
-        if(instanceAllArticles == null){
+    public static List<Article> getInstanceAllArticles() {
+        if(instanceAllArticles == null) {
             instanceAllArticles = new ArrayList<>();
         }
+
         return instanceAllArticles;
     }
 
-     public static void setInstanceAllArticles(List<Article> updatedAllArticles){
+     public static void setInstanceAllArticles(List<Article> updatedAllArticles) {
         if(updatedAllArticles != null){
             instanceAllArticles = updatedAllArticles;
         }
-
     }
 }

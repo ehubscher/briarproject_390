@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/profile_fragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="org.briarproject.briar.android.adminarticles.AdminArticlesActivity"
-    tools:showIn="@layout/activity_admin_articles">
+<org.briarproject.briar.android.view.BriarRecyclerView
+        android:id="@+id/articlesList"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/window_background"
+        app:scrollToEnd="false"
+        tools:context=".android.adminarticles.AdminArticlesActivity"/>
 
-    <TextView
-    android:id="@+id/emptyView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:gravity="center"
-    android:padding="@dimen/margin_activity_horizontal"
-    android:text="@string/no_admin_articles"
-    android:textSize="@dimen/text_size_large"
-    tools:text="@string/no_admin_articles"
-    android:visibility="visible"/>
-
-</RelativeLayout>

@@ -10,8 +10,6 @@ import org.briarproject.briar.android.activity.BriarActivity;
 
 
 public class AdminArticlesActivity extends BriarActivity {
-
-
     @Override
     public void injectActivity(ActivityComponent component) {
         component.inject(this);

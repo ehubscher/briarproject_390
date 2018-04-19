@@ -27,11 +27,11 @@ public class ContactListAdapter extends BaseContactListAdapter<ContactListItem, 
 	public boolean areContentsTheSame(ContactListItem c1, ContactListItem c2) {
 		// check for all properties that influence visual
 		// representation of contact
-		if (c1.getUnreadCount() != c2.getUnreadCount()) {
+		if(c1.getUnreadCount() != c2.getUnreadCount()) {
 			return false;
 		}
 
-		if (c1.getTimestamp() != c2.getTimestamp()) {
+		if(c1.getTimestamp() != c2.getTimestamp()) {
 			return false;
 		}
 
@@ -62,5 +62,4 @@ public class ContactListAdapter extends BaseContactListAdapter<ContactListItem, 
             return 0;
         }
 	}
-
 }

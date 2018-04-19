@@ -18,7 +18,6 @@ import static org.briarproject.briar.android.util.UiUtils.formatDate;
 @UiThread
 @NotNullByDefault
 class ContactListItemViewHolder extends ContactItemViewHolder<ContactListItem> {
-
 	private final TextView unread;
 	private final TextView date;
 
@@ -29,8 +28,7 @@ class ContactListItemViewHolder extends ContactItemViewHolder<ContactListItem> {
 	}
 
 	@Override
-	protected void bind(ContactListItem item, @Nullable
-			OnContactClickListener<ContactListItem> listener) {
+	protected void bind(ContactListItem item, @Nullable OnContactClickListener<ContactListItem> listener) {
 		super.bind(item, listener);
 
 		// unread count
@@ -54,5 +52,4 @@ class ContactListItemViewHolder extends ContactItemViewHolder<ContactListItem> {
 		setTransitionName(avatar, UiUtils.getAvatarTransitionName(c));
 		setTransitionName(bulb, UiUtils.getBulbTransitionName(c));
 	}
-
 }
