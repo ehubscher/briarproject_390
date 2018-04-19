@@ -18,9 +18,7 @@ import javax.inject.Inject;
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
-public class BlogActivity extends BriarActivity
-		implements BaseFragmentListener {
-
+public class BlogActivity extends BriarActivity implements BaseFragmentListener {
 	@Inject
 	BlogController blogController;
 
@@ -41,8 +39,7 @@ public class BlogActivity extends BriarActivity
 		// Open Sharing Status on Toolbar click
 		if (toolbar != null) {
 			toolbar.setOnClickListener(v -> {
-				Intent i1 = new Intent(BlogActivity.this,
-						BlogSharingStatusActivity.class);
+				Intent i1 = new Intent(BlogActivity.this, BlogSharingStatusActivity.class);
 				i1.putExtra(GROUP_ID, groupId.getBytes());
 				startActivity(i1);
 			});
@@ -57,5 +54,4 @@ public class BlogActivity extends BriarActivity
 	public void injectActivity(ActivityComponent component) {
 		component.inject(this);
 	}
-
 }

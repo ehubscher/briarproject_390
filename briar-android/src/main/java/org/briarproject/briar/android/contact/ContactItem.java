@@ -8,7 +8,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 @NotNullByDefault
 public class ContactItem {
-
 	private final Contact contact;
 	private boolean connected;
 	private int avatar;
@@ -42,5 +41,4 @@ public class ContactItem {
 	void setAvatar(int avatar){
 		this.avatar=avatar;
 	}
-
 }

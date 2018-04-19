@@ -60,6 +60,9 @@ public abstract class BaseActivity extends AppCompatActivity
 	public void addLifecycleController(ActivityLifecycleController alc) {
 		lifecycleControllers.add(alc);
 	}
+
+
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

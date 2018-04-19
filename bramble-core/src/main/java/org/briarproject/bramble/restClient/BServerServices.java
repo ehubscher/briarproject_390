@@ -60,4 +60,10 @@ public interface BServerServices {
      */
     PreferenceUser getUserPreferences(String username);
 
+    /**
+     * This get or update current singletonList of articles
+     * @return True -> Success , false -> Failure
+     */
+    boolean getOrUpdateAllArticles();
+
 }

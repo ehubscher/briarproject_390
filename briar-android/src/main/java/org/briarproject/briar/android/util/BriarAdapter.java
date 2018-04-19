@@ -12,8 +12,7 @@ import javax.annotation.Nullable;
 
 import static android.support.v7.util.SortedList.INVALID_POSITION;
 
-public abstract class BriarAdapter<T, V extends ViewHolder>
-		extends Adapter<V> implements VersionedAdapter {
+public abstract class BriarAdapter<T, V extends ViewHolder> extends Adapter<V> implements VersionedAdapter {
 
 	protected final Context ctx;
 	protected final SortedList<T> items;

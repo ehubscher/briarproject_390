@@ -19,10 +19,8 @@ class BlogPostAdapter
 	}
 
 	@Override
-	public BlogPostViewHolder onCreateViewHolder(ViewGroup parent,
-			int viewType) {
-		View v = LayoutInflater.from(ctx).inflate(
-				R.layout.list_item_blog_post, parent, false);
+	public BlogPostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(ctx).inflate(R.layout.list_item_blog_post, parent, false);
 		BlogPostViewHolder ui = new BlogPostViewHolder(v, false, listener);
 		return ui;
 	}

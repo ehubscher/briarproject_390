@@ -4,6 +4,8 @@ import android.app.Activity;
 
 
 import org.briarproject.briar.android.AndroidComponent;
+import org.briarproject.briar.android.adminarticles.AdminArticlesActivity;
+import org.briarproject.briar.android.adminarticles.AdminArticlesFragment;
 import org.briarproject.briar.android.blog.BlogActivity;
 import org.briarproject.briar.android.blog.BlogFragment;
 import org.briarproject.briar.android.blog.BlogModule;
@@ -155,6 +157,8 @@ public interface ActivityComponent {
 
 	void inject(ProfileActivity activity);
 
+	void inject(AdminArticlesActivity activity);
+
 	// Fragments
 	void inject(AuthorNameFragment fragment);
 	void inject(PasswordFragment fragment);
@@ -195,5 +199,7 @@ public interface ActivityComponent {
 	void inject(SettingsFragment fragment);
 
 	void inject(ProfileFragment fragment);
+
+	void inject(AdminArticlesFragment fragment);
 
 }

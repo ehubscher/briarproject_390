@@ -2,12 +2,16 @@ package org.briarproject.bramble.restClient;
 
 
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
+import org.briarproject.bramble.restClient.ServerObj.AllArticles;
+import org.briarproject.bramble.restClient.ServerObj.Article;
 import org.briarproject.bramble.restClient.ServerObj.PreferenceUser;
 import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -134,6 +138,15 @@ public class BServerServicesImplTest {
 		String user  = "Bob";
 		PreferenceUser preferenceUser = services.getUserPreferences(user);
 		Assert.assertTrue(preferenceUser != null);
+
+	}
+
+	@Ignore
+	@Test
+	public void getOrUpdateAllArticlesTest(){
+		BServerServicesImpl services = new BServerServicesImpl();
+		boolean resultsgetArticles = services.getOrUpdateAllArticles();
+		Assert.assertTrue(resultsgetArticles);
 
 	}
 

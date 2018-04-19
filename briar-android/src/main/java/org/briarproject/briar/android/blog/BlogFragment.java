@@ -51,10 +51,7 @@ import static org.briarproject.briar.android.controller.SharingController.Sharin
 @UiThread
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
-public class BlogFragment extends BaseFragment
-		implements BlogSharingListener, SharingListener,
-		OnBlogPostClickListener {
-
+public class BlogFragment extends BaseFragment implements BlogSharingListener, SharingListener, OnBlogPostClickListener {
 	private final static String TAG = BlogFragment.class.getName();
 
 	@Inject
@@ -81,9 +78,7 @@ public class BlogFragment extends BaseFragment
 
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater,
-			@Nullable ViewGroup container,
-			@Nullable Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Bundle args = getArguments();
 		byte[] b = args.getByteArray(GROUP_ID);
 		if (b == null) throw new IllegalStateException("No group ID in args");
@@ -186,18 +181,15 @@ public class BlogFragment extends BaseFragment
 	@Override
 	public void onBlogPostAdded(BlogPostHeader header, boolean local) {
 		blogController.loadBlogPost(header,
-				new UiResultExceptionHandler<BlogPostItem, DbException>(
-						this) {
+				new UiResultExceptionHandler<BlogPostItem, DbException>(this) {
 					@Override
 					public void onResultUi(BlogPostItem post) {
 						adapter.add(post);
 						if (local) {
 							list.scrollToPosition(0);
-							displaySnackbar(R.string.blogs_blog_post_created,
-									false);
+							displaySnackbar(R.string.blogs_blog_post_created, false);
 						} else {
-							displaySnackbar(R.string.blogs_blog_post_received,
-									true);
+							displaySnackbar(R.string.blogs_blog_post_received, true);
 						}
 					}
 

@@ -22,9 +22,7 @@ import javax.annotation.Nullable;
 import static org.briarproject.briar.android.util.UiUtils.MIN_DATE_RESOLUTION;
 
 public class BriarRecyclerView extends FrameLayout {
-
-	private static final Logger LOG =
-			Logger.getLogger(BriarRecyclerView.class.getName());
+	private static final Logger LOG = Logger.getLogger(BriarRecyclerView.class.getName());
 
 	private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -43,17 +41,17 @@ public class BriarRecyclerView extends FrameLayout {
 		this(context, attrs, 0);
 	}
 
-	public BriarRecyclerView(Context context, @Nullable AttributeSet attrs,
-			int defStyle) {
+	public BriarRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
-		TypedArray attributes = context.obtainStyledAttributes(attrs,
-				R.styleable.BriarRecyclerView);
-		isScrollingToEnd = attributes
-				.getBoolean(R.styleable.BriarRecyclerView_scrollToEnd, true);
-		String emtpyText =
-				attributes.getString(R.styleable.BriarRecyclerView_emptyText);
-		if (emtpyText != null) setEmptyText(emtpyText);
+		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.BriarRecyclerView);
+		isScrollingToEnd = attributes.getBoolean(R.styleable.BriarRecyclerView_scrollToEnd, true);
+		String emtpyText = attributes.getString(R.styleable.BriarRecyclerView_emptyText);
+
+		if (emtpyText != null) {
+			setEmptyText(emtpyText);
+		}
+
 		attributes.recycle();
 	}
 
@@ -94,11 +92,12 @@ public class BriarRecyclerView extends FrameLayout {
 	}
 
 	private void addLayoutChangeListener() {
-		recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom,
-				oldLeft, oldTop, oldRight, oldBottom) -> {
+		recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 			if (bottom < oldBottom) {
-				recyclerView.postDelayed(() -> scrollToPosition(
-						recyclerView.getAdapter().getItemCount() - 1), 100);
+				recyclerView.postDelayed(() ->
+                        scrollToPosition(recyclerView.getAdapter().getItemCount() - 1),
+                        100
+                );
 			}
 		});
 	}

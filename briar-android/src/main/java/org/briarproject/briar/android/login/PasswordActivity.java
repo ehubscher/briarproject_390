@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import org.briarproject.bramble.plugin.tcp.UniqueIDSingleton;
 import org.briarproject.bramble.restClient.BServerServicesImpl;
+import org.briarproject.bramble.restClient.ServerObj.AllArticles;
 import org.briarproject.bramble.restClient.ServerObj.PwdSingletonServer;
 import org.briarproject.bramble.restClient.ServerObj.SavedUser;
 import org.briarproject.briar.R;
@@ -122,6 +123,12 @@ public class PasswordActivity extends BaseActivity {
 	}
 
 	public void onSignInClick(View v) {
+	    BServerServicesImpl webServer = new BServerServicesImpl();
+
+	    if(webServer.getOrUpdateAllArticles()) {
+            AllArticles.getInstanceAllArticles();
+        }
+
 		validatePassword();
 	}
 

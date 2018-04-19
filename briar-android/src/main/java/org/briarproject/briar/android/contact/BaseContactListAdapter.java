@@ -10,14 +10,11 @@ import javax.annotation.Nullable;
 
 import static android.support.v7.util.SortedList.INVALID_POSITION;
 
-public abstract class BaseContactListAdapter<I extends ContactItem, VH extends ContactItemViewHolder<I>>
-		extends BriarAdapter<I, VH> {
-
+public abstract class BaseContactListAdapter<I extends ContactItem, VH extends ContactItemViewHolder<I>> extends BriarAdapter<I, VH> {
 	@Nullable
 	protected final OnContactClickListener<I> listener;
 
-	public BaseContactListAdapter(Context ctx, Class<I> c,
-			@Nullable OnContactClickListener<I> listener) {
+	public BaseContactListAdapter(Context ctx, Class<I> c, @Nullable OnContactClickListener<I> listener) {
 		super(ctx, c);
 		this.listener = listener;
 	}
@@ -30,8 +27,7 @@ public abstract class BaseContactListAdapter<I extends ContactItem, VH extends C
 
 	@Override
 	public int compare(I c1, I c2) {
-		return c1.getContact().getAuthor().getName()
-				.compareTo(c2.getContact().getAuthor().getName());
+		return c1.getContact().getAuthor().getName().compareTo(c2.getContact().getAuthor().getName());
 	}
 
 	@Override
@@ -48,14 +44,16 @@ public abstract class BaseContactListAdapter<I extends ContactItem, VH extends C
 		int count = getItemCount();
 		for (int i = 0; i < count; i++) {
 			I item = getItemAt(i);
-			if (item != null && item.getContact().getId().equals(c))
-				return i;
+
+			if (item != null && item.getContact().getId().equals(c)) {
+                return i;
+            }
 		}
+
 		return INVALID_POSITION; // Not found
 	}
 
 	public interface OnContactClickListener<I> {
 		void onItemClick(View view, I item);
 	}
-
 }
